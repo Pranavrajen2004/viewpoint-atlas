@@ -1,0 +1,2753 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viewpoint Atlas — Personalized Media Intelligence</title>
+  <style>
+    /* === GOLDEN RATIO SYSTEM (φ=1.618) === */
+    :root {
+      --phi:1.618;
+      --sp-1:5px;--sp-2:8px;--sp-3:13px;--sp-4:21px;--sp-5:34px;--sp-6:55px;--sp-7:89px;
+      --fs-xs:8px;--fs-sm:13px;--fs-base:16px;--fs-md:21px;--fs-lg:34px;--fs-xl:55px;
+      --r-sm:5px;--r-md:8px;--r-lg:13px;--r-xl:21px;--r-2xl:34px;
+      --left:#4f8ef7;--left-soft:rgba(79,142,247,0.14);
+      --center:#9b59b6;--center-soft:rgba(155,89,182,0.14);
+      --right:#e74c5e;--right-soft:rgba(231,76,94,0.14);
+      --accent:#00d2b4;--warn:#f39c12;--danger:#e74c3c;--success:#27ae60;
+      --bg:#080c1a;--bg-2:#0d1225;--nav-bg:rgba(8,12,26,0.88);
+      --text-1:rgba(255,255,255,0.93);--text-2:rgba(255,255,255,0.56);--text-3:rgba(255,255,255,0.28);
+      --glass-bg:rgba(255,255,255,0.06);--glass-bg-2:rgba(255,255,255,0.10);
+      --glass-b:rgba(255,255,255,0.10);--glass-b-2:rgba(255,255,255,0.18);
+      --shadow:0 8px 32px rgba(0,0,0,0.4);--shadow-lg:0 16px 64px rgba(0,0,0,0.6);
+    }
+    [data-theme="light"] {
+      --bg:#edf1fb;--bg-2:#e2e8f8;--nav-bg:rgba(237,241,251,0.92);
+      --text-1:#0d1421;--text-2:rgba(13,20,33,0.62);--text-3:rgba(13,20,33,0.30);
+      --glass-bg:rgba(255,255,255,0.70);--glass-bg-2:rgba(255,255,255,0.88);
+      --glass-b:rgba(0,0,0,0.08);--glass-b-2:rgba(0,0,0,0.15);
+      --shadow:0 8px 32px rgba(0,0,0,0.10);--shadow-lg:0 16px 64px rgba(0,0,0,0.18);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+      background:var(--bg);color:var(--text-1);line-height:var(--phi);
+      min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden;}
+
+    /* GLASS */
+    .glass{background:var(--glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--glass-b);border-radius:var(--r-xl);}
+    .glass-2{background:var(--glass-bg-2);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+      border:1px solid var(--glass-b-2);border-radius:var(--r-xl);}
+
+    /* ANIMATED BG */
+    .bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+    .bg-orbs::before,.bg-orbs::after{content:'';position:absolute;border-radius:50%;filter:blur(80px);
+      animation:orbFloat 12s ease-in-out infinite alternate;}
+    .bg-orbs::before{width:600px;height:600px;top:-200px;left:-200px;
+      background:radial-gradient(circle,rgba(79,142,247,0.18) 0%,transparent 70%);}
+    .bg-orbs::after{width:500px;height:500px;bottom:-150px;right:-150px;
+      background:radial-gradient(circle,rgba(0,210,180,0.14) 0%,transparent 70%);animation-delay:-6s;}
+    @keyframes orbFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(40px,30px) scale(1.1)}}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--glass-b);padding:var(--sp-3) var(--sp-5);
+      display:flex;align-items:center;gap:var(--sp-4);transition:background .3s;}
+    .nav-logo{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-base);
+      font-weight:700;color:var(--text-1);cursor:pointer;}
+    .nav-logo-icon{width:32px;height:32px;border-radius:var(--r-md);
+      background:linear-gradient(135deg,var(--accent),#4f8ef7);
+      display:flex;align-items:center;justify-content:center;
+      font-size:var(--fs-sm);font-weight:900;color:#fff;}
+    .nav-logo em{color:var(--accent);font-style:normal;}
+    .nav-tabs{display:flex;gap:var(--sp-1);margin-left:var(--sp-4);}
+    .nav-tab{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-lg);font-size:var(--fs-sm);
+      color:var(--text-2);cursor:pointer;border:none;background:transparent;
+      transition:all .2s;font-family:inherit;}
+    .nav-tab:hover{color:var(--text-1);background:var(--glass-bg);}
+    .nav-tab.active{color:var(--accent);background:rgba(0,210,180,0.1);}
+    .nav-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-3);}
+    .theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--glass-b);
+      background:var(--glass-bg);cursor:pointer;font-size:16px;
+      display:flex;align-items:center;justify-content:center;transition:all .2s;}
+    .theme-btn:hover{background:var(--glass-bg-2);}
+
+    /* ONBOARDING */
+    #ob-view{display:flex;align-items:center;justify-content:center;
+      min-height:100vh;padding:var(--sp-7) var(--sp-5);position:relative;z-index:1;}
+    .ob-shell{width:100%;max-width:780px;}
+    .ob-progress{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);justify-content:center;}
+    .ob-dot{height:4px;border-radius:2px;transition:all .4s;}
+    .ob-dot.done{background:var(--accent);width:var(--sp-6);}
+    .ob-dot.active{background:var(--accent);width:var(--sp-7);opacity:.7;}
+    .ob-dot.pending{background:var(--glass-b);width:var(--sp-4);}
+    .ob-card{padding:var(--sp-6);text-align:center;}
+    .ob-eye{font-size:var(--fs-sm);color:var(--accent);text-transform:uppercase;
+      letter-spacing:2px;margin-bottom:var(--sp-3);}
+    .ob-title{font-size:var(--fs-lg);font-weight:800;line-height:1.2;margin-bottom:var(--sp-3);}
+    .ob-sub{font-size:var(--fs-base);color:var(--text-2);margin-bottom:var(--sp-5);
+      max-width:500px;margin-inline:auto;}
+    .ob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-bottom:var(--sp-5);}
+    .ob-item{padding:var(--sp-4) var(--sp-3);border-radius:var(--r-xl);
+      border:1.5px solid var(--glass-b);background:var(--glass-bg);
+      cursor:pointer;transition:all .25s;text-align:center;position:relative;}
+    .ob-item:hover{border-color:var(--accent);background:rgba(0,210,180,0.08);transform:translateY(-2px);}
+    .ob-item.sel{border-color:var(--accent);background:rgba(0,210,180,0.14);}
+    .ob-item.sel::after{content:'✓';position:absolute;top:8px;right:10px;
+      font-size:var(--fs-sm);color:var(--accent);}
+    .ob-icon{font-size:26px;margin-bottom:var(--sp-2);}
+    .ob-lbl{font-size:var(--fs-sm);font-weight:700;}
+    .ob-desc{font-size:var(--fs-xs);color:var(--text-2);margin-top:4px;}
+    .ob-btn{padding:var(--sp-3) var(--sp-6);
+      background:linear-gradient(135deg,var(--accent),#4f8ef7);
+      border:none;border-radius:var(--r-xl);color:#fff;font-size:var(--fs-base);
+      font-weight:700;cursor:pointer;transition:all .25s;font-family:inherit;}
+    .ob-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,210,180,0.4);}
+    .ob-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+    .src-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-2);margin-bottom:var(--sp-5);}
+    .src-item{padding:var(--sp-3) var(--sp-2);border-radius:var(--r-lg);
+      border:1.5px solid var(--glass-b);background:var(--glass-bg);
+      cursor:pointer;transition:all .2s;text-align:center;}
+    .src-item:hover{border-color:var(--glass-b-2);transform:translateY(-1px);}
+    .src-item.sel{border-color:var(--accent);background:rgba(0,210,180,0.10);}
+    .src-name{font-size:var(--fs-sm);font-weight:700;}
+    .src-lean{font-size:var(--fs-xs);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+    .lean-l{color:var(--left);}.lean-c{color:var(--center);}.lean-r{color:var(--right);}
+    .ob-gen{padding:var(--sp-6) var(--sp-5);text-align:center;}
+    .gen-ring{width:160px;height:160px;margin:0 auto var(--sp-4);position:relative;}
+    .gen-pulse{position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent);
+      animation:gp 1.5s ease-out infinite;}
+    .gen-pulse:nth-child(2){animation-delay:.5s;}.gen-pulse:nth-child(3){animation-delay:1s;}
+    @keyframes gp{0%{transform:scale(.3);opacity:.8}100%{transform:scale(1.4);opacity:0}}
+    .gen-log{font-size:var(--fs-sm);color:var(--text-2);text-align:left;max-width:420px;margin:0 auto;}
+    .gen-row{padding:var(--sp-2) 0;border-bottom:1px solid var(--glass-b);
+      display:flex;align-items:center;gap:var(--sp-2);opacity:0;animation:fadeUp .4s forwards;}
+    .gen-row::before{content:'✓';color:var(--accent);font-weight:700;flex-shrink:0;}
+    @keyframes fadeUp{to{opacity:1;}}
+
+    /* MAIN SHELL */
+    .page{padding-top:65px;min-height:100vh;position:relative;z-index:1;}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 var(--sp-5);}
+    .content{padding:var(--sp-5) 0 var(--sp-7);}
+
+    /* SHARED CARD PARTS */
+    .c-eye{font-size:var(--fs-xs);color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--sp-2);}
+    .c-title{font-size:var(--fs-md);font-weight:700;margin-bottom:var(--sp-1);}
+    .c-sub{font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-4);}
+    .page-title{font-size:var(--fs-lg);font-weight:800;line-height:1.15;}
+    .page-sub{font-size:var(--fs-base);color:var(--text-2);margin-top:var(--sp-2);}
+    .ph{padding-top:var(--sp-5);padding-bottom:var(--sp-4);
+      display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);}
+    .stats{display:flex;gap:var(--sp-4);}
+    .stat-val{font-size:var(--fs-md);font-weight:800;color:var(--accent);}
+    .stat-lbl{font-size:var(--fs-xs);color:var(--text-3);text-transform:uppercase;letter-spacing:1px;}
+
+    /* DASHBOARD GRID */
+    .dash-r1{display:grid;grid-template-columns:1.618fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-4);}
+    .dash-r2{display:grid;grid-template-columns:1fr 1.618fr;gap:var(--sp-4);}
+
+    /* RADAR */
+    .vp-card{padding:var(--sp-5);}
+    .radar-wrap{width:100%;aspect-ratio:1;max-width:360px;margin:0 auto;}
+    .radar-legend{display:flex;flex-wrap:wrap;gap:var(--sp-3);margin-top:var(--sp-4);justify-content:center;}
+    .rl-item{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-xs);color:var(--text-2);}
+    .rl-dot{width:8px;height:8px;border-radius:50%;}
+    .domain-chips{display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-top:var(--sp-3);}
+    .d-chip{padding:var(--sp-1) var(--sp-3);border-radius:var(--r-lg);
+      font-size:var(--fs-xs);font-weight:700;cursor:pointer;transition:all .2s;border:1px solid;}
+    .d-chip:hover{transform:translateY(-1px);}
+    .thin-b{padding:2px var(--sp-2);border-radius:var(--r-sm);
+      background:rgba(243,156,18,0.12);color:var(--warn);
+      font-size:var(--fs-xs);font-weight:600;border:1px solid rgba(243,156,18,0.3);}
+
+    /* GAPS */
+    .gap-card{padding:var(--sp-4);}
+    .gap-story{padding:var(--sp-3) 0;border-bottom:1px solid var(--glass-b);}
+    .gap-story:last-child{border-bottom:none;}
+    .gap-topic{font-size:var(--fs-xs);color:var(--text-3);text-transform:uppercase;letter-spacing:1px;}
+    .gap-ttl{font-size:var(--fs-sm);font-weight:600;margin:4px 0;}
+    .gap-saw{font-size:var(--fs-xs);color:var(--text-3);margin-bottom:var(--sp-2);}
+    .gap-chips{display:flex;flex-wrap:wrap;gap:4px;}
+    .gc{padding:3px var(--sp-2);border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:600;
+      background:rgba(231,76,94,0.12);color:var(--right);border:1px solid rgba(231,76,94,0.25);}
+
+    /* ECHO */
+    .echo-card{padding:var(--sp-4);}
+    .echo-big{font-size:var(--fs-xl);font-weight:900;line-height:1;margin:var(--sp-3) 0;}
+    .echo-track{height:8px;background:var(--glass-bg-2);border-radius:4px;overflow:hidden;margin-bottom:var(--sp-2);}
+    .echo-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--success),var(--warn),var(--danger));}
+    .echo-rows{margin-top:var(--sp-3);}
+    .echo-row{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-2) 0;
+      border-bottom:1px solid var(--glass-b);font-size:var(--fs-sm);cursor:pointer;transition:color .2s;}
+    .echo-row:last-child{border-bottom:none;}
+    .echo-row:hover{color:var(--accent);}
+    .echo-name{flex:1;}
+    .echo-bar{flex:2;height:4px;background:var(--glass-bg-2);border-radius:2px;}
+    .echo-fill2{height:100%;border-radius:2px;}
+    .echo-pct{font-size:var(--fs-xs);color:var(--text-2);width:32px;text-align:right;}
+
+    /* RECENT */
+    .recent-card{padding:var(--sp-4);}
+    .r-art{display:flex;gap:var(--sp-3);padding:var(--sp-3) 0;
+      border-bottom:1px solid var(--glass-b);cursor:pointer;transition:padding .2s;}
+    .r-art:last-child{border-bottom:none;}
+    .r-art:hover{padding-left:var(--sp-2);}
+    .r-img{width:64px;height:48px;border-radius:var(--r-md);object-fit:cover;
+      flex-shrink:0;background:var(--glass-bg-2);}
+    .r-body{flex:1;min-width:0;}
+    .r-outlet{font-size:var(--fs-xs);color:var(--text-3);margin-bottom:3px;}
+    .r-ttl{font-size:var(--fs-sm);font-weight:600;overflow:hidden;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+    .why-chip{display:inline-flex;align-items:center;gap:4px;margin-top:4px;
+      padding:2px var(--sp-2);border-radius:var(--r-sm);font-size:var(--fs-xs);
+      background:rgba(0,210,180,0.1);color:var(--accent);border:1px solid rgba(0,210,180,0.2);cursor:pointer;}
+
+    /* METHODOLOGY FOOTER */
+    .mf{padding:var(--sp-5) 0;border-top:1px solid var(--glass-b);margin-top:var(--sp-5);}
+    .mf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);}
+    .mf-title{font-size:var(--fs-sm);font-weight:700;margin-bottom:var(--sp-2);color:var(--accent);}
+    .mf-text{font-size:var(--fs-xs);color:var(--text-2);line-height:var(--phi);}
+    .mf-cite{font-size:var(--fs-xs);color:var(--text-3);margin-top:var(--sp-2);font-style:italic;}
+
+    /* FEED */
+    .feed-modes{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap;}
+    .mode-chip{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-2xl);
+      border:1.5px solid var(--glass-b);background:var(--glass-bg);
+      font-size:var(--fs-sm);cursor:pointer;transition:all .2s;font-family:inherit;color:var(--text-2);}
+    .mode-chip:hover{border-color:var(--accent);color:var(--text-1);}
+    .mode-chip.active{border-color:var(--accent);background:rgba(0,210,180,0.12);color:var(--accent);font-weight:600;}
+    .mode-desc-bar{padding:var(--sp-3) var(--sp-4);border-radius:var(--r-lg);
+      background:rgba(0,210,180,0.06);border:1px solid rgba(0,210,180,0.15);
+      font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-4);}
+    .feed-layout{display:grid;grid-template-columns:1.618fr 1fr;gap:var(--sp-4);}
+    .feed-list{display:flex;flex-direction:column;gap:var(--sp-3);}
+    .fc{padding:var(--sp-4);cursor:pointer;transition:all .2s;}
+    .fc:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+    .fc-head{display:flex;gap:var(--sp-3);margin-bottom:var(--sp-3);}
+    .fc-img{width:100px;height:72px;border-radius:var(--r-md);object-fit:cover;flex-shrink:0;background:var(--glass-bg-2);}
+    .fc-meta{flex:1;min-width:0;}
+    .fc-outlet-row{display:flex;align-items:center;gap:var(--sp-2);margin-bottom:4px;flex-wrap:wrap;}
+    .outlet-name{font-size:var(--fs-sm);font-weight:700;}
+    .lb{padding:2px var(--sp-2);border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;}
+    .lb.l{background:var(--left-soft);color:var(--left);}
+    .lb.c{background:var(--center-soft);color:var(--center);}
+    .lb.r{background:var(--right-soft);color:var(--right);}
+    .rel-row{display:flex;align-items:center;gap:4px;font-size:var(--fs-xs);color:var(--text-2);}
+    .star{color:var(--warn);}
+    .fc-title{font-size:var(--fs-base);font-weight:700;margin-bottom:var(--sp-2);}
+    .fc-sum{font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-3);}
+    .why-panel{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);
+      background:rgba(0,210,180,0.07);border:1px solid rgba(0,210,180,0.18);}
+    .why-lbl{font-size:var(--fs-xs);color:var(--accent);font-weight:700;margin-bottom:3px;}
+    .why-txt{font-size:var(--fs-xs);color:var(--text-2);}
+    .fc-tags{display:flex;gap:var(--sp-2);margin-top:var(--sp-3);flex-wrap:wrap;}
+    .tag{padding:2px var(--sp-2);border-radius:var(--r-sm);font-size:var(--fs-xs);
+      background:var(--glass-bg-2);color:var(--text-2);border:1px solid var(--glass-b);}
+
+    /* SLIDERS */
+    .sliders-card{padding:var(--sp-4);position:sticky;top:80px;}
+    .sl-group{margin-bottom:var(--sp-4);}
+    .sl-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2);}
+    .sl-lbl{font-size:var(--fs-sm);font-weight:600;}
+    .sl-val{font-size:var(--fs-sm);color:var(--accent);font-weight:700;}
+    .sl-desc{font-size:var(--fs-xs);color:var(--text-2);margin-bottom:var(--sp-2);line-height:var(--phi);}
+    input[type=range]{width:100%;height:4px;border-radius:2px;appearance:none;
+      -webkit-appearance:none;background:var(--glass-bg-2);cursor:pointer;outline:none;}
+    input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;
+      width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;
+      box-shadow:0 0 8px rgba(0,210,180,0.4);}
+    .reset-btn{width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-lg);
+      border:1px solid var(--glass-b);background:var(--glass-bg);color:var(--text-2);
+      font-size:var(--fs-sm);cursor:pointer;font-family:inherit;margin-top:var(--sp-3);transition:all .2s;}
+    .reset-btn:hover{color:var(--text-1);border-color:var(--glass-b-2);}
+
+    /* TOPICS */
+    .topic-chips{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap;}
+    .t-chip{padding:var(--sp-2) var(--sp-4);border-radius:var(--r-2xl);
+      border:1.5px solid var(--glass-b);background:var(--glass-bg);
+      font-size:var(--fs-sm);cursor:pointer;transition:all .2s;font-family:inherit;color:var(--text-2);}
+    .t-chip:hover{border-color:var(--glass-b-2);color:var(--text-1);}
+    .t-chip.active{border-color:var(--accent);background:rgba(0,210,180,0.1);color:var(--accent);font-weight:600;}
+    .t-head{margin-bottom:var(--sp-4);}
+    .t-eye{font-size:var(--fs-xs);color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--sp-2);}
+    .t-title{font-size:var(--fs-lg);font-weight:800;margin-bottom:var(--sp-3);}
+    .t-meta{display:flex;gap:var(--sp-4);color:var(--text-2);font-size:var(--fs-sm);flex-wrap:wrap;}
+    .t-meta span{color:var(--text-1);font-weight:700;}
+    .bias-row{display:flex;align-items:center;gap:var(--sp-3);margin-top:var(--sp-3);flex-wrap:wrap;}
+    .bias-track{flex:1;height:6px;background:var(--glass-bg-2);border-radius:3px;overflow:hidden;display:flex;min-width:120px;}
+    .bs{height:100%;transition:width .5s ease;}
+    .bias-leg{display:flex;gap:var(--sp-3);font-size:var(--fs-xs);}
+    .bdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+
+    /* 3-COL */
+    .p-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-5);}
+    .p-col{display:flex;flex-direction:column;gap:var(--sp-3);}
+    .col-hd{display:flex;align-items:center;gap:var(--sp-2);padding-bottom:var(--sp-3);
+      border-bottom:2px solid var(--glass-b);margin-bottom:var(--sp-1);}
+    .col-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    .col-ttl{font-size:var(--fs-base);font-weight:700;}
+    .col-cnt{font-size:var(--fs-xs);color:var(--text-3);margin-left:auto;}
+    .a-card{padding:var(--sp-3);cursor:pointer;transition:all .2s;}
+    .a-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+    .a-img{width:100%;height:100px;object-fit:cover;border-radius:var(--r-lg);
+      margin-bottom:var(--sp-2);background:var(--glass-bg-2);}
+    .a-outlet{font-size:var(--fs-xs);font-weight:700;margin-bottom:4px;}
+    .a-ttl{font-size:var(--fs-sm);font-weight:600;line-height:1.4;margin-bottom:var(--sp-2);}
+    .a-frame{padding:3px var(--sp-2);border-radius:var(--r-sm);font-size:var(--fs-xs);
+      display:inline-block;margin:0 4px 4px 0;}
+
+    /* COVERAGE GAP SECTION */
+    .s-title{font-size:var(--fs-md);font-weight:700;margin-bottom:var(--sp-2);}
+    .s-sub{font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-4);}
+    .gap-cmp{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-4);}
+    .gap-col{padding:var(--sp-4);}
+    .gap-col-ttl{font-size:var(--fs-sm);font-weight:700;margin-bottom:var(--sp-3);}
+    .gap-src-row{padding:var(--sp-2) 0;font-size:var(--fs-sm);border-bottom:1px solid var(--glass-b);}
+    .gap-src-row:last-child{border-bottom:none;}
+    .miss-card{padding:var(--sp-4);}
+    .miss-ttl{font-size:var(--fs-sm);font-weight:700;color:var(--right);margin-bottom:var(--sp-3);}
+    .miss-item{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);
+      background:rgba(231,76,94,0.07);border:1px solid rgba(231,76,94,0.18);
+      font-size:var(--fs-sm);margin-bottom:var(--sp-2);}
+    .mi-lbl{font-weight:600;}
+    .mi-desc{font-size:var(--fs-xs);color:var(--text-2);margin-top:2px;line-height:var(--phi);}
+
+    /* TIMELINE */
+    .tl-wrap{margin-bottom:var(--sp-5);}
+    .tl-track{display:flex;gap:var(--sp-2);overflow-x:auto;padding-bottom:var(--sp-3);scrollbar-width:thin;}
+    .tl-ev{flex-shrink:0;padding:var(--sp-3);border-radius:var(--r-xl);
+      border:1.5px solid var(--glass-b);background:var(--glass-bg);
+      cursor:pointer;transition:all .2s;max-width:160px;min-width:140px;}
+    .tl-ev:hover,.tl-ev.active{border-color:var(--accent);background:rgba(0,210,180,0.08);}
+    .tl-date{font-size:var(--fs-xs);color:var(--accent);margin-bottom:4px;font-weight:600;}
+    .tl-lbl{font-size:var(--fs-xs);font-weight:600;line-height:1.4;}
+    .tl-detail{padding:var(--sp-4);margin-top:var(--sp-3);}
+    .tl-d-title{font-size:var(--fs-base);font-weight:700;margin-bottom:var(--sp-2);}
+    .tl-d-body{font-size:var(--fs-sm);color:var(--text-2);line-height:var(--phi);}
+    .tl-srcs{display:flex;gap:var(--sp-2);margin-top:var(--sp-3);flex-wrap:wrap;}
+    .tl-src{padding:3px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:600;border:1px solid;}
+
+    /* MODAL */
+    .modal-ov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.72);
+      backdrop-filter:blur(10px);display:none;align-items:center;
+      justify-content:center;padding:var(--sp-5);}
+    .modal-ov.open{display:flex;}
+    .modal-box{width:100%;max-width:640px;max-height:88vh;overflow-y:auto;padding:var(--sp-5);}
+    .modal-close{float:right;background:var(--glass-bg-2);border:none;border-radius:50%;
+      width:32px;height:32px;cursor:pointer;font-size:18px;color:var(--text-2);
+      display:flex;align-items:center;justify-content:center;transition:all .2s;}
+    .modal-close:hover{color:var(--text-1);}
+    .m-outlet{font-size:var(--fs-sm);font-weight:700;color:var(--text-2);margin-bottom:var(--sp-2);}
+    .m-title{font-size:var(--fs-md);font-weight:800;margin-bottom:var(--sp-3);line-height:1.3;}
+    .m-img{width:100%;height:200px;object-fit:cover;border-radius:var(--r-lg);margin-bottom:var(--sp-4);}
+    .m-sum{font-size:var(--fs-base);color:var(--text-2);line-height:var(--phi);margin-bottom:var(--sp-4);}
+    .m-frames{margin-bottom:var(--sp-4);}
+    .m-frames-ttl{font-size:var(--fs-sm);font-weight:700;margin-bottom:var(--sp-2);}
+    .m-frames-row{display:flex;gap:var(--sp-2);flex-wrap:wrap;}
+    .m-frame{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);font-size:var(--fs-xs);font-weight:600;border:1px solid;}
+    .m-why{padding:var(--sp-3) var(--sp-4);border-radius:var(--r-lg);
+      background:rgba(0,210,180,0.07);border:1px solid rgba(0,210,180,0.2);}
+    .m-why-ttl{font-size:var(--fs-xs);color:var(--accent);font-weight:700;
+      margin-bottom:var(--sp-2);text-transform:uppercase;letter-spacing:1px;}
+    .m-why-txt{font-size:var(--fs-sm);color:var(--text-2);line-height:var(--phi);}
+    .m-rel{margin-top:var(--sp-3);font-size:var(--fs-xs);color:var(--text-2);}
+
+    /* ── AUTH ── */
+    .auth-view{display:none;align-items:center;justify-content:center;min-height:100vh;padding:var(--sp-7) var(--sp-5);position:relative;z-index:1;}
+    .auth-view.show{display:flex;}
+    .auth-box{width:100%;max-width:420px;}
+    .auth-logo{text-align:center;margin-bottom:var(--sp-5);}
+    .auth-logo-icon{width:56px;height:56px;border-radius:var(--r-lg);background:linear-gradient(135deg,var(--accent),#4f8ef7);display:inline-flex;align-items:center;justify-content:center;font-size:var(--fs-base);font-weight:900;color:#fff;margin-bottom:var(--sp-3);}
+    .auth-logo-title{font-size:var(--fs-lg);font-weight:800;line-height:1.15;}
+    .auth-logo-sub{font-size:var(--fs-sm);color:var(--text-2);margin-top:var(--sp-2);}
+    .auth-tabs{display:flex;border-radius:var(--r-xl) var(--r-xl) 0 0;overflow:hidden;border:1px solid var(--glass-b-2);border-bottom:none;}
+    .auth-tab{flex:1;padding:var(--sp-3);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:none;background:var(--glass-bg);color:var(--text-2);font-family:inherit;transition:all .2s;}
+    .auth-tab.active{background:var(--glass-bg-2);color:var(--accent);}
+    .auth-card{padding:var(--sp-5);border-radius:0 0 var(--r-xl) var(--r-xl);}
+    .auth-field{margin-bottom:var(--sp-3);}
+    .auth-lbl{font-size:var(--fs-xs);color:var(--text-3);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:var(--sp-2);}
+    .auth-input{width:100%;padding:var(--sp-3);background:var(--glass-bg);border:1.5px solid var(--glass-b-2);border-radius:var(--r-lg);color:var(--text-1);font-family:inherit;font-size:var(--fs-base);outline:none;transition:border-color .2s;}
+    .auth-input:focus{border-color:var(--accent);}
+    .auth-err{font-size:var(--fs-xs);color:var(--danger);margin-top:var(--sp-2);min-height:16px;font-weight:600;}
+    .auth-demo{width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--glass-b-2);background:transparent;border-radius:var(--r-lg);color:var(--text-2);font-family:inherit;font-size:var(--fs-sm);cursor:pointer;margin-top:var(--sp-3);transition:all .2s;}
+    .auth-demo:hover{color:var(--accent);border-color:var(--accent);}
+    .nav-user{font-size:var(--fs-xs);padding:3px 10px;border-radius:var(--r-2xl);background:rgba(0,210,180,0.1);color:var(--accent);border:1px solid rgba(0,210,180,0.25);}
+
+    /* ── PREMIUM BANNER ── */
+    .prem-section{margin-top:var(--sp-7);padding:var(--sp-6);background:linear-gradient(135deg,rgba(155,89,182,0.08),rgba(79,142,247,0.06));border:1px solid rgba(155,89,182,0.22);border-radius:var(--r-2xl);}
+    .prem-eye{font-size:var(--fs-xs);color:#9b59b6;text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--sp-2);}
+    .prem-title{font-size:var(--fs-md);font-weight:800;margin-bottom:var(--sp-2);}
+    .prem-sub{font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-5);max-width:540px;line-height:var(--phi);}
+    .prem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-bottom:var(--sp-5);}
+    .prem-feat{padding:var(--sp-4);border-radius:var(--r-xl);background:var(--glass-bg);border:1px solid var(--glass-b);position:relative;opacity:.72;}
+    .prem-lock{position:absolute;top:var(--sp-3);right:var(--sp-3);font-size:var(--fs-sm);}
+    .prem-icon{font-size:26px;margin-bottom:var(--sp-2);}
+    .prem-fname{font-size:var(--fs-sm);font-weight:700;margin-bottom:4px;}
+    .prem-fdesc{font-size:var(--fs-xs);color:var(--text-2);line-height:var(--phi);}
+    .prem-cta{display:inline-flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-6);background:linear-gradient(135deg,#9b59b6,#4f8ef7);border:none;border-radius:var(--r-2xl);color:#fff;font-size:var(--fs-base);font-weight:700;cursor:pointer;font-family:inherit;transition:all .25s;}
+    .prem-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(155,89,182,0.4);}
+    .prem-price{font-size:var(--fs-xs);color:var(--text-2);margin-top:var(--sp-3);}
+
+    /* ── URL INJECTOR ── */
+    .inject-card{padding:var(--sp-4);}
+    .inj-input{width:100%;padding:var(--sp-2) var(--sp-3);background:var(--glass-bg);border:1.5px solid var(--glass-b-2);border-radius:var(--r-lg);color:var(--text-1);font-family:inherit;font-size:var(--fs-sm);outline:none;margin-bottom:var(--sp-2);transition:border-color .2s;}
+    .inj-input:focus{border-color:var(--accent);}
+    .inj-btn{width:100%;padding:var(--sp-2);background:linear-gradient(135deg,var(--accent),#4f8ef7);border:none;border-radius:var(--r-lg);color:#fff;font-size:var(--fs-sm);font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;}
+    .inj-btn:hover{opacity:.85;}
+    .inj-log{font-size:var(--fs-xs);color:var(--text-3);min-height:16px;margin-top:var(--sp-2);}
+
+    /* === EDITORIAL REDESIGN === */
+    :root{
+      --r-lg:8px;--r-xl:13px;--r-2xl:21px;
+      --font-display:"Iowan Old Style","Palatino Linotype","Book Antiqua","URW Palladio L",Georgia,serif;
+      --font-body:"Avenir Next","Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+      --paper:#f4efe4;
+      --paper-strong:#fffdf8;
+      --paper-shadow:#e4dac9;
+      --ink:#1f1a17;
+      --ink-soft:rgba(31,26,23,0.74);
+      --ink-faint:rgba(31,26,23,0.44);
+      --line:rgba(58,45,33,0.12);
+      --line-strong:rgba(58,45,33,0.22);
+      --left:#4e6f93;--left-soft:rgba(78,111,147,0.14);
+      --center:#785989;--center-soft:rgba(120,89,137,0.14);
+      --right:#9c473a;--right-soft:rgba(156,71,58,0.12);
+      --accent:#214f48;--warn:#a56b22;--danger:#8f3f31;--success:#416850;
+      --bg:var(--paper);--bg-2:#eee4d4;--nav-bg:rgba(244,239,228,0.94);
+      --text-1:var(--ink);--text-2:var(--ink-soft);--text-3:var(--ink-faint);
+      --glass-bg:rgba(255,253,248,0.84);--glass-bg-2:rgba(255,253,248,0.97);
+      --glass-b:var(--line);--glass-b-2:var(--line-strong);
+      --shadow:0 18px 42px rgba(68,50,34,0.08);--shadow-lg:0 30px 72px rgba(68,50,34,0.14);
+    }
+    [data-theme="dark"]{
+      --paper:#161210;
+      --paper-strong:#211c18;
+      --paper-shadow:#0f0c0b;
+      --ink:#f3eadb;
+      --ink-soft:rgba(243,234,219,0.74);
+      --ink-faint:rgba(243,234,219,0.44);
+      --line:rgba(243,234,219,0.10);
+      --line-strong:rgba(243,234,219,0.18);
+      --left:#7da1cb;--left-soft:rgba(125,161,203,0.14);
+      --center:#bc99cc;--center-soft:rgba(188,153,204,0.14);
+      --right:#d37e6d;--right-soft:rgba(211,126,109,0.12);
+      --accent:#8dc1b4;--warn:#d0a35d;--danger:#cb7b6d;--success:#8ab897;
+      --bg:var(--paper);--bg-2:#1d1815;--nav-bg:rgba(22,18,16,0.94);
+      --text-1:var(--ink);--text-2:var(--ink-soft);--text-3:var(--ink-faint);
+      --glass-bg:rgba(33,28,24,0.88);--glass-bg-2:rgba(33,28,24,0.96);
+      --glass-b:var(--line);--glass-b-2:var(--line-strong);
+      --shadow:0 18px 42px rgba(0,0,0,0.26);--shadow-lg:0 30px 72px rgba(0,0,0,0.42);
+    }
+    body{
+      font-family:var(--font-body);
+      background:
+        radial-gradient(circle at top right, rgba(33,79,72,0.08), transparent 32%),
+        radial-gradient(circle at bottom left, rgba(78,111,147,0.07), transparent 36%),
+        var(--bg);
+      color:var(--text-1);
+    }
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.24), transparent 18%),
+        repeating-linear-gradient(90deg,
+          transparent 0,
+          transparent 104px,
+          rgba(58,45,33,0.026) 104px,
+          rgba(58,45,33,0.026) 105px);
+      opacity:.75;
+      mix-blend-mode:multiply;
+    }
+    body::after{
+      content:'';
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:linear-gradient(180deg, transparent 0%, rgba(58,45,33,0.02) 100%);
+    }
+    .bg-orbs{display:none;}
+    .glass,.glass-2{
+      background:linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)), var(--glass-bg-2);
+      border:1px solid var(--glass-b);
+      box-shadow:var(--shadow);
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+    }
+    nav{
+      padding:var(--sp-4) var(--sp-5) var(--sp-3);
+      align-items:flex-end;
+      background:var(--nav-bg);
+      border-top:1px solid var(--glass-b-2);
+      border-bottom:3px double var(--glass-b-2);
+      box-shadow:0 10px 28px rgba(68,50,34,0.08);
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+    }
+    .nav-logo{
+      gap:var(--sp-3);
+      font-family:var(--font-display);
+      font-size:var(--fs-md);
+      font-weight:700;
+      letter-spacing:-0.03em;
+    }
+    .nav-logo-icon{
+      border-radius:var(--r-lg);
+      background:var(--ink);
+      border:1px solid var(--glass-b-2);
+      color:var(--paper-strong);
+      font-family:var(--font-body);
+    }
+    .nav-tabs{
+      gap:var(--sp-4);
+      margin-left:var(--sp-5);
+    }
+    .nav-tab{
+      padding:0 0 var(--sp-2);
+      border-radius:0;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      border-bottom:2px solid transparent;
+    }
+    .nav-tab:hover,.nav-tab.active{
+      color:var(--accent);
+      background:transparent;
+      border-bottom-color:currentColor;
+    }
+    .nav-edition{
+      margin-left:auto;
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--text-3);
+      white-space:nowrap;
+    }
+    .nav-right{
+      margin-left:0;
+      gap:var(--sp-2);
+    }
+    .theme-btn{
+      width:36px;
+      height:36px;
+      border-radius:999px;
+      background:var(--paper-strong);
+      border:1px solid var(--glass-b);
+      box-shadow:none;
+    }
+    .theme-btn:hover{
+      background:var(--glass-bg-2);
+      border-color:var(--glass-b-2);
+    }
+    .nav-user{
+      padding:0;
+      border:none;
+      border-radius:0;
+      background:transparent;
+      color:var(--accent);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .wrap{
+      max-width:1320px;
+      padding:0 var(--sp-5);
+    }
+    .page{
+      padding-top:88px;
+    }
+    .content{
+      padding:var(--sp-6) 0 var(--sp-7);
+    }
+    .ph{
+      margin-bottom:var(--sp-5);
+      padding:var(--sp-4) 0 var(--sp-5);
+      border-top:1px solid var(--glass-b);
+      border-bottom:3px double var(--glass-b);
+      align-items:end;
+    }
+    .page-kicker,.c-eye,.t-eye,.ob-eye,.prem-eye{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      font-weight:700;
+    }
+    .page-title,.auth-logo-title,.ob-title,.t-title,.prem-title,.m-title,.fc-title,.s-title,.c-title{
+      font-family:var(--font-display);
+      letter-spacing:-0.03em;
+    }
+    .page-title{
+      font-size:clamp(42px,5vw,72px);
+      line-height:.98;
+      max-width:10ch;
+    }
+    .page-sub{
+      margin-top:var(--sp-3);
+      max-width:56ch;
+      font-size:18px;
+      color:var(--text-2);
+    }
+    .c-title{
+      font-size:28px;
+      line-height:1.08;
+    }
+    .c-sub,.s-sub,.mf-text,.m-sum,.why-txt,.fc-sum,.sl-desc,.mi-desc,.prem-fdesc,.gap-saw,.ob-sub,.auth-logo-sub,.auth-editorial-sub{
+      font-size:15px;
+      line-height:1.7;
+      color:var(--text-2);
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(92px,1fr));
+      gap:var(--sp-4);
+      min-width:min(100%,360px);
+      padding-left:var(--sp-5);
+      border-left:1px solid var(--glass-b);
+    }
+    .stat-val{
+      font-family:var(--font-display);
+      font-size:var(--fs-lg);
+      line-height:1;
+      color:var(--ink);
+    }
+    .stat-lbl{
+      margin-top:6px;
+      color:var(--text-3);
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .dash-r1,.dash-r2,.feed-layout{
+      gap:var(--sp-4);
+    }
+    .vp-card,.gap-card,.echo-card,.recent-card,.sliders-card,.inject-card,.prem-section,.auth-editorial,.auth-card,.ob-card,.ob-gen,.gap-col,.miss-card,.tl-detail,.modal-box,.p-col{
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0)),
+        var(--glass-bg-2);
+      border:1px solid var(--glass-b);
+      box-shadow:var(--shadow);
+    }
+    .vp-card::before,.gap-card::before,.echo-card::before,.recent-card::before,.sliders-card::before,.inject-card::before,.prem-section::before,.auth-editorial::before,.auth-card::before,.ob-card::before,.ob-gen::before,.gap-col::before,.miss-card::before,.tl-detail::before,.modal-box::before{
+      content:'';
+      position:absolute;
+      inset:0 0 auto 0;
+      height:4px;
+      background:linear-gradient(90deg, var(--accent), transparent 72%);
+      opacity:.5;
+      pointer-events:none;
+    }
+    .radar-wrap{
+      max-width:420px;
+      padding:var(--sp-3);
+      border-radius:var(--r-xl);
+      background:linear-gradient(180deg, rgba(33,79,72,0.06), transparent 70%);
+      border:1px solid var(--glass-b);
+    }
+    .radar-legend{
+      justify-content:flex-start;
+      gap:var(--sp-4);
+    }
+    .domain-chips{
+      gap:var(--sp-2);
+    }
+    .d-chip,.thin-b,.tag,.lb,.a-frame,.tl-src,.why-chip{
+      border-radius:999px;
+    }
+    .d-chip{
+      font-size:11px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      padding:6px 11px;
+    }
+    .gap-card,.echo-card,.recent-card,.sliders-card,.inject-card,.vp-card{
+      padding:var(--sp-5);
+    }
+    .gap-story,.echo-row,.r-art,.gap-src-row{
+      border-color:var(--glass-b);
+    }
+    .gap-ttl,.r-ttl,.tl-d-title,.m-title{
+      line-height:1.18;
+    }
+    .gap-ttl,.r-ttl{
+      font-family:var(--font-display);
+      font-size:24px;
+      font-weight:700;
+    }
+    .gap-topic,.r-outlet,.outlet-name,.a-outlet,.m-outlet,.topic-chips .t-chip,.col-cnt,.tl-date,.mf-cite{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .gc{
+      background:rgba(156,71,58,0.08);
+      border-color:rgba(156,71,58,0.22);
+      color:var(--right);
+    }
+    .echo-big{
+      font-family:var(--font-display);
+      font-size:72px;
+      margin:var(--sp-2) 0 var(--sp-3);
+      color:var(--ink);
+    }
+    .echo-track,.echo-bar,.bias-track,input[type=range]{
+      background:rgba(58,45,33,0.12);
+    }
+    .r-art{
+      align-items:flex-start;
+      padding:var(--sp-4) 0;
+    }
+    .r-art:hover{
+      padding-left:var(--sp-2);
+    }
+    .r-img{
+      width:108px;
+      height:82px;
+      border-radius:var(--r-lg);
+      border:1px solid var(--glass-b);
+    }
+    .why-chip,.why-panel,.m-why,.mode-desc-bar{
+      background:rgba(33,79,72,0.06);
+      border-color:rgba(33,79,72,0.18);
+      color:var(--accent);
+    }
+    .mf{
+      margin-top:var(--sp-6);
+      padding-top:var(--sp-5);
+      border-top:3px double var(--glass-b);
+    }
+    .mf-title{
+      font-family:var(--font-display);
+      font-size:21px;
+      color:var(--ink);
+    }
+    .mf-cite{
+      color:var(--text-3);
+      font-style:normal;
+    }
+    .prem-section{
+      margin-top:var(--sp-7);
+      padding:var(--sp-6);
+      background:
+        linear-gradient(135deg, rgba(33,79,72,0.08), rgba(156,71,58,0.03)),
+        var(--glass-bg-2);
+      border-color:var(--glass-b-2);
+    }
+    .prem-title{
+      font-size:42px;
+      max-width:14ch;
+      line-height:1.02;
+      margin-bottom:var(--sp-3);
+    }
+    .prem-sub{
+      max-width:62ch;
+    }
+    .prem-grid{
+      gap:var(--sp-4);
+    }
+    .prem-feat{
+      background:rgba(255,255,255,0.32);
+      opacity:1;
+      border-style:dashed;
+    }
+    .prem-fname{
+      font-family:var(--font-display);
+      font-size:21px;
+      line-height:1.1;
+    }
+    .prem-cta,.ob-btn,.inj-btn{
+      border-radius:999px;
+      background:var(--ink);
+      color:var(--paper-strong);
+      box-shadow:none;
+    }
+    .prem-cta:hover,.ob-btn:hover,.inj-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 24px rgba(31,26,23,0.16);
+    }
+    .prem-price{
+      color:var(--text-3);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .feed-modes,.topic-chips{
+      gap:var(--sp-3);
+    }
+    .mode-chip,.t-chip{
+      padding:8px 0;
+      border:none;
+      border-bottom:2px solid transparent;
+      border-radius:0;
+      background:transparent;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--text-2);
+    }
+    .mode-chip:hover,.t-chip:hover,.mode-chip.active,.t-chip.active{
+      color:var(--accent);
+      background:transparent;
+      border-bottom-color:currentColor;
+    }
+    .mode-desc-bar{
+      margin-bottom:var(--sp-5);
+      padding:var(--sp-3) var(--sp-4);
+      border-radius:var(--r-xl);
+    }
+    .fc{
+      padding:var(--sp-5);
+      border-radius:var(--r-2xl);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0)),
+        var(--glass-bg-2);
+      border:1px solid var(--glass-b);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .fc::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:4px;
+      background:linear-gradient(90deg, var(--accent), transparent 72%);
+      opacity:.5;
+    }
+    .fc-head{
+      display:grid;
+      grid-template-columns:180px 1fr;
+      gap:var(--sp-4);
+      align-items:start;
+    }
+    .fc-img{
+      width:100%;
+      height:132px;
+      border-radius:var(--r-lg);
+      border:1px solid var(--glass-b);
+    }
+    .fc-title{
+      font-size:32px;
+      line-height:1.02;
+      margin-bottom:var(--sp-3);
+      max-width:18ch;
+    }
+    .feed-list .fc:first-child .fc-head{
+      grid-template-columns:1fr;
+    }
+    .feed-list .fc:first-child .fc-img{
+      height:264px;
+      margin-bottom:var(--sp-2);
+    }
+    .feed-list .fc:not(:first-child) .fc-title{
+      font-size:24px;
+      max-width:24ch;
+    }
+    .fc-outlet-row{
+      margin-bottom:var(--sp-2);
+    }
+    .outlet-name{
+      color:var(--ink);
+    }
+    .lb{
+      padding:3px 8px;
+    }
+    .fc-tags{
+      gap:8px;
+    }
+    .tag{
+      background:rgba(58,45,33,0.05);
+      border-color:var(--glass-b);
+      color:var(--text-2);
+      padding:4px 10px;
+    }
+    .sliders-card{
+      top:108px;
+    }
+    .sl-lbl,.gap-col-ttl,.miss-ttl,.m-frames-ttl,.why-lbl,.m-why-ttl,.auth-lbl{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .reset-btn,.auth-demo{
+      border-radius:999px;
+      background:transparent;
+      border:1px solid var(--glass-b-2);
+    }
+    .reset-btn:hover,.auth-demo:hover{
+      border-color:var(--accent);
+      color:var(--accent);
+    }
+    .inj-input,.auth-input,#api-key-input{
+      background:rgba(255,255,255,0.5);
+      border-color:var(--glass-b-2);
+      border-radius:var(--r-xl);
+      font-family:var(--font-body);
+    }
+    [data-theme="dark"] .inj-input,[data-theme="dark"] .auth-input,[data-theme="dark"] #api-key-input{
+      background:rgba(255,255,255,0.04);
+    }
+    .topic-chips{
+      margin-bottom:var(--sp-5);
+    }
+    .t-head{
+      margin-bottom:var(--sp-5);
+      padding:0 0 var(--sp-4);
+      border-bottom:3px double var(--glass-b);
+    }
+    .t-title{
+      font-size:clamp(42px,5vw,68px);
+      line-height:.98;
+      max-width:14ch;
+      margin-bottom:var(--sp-4);
+    }
+    .t-meta{
+      gap:var(--sp-3);
+      font-size:14px;
+    }
+    .p-grid{
+      gap:var(--sp-4);
+    }
+    .p-col{
+      padding:var(--sp-4);
+      border-radius:var(--r-xl);
+      gap:0;
+    }
+    .col-hd{
+      border-bottom:1px solid var(--glass-b);
+      margin-bottom:0;
+      padding-bottom:var(--sp-3);
+    }
+    .col-ttl{
+      font-family:var(--font-display);
+      font-size:24px;
+      line-height:1.06;
+    }
+    .a-card{
+      padding:var(--sp-4) 0 0;
+      border:none;
+      border-top:1px solid var(--glass-b);
+      background:transparent;
+      border-radius:0;
+      box-shadow:none;
+      margin-top:var(--sp-4);
+    }
+    .a-card:first-of-type{
+      margin-top:0;
+      padding-top:0;
+      border-top:none;
+    }
+    .a-card:hover{
+      transform:none;
+      box-shadow:none;
+    }
+    .a-img{
+      height:136px;
+      border-radius:var(--r-lg);
+      border:1px solid var(--glass-b);
+    }
+    .a-ttl{
+      font-family:var(--font-display);
+      font-size:24px;
+      line-height:1.12;
+      margin:8px 0 var(--sp-2);
+    }
+    .gap-cmp{
+      gap:var(--sp-4);
+    }
+    .miss-item{
+      background:rgba(156,71,58,0.06);
+      border-color:rgba(156,71,58,0.18);
+      border-radius:var(--r-xl);
+    }
+    .tl-track{
+      gap:var(--sp-3);
+      padding-bottom:var(--sp-4);
+    }
+    .tl-ev{
+      max-width:176px;
+      min-width:152px;
+      border-radius:var(--r-xl);
+      background:var(--paper-strong);
+      border:1px solid var(--glass-b);
+    }
+    .tl-ev:hover,.tl-ev.active{
+      border-color:var(--accent);
+      background:rgba(33,79,72,0.06);
+    }
+    .tl-date{
+      color:var(--accent);
+    }
+    .modal-ov{
+      background:rgba(28,22,18,0.36);
+      backdrop-filter:blur(6px);
+    }
+    .modal-close{
+      background:var(--paper-strong);
+      border:1px solid var(--glass-b);
+    }
+    .auth-view{
+      padding:var(--sp-7) var(--sp-5) var(--sp-6);
+    }
+    .auth-box{
+      max-width:1180px;
+      display:grid;
+      grid-template-columns:1.618fr 1fr;
+      gap:var(--sp-5);
+      align-items:stretch;
+    }
+    .auth-editorial{
+      padding:var(--sp-6);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:560px;
+    }
+    .auth-edition{
+      margin-bottom:var(--sp-4);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .auth-editorial-title{
+      font-family:var(--font-display);
+      font-size:clamp(46px,6vw,76px);
+      line-height:.98;
+      letter-spacing:-0.04em;
+      max-width:10ch;
+    }
+    .auth-editorial-sub{
+      margin-top:var(--sp-4);
+      max-width:38ch;
+      font-size:18px;
+    }
+    .auth-editorial-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:var(--sp-4);
+      margin-top:var(--sp-6);
+    }
+    .auth-note{
+      padding-top:var(--sp-3);
+      border-top:1px solid var(--glass-b);
+    }
+    .auth-note-kicker{
+      display:block;
+      margin-bottom:var(--sp-2);
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--text-3);
+    }
+    .auth-note-title{
+      font-family:var(--font-display);
+      font-size:24px;
+      line-height:1.08;
+    }
+    .auth-note-text{
+      margin-top:var(--sp-2);
+      font-size:14px;
+      line-height:1.6;
+      color:var(--text-2);
+    }
+    .auth-panel{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .auth-logo{
+      text-align:left;
+      margin-bottom:var(--sp-4);
+    }
+    .auth-logo-icon{
+      border-radius:var(--r-lg);
+      background:var(--ink);
+      margin-bottom:var(--sp-4);
+    }
+    .auth-logo-title{
+      font-size:42px;
+      line-height:1.02;
+    }
+    .auth-logo-sub{
+      max-width:24ch;
+      margin-top:var(--sp-3);
+    }
+    .auth-tabs{
+      border-radius:var(--r-xl) var(--r-xl) 0 0;
+      background:var(--paper-strong);
+      border-color:var(--glass-b);
+    }
+    .auth-tab{
+      background:transparent;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .auth-tab.active{
+      color:var(--accent);
+      background:rgba(33,79,72,0.05);
+    }
+    .auth-card{
+      padding:var(--sp-5);
+      border-radius:0 0 var(--r-xl) var(--r-xl);
+    }
+    #ob-view{
+      align-items:flex-start;
+      padding:calc(var(--sp-7) + 20px) var(--sp-5) var(--sp-6);
+    }
+    .ob-shell{
+      max-width:1080px;
+    }
+    .ob-progress{
+      justify-content:flex-start;
+      margin-bottom:var(--sp-4);
+    }
+    .ob-dot{
+      height:5px;
+    }
+    .ob-card,.ob-gen{
+      padding:var(--sp-6);
+      text-align:left;
+    }
+    .ob-title{
+      max-width:11ch;
+      font-family:var(--font-display);
+      font-size:clamp(42px,5vw,68px);
+      line-height:.98;
+    }
+    .ob-sub{
+      max-width:52ch;
+      margin-inline:0;
+      margin-bottom:var(--sp-5);
+    }
+    .ob-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:var(--sp-4);
+    }
+    .src-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:var(--sp-3);
+    }
+    .ob-item,.src-item{
+      border-radius:var(--r-xl);
+      background:var(--paper-strong);
+      border:1px solid var(--glass-b);
+      box-shadow:none;
+      padding:var(--sp-4);
+      text-align:left;
+    }
+    .ob-item:hover,.src-item:hover{
+      transform:translateY(-3px);
+      border-color:var(--accent);
+      background:rgba(33,79,72,0.05);
+    }
+    .ob-item.sel,.src-item.sel{
+      background:rgba(33,79,72,0.08);
+      border-color:var(--accent);
+    }
+    .ob-item.sel::after{
+      top:13px;
+      right:13px;
+    }
+    .ob-icon{
+      margin-bottom:var(--sp-3);
+    }
+    .ob-lbl,.src-name{
+      font-family:var(--font-display);
+      font-size:24px;
+      line-height:1.1;
+    }
+    .gen-log{
+      max-width:520px;
+      margin:0;
+    }
+    @media (max-width:1200px){
+      .auth-box{
+        grid-template-columns:1fr;
+      }
+      .auth-editorial{
+        min-height:auto;
+      }
+      .auth-editorial-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+      .dash-r1,.dash-r2,.feed-layout{
+        grid-template-columns:1fr;
+      }
+      .sliders-card{
+        position:static;
+      }
+      .p-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    @media (max-width:900px){
+      nav{
+        flex-wrap:wrap;
+        align-items:center;
+      }
+      .nav-tabs{
+        order:3;
+        width:100%;
+        margin-left:0;
+        justify-content:flex-start;
+      }
+      .nav-edition{
+        order:2;
+        margin-left:auto;
+      }
+      .auth-editorial-grid,.prem-grid,.mf-grid,.gap-cmp,.ob-grid,.src-grid{
+        grid-template-columns:1fr 1fr;
+      }
+      .stats{
+        width:100%;
+        padding-left:0;
+        padding-top:var(--sp-4);
+        border-left:none;
+        border-top:1px solid var(--glass-b);
+      }
+      .fc-head{
+        grid-template-columns:1fr;
+      }
+      .fc-img,.feed-list .fc:first-child .fc-img{
+        height:220px;
+      }
+    }
+    @media (max-width:680px){
+      nav,.wrap,.auth-view,#ob-view{
+        padding-left:var(--sp-4);
+        padding-right:var(--sp-4);
+      }
+      .nav-edition{
+        width:100%;
+        margin-left:0;
+        text-align:left;
+      }
+      .page{
+        padding-top:124px;
+      }
+      .page-title,.t-title,.ob-title,.auth-editorial-title{
+        max-width:none;
+      }
+      .page-title{
+        font-size:46px;
+      }
+      .page-sub{
+        max-width:none;
+      }
+      .auth-editorial-grid,.prem-grid,.mf-grid,.gap-cmp,.ob-grid,.src-grid,.stats{
+        grid-template-columns:1fr;
+      }
+      .ph{
+        flex-direction:column;
+        align-items:flex-start;
+        padding-top:var(--sp-3);
+      }
+      .stats{
+        width:100%;
+      }
+      .fc,.vp-card,.gap-card,.echo-card,.recent-card,.sliders-card,.inject-card,.prem-section,.auth-editorial,.auth-card,.ob-card,.ob-gen,.p-col{
+        padding:var(--sp-4);
+      }
+      .echo-big{
+        font-size:56px;
+      }
+      .radar-wrap{
+        max-width:none;
+      }
+      .feed-modes,.topic-chips{
+        gap:var(--sp-2);
+      }
+      .mode-chip,.t-chip,.nav-tab{
+        font-size:10px;
+        letter-spacing:.12em;
+      }
+      .fc-title{
+        font-size:28px;
+      }
+      .feed-list .fc:not(:first-child) .fc-title,.a-ttl,.gap-ttl,.r-ttl,.col-ttl,.auth-note-title{
+        font-size:22px;
+      }
+      .r-art{
+        flex-direction:column;
+      }
+      .r-img{
+        width:100%;
+        height:180px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-orbs"></div>
+
+<!-- NAV -->
+<nav id="main-nav" style="display:none">
+  <div class="nav-logo" onclick="go('dash')">
+    <div class="nav-logo-icon">VA</div>
+    Viewpoint<em>Atlas</em>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-view="dash" onclick="go('dash')">Dashboard</button>
+    <button class="nav-tab" data-view="feed" onclick="go('feed')">My Feed</button>
+    <button class="nav-tab" data-view="topics" onclick="go('topics')">Topics</button>
+  </div>
+  <div class="nav-edition" id="nav-edition"></div>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user" style="display:none"></span>
+    <button class="theme-btn" id="apiBtn" onclick="openSettings()" title="Live News Settings" style="font-size:13px">⚙</button>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    <button class="theme-btn" id="logoutBtn" onclick="doLogout()" title="Sign out" style="display:none;font-size:11px" title="Sign out">⏏</button>
+  </div>
+</nav>
+
+<!-- AUTH -->
+<div class="auth-view" id="auth-view">
+  <div class="auth-box">
+    <div class="auth-editorial glass">
+      <div>
+        <div class="auth-edition" id="auth-edition"></div>
+        <div class="auth-editorial-title">Read your reading habits like the front page.</div>
+        <div class="auth-editorial-sub">Viewpoint Atlas turns your media diet into an edition: what led, what repeated, and which voices never made it above the fold.</div>
+      </div>
+      <div class="auth-editorial-grid">
+        <div class="auth-note">
+          <span class="auth-note-kicker">Lead Story</span>
+          <div class="auth-note-title">Coverage gaps</div>
+          <div class="auth-note-text">See which perspectives never reached your daily stack, not just which outlets you already trust.</div>
+        </div>
+        <div class="auth-note">
+          <span class="auth-note-kicker">Analysis</span>
+          <div class="auth-note-title">Bias by beat</div>
+          <div class="auth-note-text">Your politics are not one-dimensional. The atlas tracks ideology separately across each topic you actually follow.</div>
+        </div>
+        <div class="auth-note">
+          <span class="auth-note-kicker">Late Edition</span>
+          <div class="auth-note-title">Explain the ranking</div>
+          <div class="auth-note-text">Every recommendation arrives with a short editorial note about why it deserves space in your feed.</div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-panel">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">VA</div>
+        <div class="auth-logo-title">Viewpoint<span style="color:var(--accent)">Atlas</span></div>
+        <div class="auth-logo-sub">An editorial dashboard for your media diet.</div>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+      <div class="glass-2 auth-card">
+        <!-- LOGIN -->
+        <div id="auth-login-form">
+          <div class="auth-field">
+            <label class="auth-lbl">Username</label>
+            <input class="auth-input" id="login-user" type="text" placeholder="your username" autocomplete="username">
+          </div>
+          <div class="auth-field">
+            <label class="auth-lbl">Password</label>
+            <input class="auth-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+          </div>
+          <div class="auth-err" id="login-err"></div>
+          <button class="ob-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
+          <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
+        </div>
+        <!-- SIGNUP -->
+        <div id="auth-signup-form" style="display:none">
+          <div class="auth-field">
+            <label class="auth-lbl">Username</label>
+            <input class="auth-input" id="signup-user" type="text" placeholder="choose a username" autocomplete="username">
+          </div>
+          <div class="auth-field">
+            <label class="auth-lbl">Email</label>
+            <input class="auth-input" id="signup-email" type="email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="auth-field">
+            <label class="auth-lbl">Password</label>
+            <input class="auth-input" id="signup-pass" type="password" placeholder="min 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()">
+          </div>
+          <div class="auth-err" id="signup-err"></div>
+          <button class="ob-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
+          <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="ob-view" style="display:none">
+  <div class="ob-shell">
+    <div class="ob-progress" id="ob-prog">
+      <div class="ob-dot active"></div><div class="ob-dot pending"></div><div class="ob-dot pending"></div>
+    </div>
+    <div id="ob-s1" class="ob-card glass-2">
+      <div class="ob-eye">Step 1 of 3 · Viewpoint Atlas</div>
+      <div class="ob-title">What topics matter to you?</div>
+      <div class="ob-sub">Pick the domains you follow. We'll map your viewpoint exposure per domain — because most people aren't ideologically consistent across topics.</div>
+      <div class="ob-grid" id="ob-topics"></div>
+      <button class="ob-btn" id="ob-btn1" onclick="ob2()" disabled>Continue →</button>
+    </div>
+    <div id="ob-s2" class="ob-card glass-2" style="display:none">
+      <div class="ob-eye">Step 2 of 3 · Source Calibration</div>
+      <div class="ob-title">Which outlets do you usually read?</div>
+      <div class="ob-sub">Select all you visit at least monthly. We use this to calibrate your starting position — not to judge. Scores update as you read.</div>
+      <div class="src-grid" id="ob-srcs"></div>
+      <button class="ob-btn" onclick="ob3()">Build My Atlas →</button>
+    </div>
+    <div id="ob-s3" class="ob-gen glass-2" style="display:none">
+      <div class="ob-eye">Calibrating your media atlas...</div>
+      <div class="gen-ring">
+        <div class="gen-pulse"></div><div class="gen-pulse"></div><div class="gen-pulse"></div>
+      </div>
+      <div class="gen-log" id="ob-log"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP (post-onboarding) -->
+<div id="app" style="display:none">
+
+  <!-- DASHBOARD -->
+  <div id="v-dash" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph">
+        <div>
+          <div class="page-kicker">Personal Edition · Prepared for <span id="hero-user">Researcher</span></div>
+          <div class="page-title">Your Viewpoint Atlas</div>
+          <div class="page-sub">Media diet across 6 domains · 14-day snapshot</div>
+        </div>
+        <div class="stats">
+          <div><div class="stat-val">247</div><div class="stat-lbl">Articles Read</div></div>
+          <div><div class="stat-val">23</div><div class="stat-lbl">Outlets</div></div>
+          <div><div class="stat-val" style="color:var(--warn)">62%</div><div class="stat-lbl">Echo Score</div></div>
+        </div>
+      </div>
+
+      <!-- Row 1: Radar + Gaps -->
+      <div class="dash-r1">
+        <div class="glass vp-card">
+          <div class="c-eye">Personal Viewpoint Map</div>
+          <div class="c-title">Your Ideological Footprint by Domain</div>
+          <div class="c-sub">Each axis = your lean for that topic. Shaded band = confidence interval. Dashed axis = insufficient data (&lt;15 articles).</div>
+          <div class="radar-wrap"><svg id="radarSvg" viewBox="0 0 400 400" width="100%" height="100%"></svg></div>
+          <div class="radar-legend">
+            <div class="rl-item"><div class="rl-dot" style="background:var(--accent)"></div>Your Position</div>
+            <div class="rl-item"><div class="rl-dot" style="background:rgba(0,210,180,0.3)"></div>Confidence Band</div>
+            <div class="rl-item"><div class="rl-dot" style="background:var(--text-3)"></div>Data Too Thin</div>
+          </div>
+          <div class="domain-chips" id="domain-chips"></div>
+        </div>
+        <div class="glass gap-card">
+          <div class="c-eye">Coverage Gap Scanner</div>
+          <div class="c-title">What You Missed This Week</div>
+          <div style="font-size:var(--fs-xs);color:var(--text-2);margin-bottom:var(--sp-3)">Perspectives absent from your reading on stories you follow</div>
+          <div id="gap-list"></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Echo + Recent -->
+      <div class="dash-r2">
+        <div class="glass echo-card">
+          <div class="c-eye">Echo Chamber Score</div>
+          <div class="c-title">By Domain</div>
+          <div class="echo-big" style="color:var(--warn)">62%</div>
+          <div class="echo-track"><div class="echo-fill" style="width:62%"></div></div>
+          <div style="font-size:var(--fs-xs);color:var(--text-2);margin-bottom:var(--sp-3)">
+            Moderate echo. Low diversity in 3 of 6 domains.<br>Score = 1 − Shannon entropy of viewpoint distribution.
+          </div>
+          <div class="echo-rows" id="echo-rows"></div>
+        </div>
+        <div class="glass recent-card">
+          <div class="c-eye">Recent Reads</div>
+          <div class="c-title">With Recommendation Explainers</div>
+          <div id="recent-list"></div>
+        </div>
+      </div>
+
+      <!-- Methodology -->
+      <div class="mf">
+        <div class="mf-grid">
+          <div>
+            <div class="mf-title">Viewpoint Scoring</div>
+            <div class="mf-text">Per-domain scores are weighted averages of outlet bias ratings (AllSides, Ad Fontes Media), adjusted for reading recency and depth. Confidence bands use Wilson score interval; domains with &lt;15 articles show "data too thin."</div>
+            <div class="mf-cite">Bakshy et al. (2015); Guess et al. (2023)</div>
+          </div>
+          <div>
+            <div class="mf-title">Echo Chamber Metric</div>
+            <div class="mf-text">Echo score = 1 − normalized Shannon entropy of viewpoint distribution per domain. Range 0–100%: 0% = perfectly balanced; 100% = single-viewpoint diet. Domains weighted by article count in composite.</div>
+            <div class="mf-cite">Cinelli et al. (2021, PNAS); Bail et al. (2018)</div>
+          </div>
+          <div>
+            <div class="mf-title">Coverage Gap Detection</div>
+            <div class="mf-text">Gaps identified by comparing your source cluster against a reference corpus by outlet category: wire, local, labor, expert, foreign-language, advocacy. Missing categories surface as personal gaps — not generic recommendations.</div>
+            <div class="mf-cite">Robertson et al. (2023, UW); Altay et al. (2022)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM BANNER -->
+      <div class="prem-section">
+        <div class="prem-eye">Atlas Pro · Unlock Full Intelligence</div>
+        <div class="prem-title">Seven features that turn reading into understanding</div>
+        <div class="prem-sub">The free tier gives you your viewpoint map, coverage gaps, and a curated feed. Atlas Pro adds the behavioral layer — tracking how your media diet changes you over time.</div>
+        <div class="prem-grid">
+          <div class="prem-feat glass">
+            <div class="prem-lock">🔒</div>
+            <div class="prem-icon">🌡</div>
+            <div class="prem-fname">Emotional Temperature</div>
+            <div class="prem-fdesc">Track outrage, fear, and threat-framing in your feed. Reduce emotional intensity without losing the topic.</div>
+          </div>
+          <div class="prem-feat glass">
+            <div class="prem-lock">🔒</div>
+            <div class="prem-icon">📅</div>
+            <div class="prem-fname">Timeline Drift Tracker</div>
+            <div class="prem-fdesc">See how your media diet shifts week by week — not "you became biased" but "your Ukraine reading narrowed to two source families."</div>
+          </div>
+          <div class="prem-feat glass">
+            <div class="prem-lock">🔒</div>
+            <div class="prem-icon">🧬</div>
+            <div class="prem-fname">Source Genome Cards</div>
+            <div class="prem-fdesc">Full outlet profiles: ownership, country, audience, format mix, topic strengths, ideological tendency, and reliability inputs.</div>
+          </div>
+          <div class="prem-feat glass">
+            <div class="prem-lock">🔒</div>
+            <div class="prem-icon">🗺</div>
+            <div class="prem-fname">Atlas World Map</div>
+            <div class="prem-fdesc">The same story through national, regional, local, wire, and independent source layers — across every continent.</div>
+          </div>
+          <div class="prem-feat glass">
+            <div class="prem-lock">🔒</div>
+            <div class="prem-icon">📔</div>
+            <div class="prem-fname">Belief Audit Journal</div>
+            <div class="prem-fdesc">After reading a story package, record what you think happened, what's uncertain, and what would change your mind. Revisited a week later.</div>
+          </div>
+          <div class="prem-feat glass">
+            <div class="prem-lock">🔒</div>
+            <div class="prem-icon">📊</div>
+            <div class="prem-fname">Weekly Media Diet Report</div>
+            <div class="prem-fdesc">Topics you dominated, viewpoints you overconsumed, where your confidence exceeded your evidence — shareable, habit-forming.</div>
+          </div>
+        </div>
+        <button class="prem-cta" onclick="showToast('Atlas Pro is coming soon. Join the waitlist at viewpointatlas.com')">Upgrade to Atlas Pro →</button>
+        <div class="prem-price">$8 / month · φ-ratio pricing · cancel any time</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FEED -->
+  <div id="v-feed" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph" style="padding-bottom:var(--sp-3)">
+        <div>
+          <div class="c-eye">The Reading Desk</div>
+          <div class="page-title">My Feed</div>
+          <div class="page-sub">Ranked by your slider settings · Each card includes a recommendation explainer</div>
+        </div>
+      </div>
+      <div class="feed-modes" id="feed-modes"></div>
+      <div class="mode-desc-bar" id="mode-desc"></div>
+      <div class="feed-layout">
+        <div class="feed-list" id="feed-list"></div>
+        <div>
+          <div class="glass sliders-card">
+            <div class="c-eye">Rerank Controls</div>
+            <div class="c-title" style="margin-bottom:var(--sp-3)">Shape Your Algorithm</div>
+            <div id="slider-groups"></div>
+            <button class="reset-btn" onclick="resetSliders()">↺ Reset to defaults</button>
+          </div>
+          <div class="glass inject-card" style="margin-top:var(--sp-4)">
+            <div class="c-eye">Article Injector</div>
+            <div class="c-title" style="margin-bottom:var(--sp-2)">Inject Any URL</div>
+            <div style="font-size:var(--fs-xs);color:var(--text-2);margin-bottom:var(--sp-3);line-height:var(--phi)">Paste any news article URL — we detect the outlet's bias, score its reliability, and inject it into your feed.</div>
+            <input class="inj-input" id="inj-url" type="url" placeholder="https://nytimes.com/..." onkeydown="if(event.key==='Enter')injectUrl()">
+            <button class="inj-btn" onclick="injectUrl()">Analyze &amp; Inject →</button>
+            <div class="inj-log" id="inj-log"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPICS -->
+  <div id="v-topics" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph" style="padding-bottom:var(--sp-3)">
+        <div>
+          <div class="c-eye">Comparative Coverage</div>
+          <div class="page-title">Stories by Perspective</div>
+          <div class="page-sub">Left · Center · Right columns + your personal coverage gap + story timeline</div>
+        </div>
+      </div>
+      <div class="topic-chips" id="topic-chips"></div>
+      <div id="topic-content"></div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ARTICLE MODAL -->
+<div class="modal-ov" id="modal" onclick="closeModal(event)">
+  <div class="modal-box glass-2" id="modal-body"></div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-ov" id="settings-modal" onclick="closeSettings(event)">
+  <div class="modal-box glass-2" style="max-width:480px">
+    <button class="modal-close" onclick="closeSettings()">✕</button>
+    <div class="m-title" style="margin-bottom:var(--sp-3)">Live News Settings</div>
+    <p style="font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-4);line-height:var(--phi)">Paste a free <strong style="color:var(--text-1)">NewsAPI.org</strong> key to load real headlines in the Feed. Requires serving from <code style="color:var(--accent)">localhost</code> — run <code style="color:var(--accent)">python3 -m http.server</code> in the project folder.</p>
+    <label style="font-size:var(--fs-xs);color:var(--text-3);display:block;margin-bottom:var(--sp-2);text-transform:uppercase;letter-spacing:1px">NewsAPI Key</label>
+    <input id="api-key-input" type="text" placeholder="e.g. a1b2c3d4e5f6..." autocomplete="off"
+      style="width:100%;padding:var(--sp-3);background:var(--glass-bg);border:1.5px solid var(--glass-b-2);border-radius:var(--r-lg);color:var(--text-1);font-family:inherit;font-size:var(--fs-sm);outline:none;margin-bottom:var(--sp-3);transition:border-color .2s"
+      onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--glass-b-2)'">
+    <button onclick="saveApiKey()" class="ob-btn" style="width:100%;margin-bottom:var(--sp-3)">Save &amp; Enable Live News</button>
+    <div id="api-status" style="font-size:var(--fs-xs);color:var(--text-2);text-align:center"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:34px;right:34px;z-index:400;max-width:380px;padding:13px 21px;
+  background:var(--glass-bg-2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-b-2);border-radius:var(--r-xl);
+  box-shadow:var(--shadow-lg);opacity:0;transition:opacity .3s;pointer-events:none;"></div>
+
+<script>
+// ===================================================================
+// CONFIG
+// ===================================================================
+let NEWS_API_KEY = localStorage.getItem('va_api_key') || '';
+
+// ===================================================================
+// DATA — ONBOARDING
+// ===================================================================
+const OB_TOPICS = [
+  {id:'economy',      icon:'📈', lbl:'Economy',          desc:'Inflation, trade, markets'},
+  {id:'foreignPolicy',icon:'🌍', lbl:'Foreign Policy',   desc:'Diplomacy, conflicts, alliances'},
+  {id:'techReg',      icon:'⚙️', lbl:'Tech Regulation',  desc:'AI, antitrust, privacy'},
+  {id:'environment',  icon:'🌿', lbl:'Environment',      desc:'Climate, energy, conservation'},
+  {id:'gender',       icon:'⚖️', lbl:'Gender & Identity',desc:'Equality, rights, culture'},
+  {id:'immigration',  icon:'🗺️', lbl:'Immigration',      desc:'Policy, border, asylum'},
+];
+const OB_SOURCES = [
+  {id:'nyt',      name:'NYT',       lean:'c'},
+  {id:'wsj',      name:'WSJ',       lean:'r'},
+  {id:'fox',      name:'Fox News',  lean:'r'},
+  {id:'msnbc',    name:'MSNBC',     lean:'l'},
+  {id:'bbc',      name:'BBC',       lean:'c'},
+  {id:'guardian', name:'Guardian',  lean:'l'},
+  {id:'ap',       name:'AP',        lean:'c'},
+  {id:'breit',    name:'Breitbart', lean:'r'},
+  {id:'vox',      name:'Vox',       lean:'l'},
+  {id:'econ',     name:'Economist', lean:'c'},
+  {id:'atl',      name:'Atlantic',  lean:'l'},
+  {id:'ft',       name:'FT',        lean:'c'},
+];
+
+// ===================================================================
+// DATA — BASE TEMPLATES (adjusted per user profile on launch)
+// ===================================================================
+const BASE_DOMAINS = [
+  {id:'economy',      lbl:'Economy',       score:-0.15, conf:0.12, n:61,  col:'#4f8ef7'},
+  {id:'foreignPolicy',lbl:'Foreign Policy',score: 0.28, conf:0.18, n:44,  col:'#9b59b6'},
+  {id:'techReg',      lbl:'Tech Reg.',     score:-0.52, conf:0.21, n:36,  col:'#00d2b4'},
+  {id:'environment',  lbl:'Environment',   score:-0.71, conf:0.15, n:36,  col:'#27ae60'},
+  {id:'gender',       lbl:'Gender',        score:null,  conf:null, n:10,  col:'#f39c12'},
+  {id:'immigration',  lbl:'Immigration',   score: 0.31, conf:0.19, n:38,  col:'#e74c5e'},
+];
+const BASE_GAPS = [
+  {topic:'Immigration',    ttl:'Border Policy Debate',          saw:['WSJ','Fox Business','NYT','AP'], missed:['Labor reporting','Migrant-rights outlets','Local border press','Spanish-language press']},
+  {topic:'Tech Regulation',ttl:'EU AI Act Implementation',      saw:['TechCrunch','Economist','FT'],  missed:['Civil liberties orgs','Academic/expert commentary','Global South tech press']},
+  {topic:'Economy',        ttl:'Federal Reserve Rate Decision',  saw:['WSJ','Bloomberg','FT','CNBC'], missed:['Labor economics','Consumer advocacy','Local business reporting']},
+];
+const BASE_ECHO = [
+  {lbl:'Economy',        score:48, col:'#27ae60'},
+  {lbl:'Foreign Policy', score:61, col:'#f39c12'},
+  {lbl:'Tech Reg.',      score:71, col:'#e74c5e'},
+  {lbl:'Environment',    score:82, col:'#e74c5e'},
+  {lbl:'Gender',         score:null},
+  {lbl:'Immigration',    score:55, col:'#f39c12'},
+];
+// Working copies — overwritten by computeUserProfile() after onboarding
+let DOMAINS = BASE_DOMAINS.map(d=>({...d}));
+let GAPS    = BASE_GAPS.map(g=>({...g}));
+let ECHO    = BASE_ECHO.map(e=>({...e}));
+
+const RECENT = [
+  {outlet:'Wall Street Journal', lean:'r', img:'https://picsum.photos/seed/r1/120/80',
+   ttl:'Fed holds rates amid tariff uncertainty, signals caution through mid-year',
+   why:"Shown because you over-index on monetary policy and have under-consumed center-right business coverage this week."},
+  {outlet:'The Guardian', lean:'l', img:'https://picsum.photos/seed/r2/120/80',
+   ttl:'EU regulators warn Meta over algorithmic amplification of health misinformation',
+   why:"Balancing your tech regulation feed — you've read 5 industry-perspective pieces; this adds a regulatory/civil society angle."},
+  {outlet:'Associated Press', lean:'c', img:'https://picsum.photos/seed/r3/120/80',
+   ttl:'UN Security Council deadlocked on Gaza ceasefire resolution for third time',
+   why:"Wire service baseline for a story you follow. High factual reliability (4.8/5). Reduces emotional framing in your feed."},
+  {outlet:'Vox', lean:'l', img:'https://picsum.photos/seed/r4/120/80',
+   ttl:'The housing crisis is a zoning crisis — and cities are finally starting to admit it',
+   why:"Long-form analysis matches your reading depth preference. Topic is in your interest graph but coverage has thinned this week."},
+];
+const SLIDERS = [
+  {id:'novelty',     lbl:'Novelty',                desc:'How much to surface new topics vs. deepen existing interests', val:60},
+  {id:'spread',      lbl:'Ideological Spread',     desc:'How widely to sample across the left–center–right spectrum',  val:40},
+  {id:'geo',         lbl:'Geographic Spread',      desc:'Weight given to local, national, and international sources',  val:50},
+  {id:'reliability', lbl:'Reliability Floor',      desc:'Minimum source reliability score to include (Ad Fontes, 1–5)', val:70},
+  {id:'emotion',     lbl:'Emotional Intensity Cap',desc:'Filters high-outrage / fear-framing while keeping the topic', val:65},
+];
+const MODES = [
+  {id:'myFeed',   lbl:'My Feed',              desc:'Personalized feed based on your reading history and current slider settings. Ranked by relevance to your established interest graph.'},
+  {id:'balanced', lbl:'Balanced Feed',        desc:'Equal weighting across left, center, and right sources. Note: ideological balance ≠ informational balance — see methodology.'},
+  {id:'bubble',   lbl:'Outside My Bubble',    desc:'Surfaces outlets and frames you have not encountered in the past 30 days. Use as a deliberate probe, not a replacement for your regular feed.'},
+  {id:'reliable', lbl:'Only High-Reliability',desc:'Restricted to sources scoring ≥4.5/5 on factual reliability (Ad Fontes Media). Wires, academic sources, and select broadsheets only.'},
+  {id:'global',   lbl:'Global South Lens',    desc:"Prioritizes non-Western outlets: Al Jazeera, The Hindu, Quartz Africa, Folha de S.Paulo, Dawn. Addresses the field's documented US-centrism."},
+];
+const FEED_ARTICLES = {
+  myFeed:[
+    {outlet:'Wall Street Journal',lean:'r',rel:4.2,img:'https://picsum.photos/seed/f1/140/90',
+     ttl:'Tariff negotiations stall as China signals retaliation on semiconductor exports',
+     sum:'Trade talks between Washington and Beijing hit a new impasse as Chinese officials signaled potential restrictions on rare earth exports in response to proposed U.S. tariffs on consumer electronics.',
+     why:'Shown because you follow trade policy closely and have read 7 articles on China relations in the last 10 days.',
+     tags:['Trade','China','Semiconductors'],frames:['Economic Competition','National Security','Supply Chain Risk']},
+    {outlet:'NPR',lean:'c',rel:4.6,img:'https://picsum.photos/seed/f2/140/90',
+     ttl:'Public health officials warn of measles resurgence in vaccine-hesitant communities',
+     sum:'The CDC reported 340 measles cases in Q1 — highest since 2019 — concentrated in counties with below-average vaccination rates correlating with specific political and religious communities.',
+     why:"Balancing your health coverage — you've read primarily institutional sources. This adds public health framing to your recent policy-focused reads.",
+     tags:['Health','Vaccines','Public Policy'],frames:['Public Safety','Individual Liberty','Scientific Consensus']},
+    {outlet:'The Economist',lean:'c',rel:4.8,img:'https://picsum.photos/seed/f3/140/90',
+     ttl:'The productivity paradox: why AI investment has not yet moved the GDP needle',
+     sum:'Despite $500B in AI infrastructure investment in 2024, productivity statistics remain stubbornly flat. Economists debate whether gains are mismeasured or simply delayed.',
+     why:'Long-form analysis on AI economics — a core interest. Reliability 4.8. Adds economic framing to your primarily technology-law focused AI reading.',
+     tags:['AI','Economics','Productivity'],frames:['Technological Progress','Economic Policy','Measurement Uncertainty']},
+  ],
+  balanced:[
+    {outlet:'Fox News',lean:'r',rel:3.6,img:'https://picsum.photos/seed/f4/140/90',
+     ttl:'Border crossings drop 40% under new executive order, DHS reports',
+     sum:"DHS data shows a significant reduction in illegal crossings since the administration's latest executive order, which critics argue conflates asylum seekers with illegal migration.",
+     why:'Added to balance your center-left immigration reading. Reliability 3.6 — cross-reference with wire sources before accepting framing.',
+     tags:['Immigration','Border','Policy'],frames:['National Security','Rule of Law','Enforcement']},
+    {outlet:'Democracy Now',lean:'l',rel:3.8,img:'https://picsum.photos/seed/f5/140/90',
+     ttl:"Deported residents: \"We built lives here, we're not criminals\"",
+     sum:'Investigative report following five long-term U.S. residents deported under expanded enforcement, examining human and economic impact on communities and families.',
+     why:'Left perspective on immigration to pair with right-leaning coverage. Humanizes the same enforcement data with on-the-ground reporting.',
+     tags:['Immigration','Human Rights','Communities'],frames:['Humanitarian Crisis','Community Impact','Human Dignity']},
+    {outlet:'Associated Press',lean:'c',rel:4.9,img:'https://picsum.photos/seed/f6/140/90',
+     ttl:'Immigration enforcement data: what the numbers actually show',
+     sum:'An AP fact-check of DHS crossing statistics, detention numbers, and processing times cross-referenced with CBP data and independent tracking organizations.',
+     why:'Highest-reliability factual baseline for a contested story. Recommend reading alongside both partisan takes.',
+     tags:['Immigration','Fact-check','Data'],frames:['Factual Record','Accountability','Data Transparency']},
+  ],
+  bubble:[
+    {outlet:'The Intercept',lean:'l',rel:3.9,img:'https://picsum.photos/seed/f7/140/90',
+     ttl:"Pentagon's AI targeting system: what the contracts actually say",
+     sum:'A review of 2,300 pages of Defense Department procurement documents reveals the scope of AI integration in targeting decisions, raising questions about accountability and international law.',
+     why:"You have not encountered The Intercept in 45 days. National security / AI intersection — both in your interest graph, but this source-frame combination is new to you.",
+     tags:['AI','Defense','Accountability'],frames:['Surveillance State','Military Ethics','Transparency']},
+    {outlet:'Responsible Statecraft',lean:'c',rel:4.1,img:'https://picsum.photos/seed/f8/140/90',
+     ttl:"The foreign policy establishment's Ukraine fatigue problem",
+     sum:"A realist foreign policy analysis of declining congressional support for Ukraine aid, examining the gap between Washington's stated strategy and its actual resource commitments.",
+     why:'Realist foreign policy perspective — absent from your feed for 60+ days. You consume primarily liberal internationalist framing on Ukraine.',
+     tags:['Ukraine','Foreign Policy','Realism'],frames:['Strategic Realism','Alliance Politics','Resource Limits']},
+  ],
+  reliable:[
+    {outlet:'Reuters',lean:'c',rel:4.9,img:'https://picsum.photos/seed/f9/140/90',
+     ttl:'WHO declares mpox outbreak in four new countries a public health emergency',
+     sum:'The World Health Organization has declared a Public Health Emergency of International Concern as mpox spreads to four additional countries in Central Africa.',
+     why:'Reliability: 4.9/5. Wire service on a breaking health story. Factual density high, emotional framing minimal.',
+     tags:['Global Health','WHO','Emergency'],frames:['Public Health','Global Cooperation','Disease Surveillance']},
+    {outlet:'Financial Times',lean:'c',rel:4.8,img:'https://picsum.photos/seed/f10/140/90',
+     ttl:'ECB rate decision: inside the debate between hawks and doves',
+     sum:"Detailed reconstructed account of the European Central Bank's monetary policy meeting, drawing on sources inside the institution and leaked briefing documents.",
+     why:'FT monetary policy coverage consistently rated high-reliability. Depth matches your reading pattern on economic stories.',
+     tags:['ECB','Monetary Policy','Europe'],frames:['Institutional Process','Economic Stability','Policy Debate']},
+  ],
+  global:[
+    {outlet:'Al Jazeera English',lean:'c',rel:4.3,img:'https://picsum.photos/seed/f11/140/90',
+     ttl:"The African Union's AI governance framework: what the West ignored",
+     sum:"The AU's continental AI strategy emphasizes data sovereignty and local model training — largely overlooked in Western tech policy coverage.",
+     why:'Global South Lens: zero African tech policy sources in your 30-day reading history. This framing is entirely absent from your current information diet.',
+     tags:['AI','Africa','Governance'],frames:['Data Sovereignty','Development','Digital Colonialism']},
+    {outlet:'The Hindu',lean:'c',rel:4.4,img:'https://picsum.photos/seed/f12/140/90',
+     ttl:"India's semiconductor ambitions: a realistic assessment after two years",
+     sum:"Two years into India's $10B chip incentive scheme, ground-level analysis finds significant delays, missing expertise, and supply chain gaps that official statements obscure.",
+     why:"South Asian technology policy — absent from your feed entirely. Provides context for the US-China chip narrative you consume heavily.",
+     tags:['Semiconductors','India','Industrial Policy'],frames:['Industrial Policy','Geopolitical Competition','Development Economics']},
+  ],
+};
+const TOPICS = {
+  iran:{
+    name:'Iran Nuclear Standoff',cat:'Geopolitics',hot:true,articles:2841,outlets:34,since:'14 months',echo:'58%',
+    bias:{l:38,c:30,r:32},
+    cols:{
+      left:{lbl:'Left-Leaning',srcs:[
+        {outlet:'The Guardian',lean:'l',ttl:"Diplomats warn military escalation risks broader regional catastrophe",img:'https://picsum.photos/seed/i1/300/180',sum:'Senior EU diplomats and former JCPOA negotiators warn that military action would trigger Hezbollah activation, Strait of Hormuz closure, and energy price shocks.',frames:['Diplomatic Priority','Regional Stability','Anti-War'],rel:4.3},
+        {outlet:'MSNBC',lean:'l',ttl:"Inside Iran's domestic opposition to nuclear weapons program",img:'https://picsum.photos/seed/i2/300/180',sum:"Reporting from exile Iranian journalists and leaked civil society surveys suggests significant domestic ambivalence about the nuclear program's costs.",frames:['Civil Society','Domestic Politics','Human Rights'],rel:3.8},
+      ]},
+      center:{lbl:'Center',srcs:[
+        {outlet:'Reuters',lean:'c',ttl:'IAEA inspectors denied access to Fordow site for third consecutive month',img:'https://picsum.photos/seed/i3/300/180',sum:'UN nuclear watchdog reports Iran has blocked inspector access since November, complicating verification of enrichment activity at the underground facility.',frames:['International Law','Verification','Factual Record'],rel:4.9},
+        {outlet:'BBC World Service',lean:'c',ttl:'Iran nuclear timeline: what we know and what remains uncertain',img:'https://picsum.photos/seed/i4/300/180',sum:"A fact-based reconstruction of Iran's nuclear program milestones, distinguishing confirmed facts from assessed capabilities and contested claims.",frames:['Factual Clarity','Uncertainty','Historical Context'],rel:4.7},
+      ]},
+      right:{lbl:'Right-Leaning',srcs:[
+        {outlet:'Wall Street Journal',lean:'r',ttl:"Biden-era concessions emboldened Iran's nuclear acceleration, analysts say",img:'https://picsum.photos/seed/i5/300/180',sum:'A hawkish analysis argues that eased sanctions pressure during nuclear talks provided Iran fiscal space to fund its enrichment program expansion.',frames:['Policy Failure','Deterrence','Strategic Competition'],rel:4.2},
+        {outlet:'Fox News',lean:'r',ttl:'Iran weeks from weapons-grade enrichment threshold, officials warn',img:'https://picsum.photos/seed/i6/300/180',sum:'U.S. intelligence officials cited by congressional sources say Iran is closer to weapons-grade enrichment capacity than publicly acknowledged.',frames:['National Security Threat','Military Option','Urgency'],rel:3.5},
+      ]},
+    },
+    tl:[
+      {date:'Jan 2024',lbl:'Enrichment exceeds 84%',    detail:'IAEA confirms uranium enriched to 84% purity — just below weapons grade — at Fordow underground facility.',srcs:['Reuters','IAEA']},
+      {date:'Mar 2024',lbl:'Fordow access denied',      detail:'Iran blocks IAEA inspector access to Fordow for the third consecutive month, citing "technical issues."',srcs:['BBC','WSJ','Al Jazeera']},
+      {date:'Jun 2024',lbl:'Geneva talks collapse',     detail:'Indirect US-Iran talks in Geneva break down after 3 days. Neither side discloses the specific reason for failure.',srcs:['Reuters','Guardian','Fox News']},
+      {date:'Sep 2024',lbl:'UN resolution fails',       detail:'Security Council resolution demanding IAEA access vetoed by Russia and China. Diplomatic path narrows.',srcs:['NYT','AP']},
+      {date:'Nov 2024',lbl:'Missile test over Red Sea', detail:'Iran test-fires medium-range ballistic missile in a trajectory passing over international shipping lanes.',srcs:['WSJ','BBC','Al Jazeera']},
+      {date:'Feb 2025',lbl:'Sanctions expanded',        detail:'US, EU, and UK expand sanctions targeting Iranian oil exports. Iran responds with new centrifuge announcement.',srcs:['Reuters','FT']},
+      {date:'Mar 2025',lbl:'Current standoff',          detail:'No active negotiations. IAEA access still blocked. Regional partners signaling military contingency planning.',srcs:['NYT','Economist','Guardian']},
+    ],
+    gap:{
+      saw:['WSJ','Fox News','Reuters','BBC'],
+      missed:[
+        {lbl:'Persian-language press',desc:'BBC Persian, Iran International, and Manoto cover domestic Iranian political dynamics invisible in English reporting.'},
+        {lbl:'Gulf state perspectives',desc:'Saudi, UAE, and Qatari outlets frame the standoff through a very different regional security lens than Western analysis.'},
+        {lbl:'Non-proliferation experts',desc:'Arms Control Association, Bulletin of Atomic Scientists — deep technical analysis largely absent from mainstream coverage.'},
+      ]
+    }
+  },
+  climate:{
+    name:'Climate Geneva Compact',cat:'Environment',hot:false,articles:1847,outlets:29,since:'3 weeks',echo:'67%',
+    bias:{l:55,c:30,r:15},
+    cols:{
+      left:{lbl:'Left-Leaning',srcs:[
+        {outlet:'The Guardian',lean:'l',ttl:"Scientists warn new climate pledge still 2.4°C off Paris target",img:'https://picsum.photos/seed/c1/300/180',sum:'Climate scientists from 12 institutions say the Geneva Compact, while historic in scope, remains insufficient to limit warming to 1.5°C without deeper structural change.',frames:['Scientific Urgency','Policy Inadequacy','Crisis Framing'],rel:4.4},
+        {outlet:'Vox',lean:'l',ttl:'Why fossil fuel phase-out language got weakened — again',img:'https://picsum.photos/seed/c2/300/180',sum:"An inside account of the Geneva negotiations reveals how oil-producing nations lobbied to soften 'phase-out' to 'phase-down' language in the final communiqué.",frames:['Corporate Influence','Political Accountability','Climate Justice'],rel:4.0},
+      ]},
+      center:{lbl:'Center',srcs:[
+        {outlet:'Associated Press',lean:'c',ttl:"Geneva Compact: what countries agreed to and what they didn't",img:'https://picsum.photos/seed/c3/300/180',sum:"A line-by-line analysis of the final accord, separating binding commitments from aspirational pledges and voluntary targets.",frames:['Factual Clarity','Policy Detail','Accountability'],rel:4.9},
+        {outlet:'BBC',lean:'c',ttl:'The Geneva talks in charts: emissions pledges vs. projected trajectories',img:'https://picsum.photos/seed/c4/300/180',sum:"Data visualization showing each major emitter's 2035 pledge against current IPCC and IEA trajectory models.",frames:['Data-Driven','Comparative Analysis','Verification'],rel:4.7},
+      ]},
+      right:{lbl:'Right-Leaning',srcs:[
+        {outlet:'Wall Street Journal',lean:'r',ttl:"Geneva Compact's hidden cost: $4.2 trillion in energy transition by 2035",img:'https://picsum.photos/seed/c5/300/180',sum:'An economic analysis of implementation costs for signatory nations, noting the burden falls disproportionately on industrial economies.',frames:['Economic Cost','Competitiveness','Energy Security'],rel:4.2},
+        {outlet:'National Review',lean:'r',ttl:"Climate bureaucracy grows while emissions don't fall",img:'https://picsum.photos/seed/c6/300/180',sum:'A skeptical assessment of institutional climate governance, arguing new oversight bodies add administrative overhead without proportional emissions impact.',frames:['Government Skepticism','Cost-Benefit','Policy Critique'],rel:3.4},
+      ]},
+    },
+    tl:[
+      {date:'Jan 2025',lbl:'Pre-negotiations open',    detail:'143 nations begin preliminary talks in Geneva. Key sticking points: carbon border adjustment, loss & damage fund structure.',srcs:['Reuters','BBC']},
+      {date:'Feb 2025',lbl:'China-US joint framework', detail:'Surprise bilateral statement from China and US agreeing on methane monitoring protocol — first joint climate statement in 18 months.',srcs:['NYT','FT','Xinhua']},
+      {date:'Mar 1',   lbl:'Oil bloc pushes back',     detail:"OPEC+ bloc introduces amendments weakening fossil fuel phase-out timelines. G7 calls it a 'red line' violation.",srcs:['Guardian','WSJ']},
+      {date:'Mar 10',  lbl:'Final text agreed',        detail:'Geneva Compact signed by 138 nations. Fossil fuel language weakened; $300B climate finance pledge reaffirmed.',srcs:['AP','Reuters','BBC']},
+      {date:'Mar 15',  lbl:'Ratification begins',      detail:'EU and 23 nations ratify immediately. US Senate ratification uncertain.',srcs:['FT','NYT']},
+    ],
+    gap:{
+      saw:['Guardian','BBC','AP','Vox'],
+      missed:[
+        {lbl:'Global South climate press',desc:'Daily Star (Bangladesh), Daily Nation (Kenya) cover how adaptation finance pledges actually reach affected communities.'},
+        {lbl:'Energy industry press',desc:'Oil & Gas Journal, Platts, S&P Global Commodity Insights offer technical framing absent from advocacy-oriented coverage.'},
+        {lbl:'Indigenous climate voices',desc:'Mongabay, First Peoples Worldwide give frontline community perspectives rarely present in mainstream climate journalism.'},
+      ]
+    }
+  },
+  ai:{
+    name:'AI Oversight Bill',cat:'Tech & Policy',hot:true,articles:1203,outlets:21,since:'6 weeks',echo:'71%',
+    bias:{l:45,c:35,r:20},
+    cols:{
+      left:{lbl:'Left-Leaning',srcs:[
+        {outlet:'The Atlantic',lean:'l',ttl:'The AI bill is a good start. Silicon Valley will gut it anyway.',img:'https://picsum.photos/seed/a1/300/180',sum:'A skeptical take on the legislative process, arguing that tech industry lobbying has already diluted key provisions around model auditing and liability assignment.',frames:['Corporate Accountability','Regulatory Capture','Power Analysis'],rel:4.1},
+        {outlet:'Wired',lean:'l',ttl:'Civil liberties groups: facial recognition carve-outs are a surveillance backdoor',img:'https://picsum.photos/seed/a2/300/180',sum:'ACLU and EFF analysis of Section 14 exemptions that permit government use of biometric AI tools without the transparency requirements applied to private firms.',frames:['Civil Liberties','Surveillance','Government Accountability'],rel:4.2},
+      ]},
+      center:{lbl:'Center',srcs:[
+        {outlet:'MIT Technology Review',lean:'c',ttl:"What the AI Oversight Bill actually does — and doesn't do",img:'https://picsum.photos/seed/a3/300/180',sum:"A technical breakdown of the bill's provisions: mandatory incident reporting, NIST evaluation requirements, and liability framework, with expert commentary on gaps.",frames:['Technical Analysis','Policy Detail','Expert Assessment'],rel:4.6},
+        {outlet:'Reuters',lean:'c',ttl:'Senate AI bill: key provisions, timeline, and what experts say',img:'https://picsum.photos/seed/a4/300/180',sum:"A comprehensive summary of the bill's path through committee, the main amendments, and expert reaction from both industry and civil society.",frames:['Legislative Process','Balanced Analysis','Factual Record'],rel:4.9},
+      ]},
+      right:{lbl:'Right-Leaning',srcs:[
+        {outlet:'National Review',lean:'r',ttl:'The AI Oversight Bill is a solution looking for a problem',img:'https://picsum.photos/seed/a5/300/180',sum:'A market-oriented critique arguing the bill imposes compliance costs that disproportionately affect smaller AI developers while entrenching Big Tech incumbents.',frames:['Market Competition','Regulatory Burden','Innovation Risk'],rel:3.5},
+        {outlet:'Wall Street Journal',lean:'r',ttl:'AI regulation: why the U.S. risks ceding ground to China',img:'https://picsum.photos/seed/a6/300/180',sum:'A competitiveness-framed analysis of how EU-style AI regulation could slow U.S. model development while China faces no equivalent domestic restrictions.',frames:['Geopolitical Competition','Innovation','National Security'],rel:4.2},
+      ]},
+    },
+    tl:[
+      {date:'Oct 2024',lbl:'Bill introduced',        detail:'Bipartisan AI Oversight Act introduced in Senate with 22 co-sponsors. Provisions: mandatory safety testing and incident reporting.',srcs:['Reuters','TechCrunch']},
+      {date:'Nov 2024',lbl:'Industry lobbying push', detail:'Google, Microsoft, OpenAI, Meta file 14 separate comment letters. $220M in AI lobbying disclosed in Q4 2024.',srcs:['Intercept','FT']},
+      {date:'Jan 2025',lbl:'Committee markup',       detail:'Key amendments weaken audit requirements and extend compliance deadlines. Civil liberties groups declare "gutting" of core provisions.',srcs:['Wired','Atlantic']},
+      {date:'Feb 2025',lbl:'Senate floor debate',    detail:'Floor debate reveals sharp partisan divide on liability provisions. Filibuster threat delays final vote.',srcs:['Politico','AP']},
+      {date:'Mar 2025',lbl:'Current status',         detail:'Bill in procedural hold. Administration signals executive order as fallback if legislation stalls through Q2.',srcs:['NYT','Reuters']},
+    ],
+    gap:{
+      saw:['Atlantic','Wired','WSJ','MIT Tech Review'],
+      missed:[
+        {lbl:'Academic AI safety literature',desc:'Papers from ARC Evals, Anthropic, and MIRI provide technical grounding largely absent from legislative coverage.'},
+        {lbl:'International regulatory comparison',desc:"EU AI Act implementation, UK DSIT, Singapore's Model AI Governance — comparative lens almost entirely absent from US coverage."},
+        {lbl:'Labor / worker impact',desc:'How AI deployment affects workers in gig, creative, and knowledge work is poorly covered relative to the innovation and safety frames.'},
+      ]
+    }
+  },
+  ukraine:{
+    name:'Ukraine War · Year 3',cat:'Geopolitics',hot:true,articles:4219,outlets:47,since:'3 years',echo:'64%',
+    bias:{l:42,c:35,r:23},
+    cols:{
+      left:{lbl:'Left-Leaning',srcs:[
+        {outlet:'The Guardian',lean:'l',ttl:'Ukrainian civilians pay the price as Western support wavers',img:'https://picsum.photos/seed/u1/300/180',sum:'Reporting from Kharkiv documents the humanitarian toll as drone strikes intensify and reconstruction aid stalls amid political gridlock in Washington.',frames:['Humanitarian Cost','Western Responsibility','Civilian Harm'],rel:4.3},
+        {outlet:'Democracy Now',lean:'l',ttl:'Peace advocates: prolonged war benefits arms industry, not Ukrainians',img:'https://picsum.photos/seed/u2/300/180',sum:'Anti-war voices argue diplomatic options were prematurely foreclosed, citing evidence that a negotiated settlement was possible in early 2022.',frames:['Anti-War','Diplomacy','Power Critique'],rel:3.7},
+      ]},
+      center:{lbl:'Center',srcs:[
+        {outlet:'Reuters',lean:'c',ttl:'Ukraine frontline: territorial gains and losses Q1 2025',img:'https://picsum.photos/seed/u3/300/180',sum:'A data-driven battlefield assessment verified by satellite imagery and cross-referenced with official statements from both sides.',frames:['Military Reality','Factual Record','Verification'],rel:4.9},
+        {outlet:'BBC',lean:'c',ttl:"NATO's Ukraine commitment: pledged vs. actually delivered",img:'https://picsum.photos/seed/u4/300/180',sum:'An audit revealing significant gaps between NATO members\' public pledges and actual military aid deliveries.',frames:['Accountability','Alliance Politics','Factual Clarity'],rel:4.7},
+      ]},
+      right:{lbl:'Right-Leaning',srcs:[
+        {outlet:'Wall Street Journal',lean:'r',ttl:'Ukraine needs a strategy, not just weapons — Washington has failed',img:'https://picsum.photos/seed/u5/300/180',sum:'A realist critique arguing administrations provided tactical support without strategic clarity, prolonging conflict without a viable end-state.',frames:['Strategic Failure','Policy Critique','National Interest'],rel:4.2},
+        {outlet:'National Review',lean:'r',ttl:'Europe must lead on Ukraine — American taxpayers have done enough',img:'https://picsum.photos/seed/u6/300/180',sum:'A conservative case for shifting financial and military burden to European NATO members, citing fiscal pressures.',frames:['Burden Sharing','Fiscal Responsibility','America First'],rel:3.6},
+      ]},
+    },
+    tl:[
+      {date:'Feb 2022',lbl:'Full-scale invasion',detail:"Russia launches full-scale invasion. Kyiv surrounded within days; Ukraine's military mounts fierce resistance.",srcs:['Reuters','BBC','NYT']},
+      {date:'Sep 2022',lbl:'Kharkiv counteroffensive',detail:'Ukraine recaptures 6,000+ km² in Kharkiv region, forcing rapid Russian withdrawal.',srcs:['Reuters','AP','Guardian']},
+      {date:'Jun 2023',lbl:'Summer offensive stalls',detail:"Ukraine's anticipated summer offensive makes limited gains against entrenched Russian defensive lines.",srcs:['FT','WSJ','BBC']},
+      {date:'Jan 2025',lbl:'Aid package delayed',detail:'Congressional standoff delays $24B Ukraine aid for three months. Frontline ammunition shortages reported.',srcs:['NYT','AP','Politico']},
+      {date:'Mar 2025',lbl:'Ceasefire talks rumored',detail:'Unconfirmed back-channel talks mediated by Turkey. Both sides publicly deny active negotiations.',srcs:['Reuters','FT','Al Jazeera']},
+    ],
+    gap:{
+      saw:['Reuters','BBC','WSJ'],
+      missed:[
+        {lbl:'Ukrainian-language press',desc:'Ukrinform and Ukrainska Pravda cover domestic political dynamics and public morale invisible in Western reporting.'},
+        {lbl:'Russian independent media',desc:'Meduza and iStories (Latvia-based) provide non-Kremlin Russian perspectives largely ignored in Western feeds.'},
+        {lbl:'Global South neutrality framing',desc:'African Union, ASEAN, and Indian press frame the conflict through non-aligned lenses very different from NATO-centric coverage.'},
+      ]
+    }
+  },
+  china:{
+    name:'US–China Trade War',cat:'Economics',hot:true,articles:3102,outlets:38,since:'7 years',echo:'55%',
+    bias:{l:35,c:38,r:27},
+    cols:{
+      left:{lbl:'Left-Leaning',srcs:[
+        {outlet:'The Nation',lean:'l',ttl:'Tariffs hurt American workers more than Chinese factories',img:'https://picsum.photos/seed/ch1/300/180',sum:'Tariff incidence studies show the cost of US-China trade war tariffs has been disproportionately borne by American consumers and import-dependent manufacturers.',frames:['Worker Impact','Corporate Accountability','Economic Justice'],rel:3.9},
+        {outlet:'Vox',lean:'l',ttl:"The trade war's hidden casualties: rural communities",img:'https://picsum.photos/seed/ch2/300/180',sum:'County-level analysis reveals agricultural communities in the Midwest have suffered the sharpest pain from Chinese retaliatory tariffs on soybeans and pork.',frames:['Economic Harm','Rural Communities','Policy Critique'],rel:4.1},
+      ]},
+      center:{lbl:'Center',srcs:[
+        {outlet:'Financial Times',lean:'c',ttl:"US-China decoupling: what's actually in the trade data",img:'https://picsum.photos/seed/ch3/300/180',sum:'Despite political rhetoric, bilateral trade hit $575B in 2024. The trade war reshuffled supply chains but has not eliminated interdependence.',frames:['Economic Reality','Data-Driven','Complexity'],rel:4.8},
+        {outlet:'Economist',lean:'c',ttl:'Chip war at two years: the scorecard',img:'https://picsum.photos/seed/ch4/300/180',sum:'US semiconductor export controls have accelerated Chinese domestic development while supply chain diversification remains incomplete.',frames:['Technology Competition','Policy Analysis','Long-term Trends'],rel:4.8},
+      ]},
+      right:{lbl:'Right-Leaning',srcs:[
+        {outlet:'Wall Street Journal',lean:'r',ttl:'Tariffs: the economic pain is worth the strategic gain',img:'https://picsum.photos/seed/ch5/300/180',sum:'An editorial defense of broad tariffs arguing short-term economic costs are justified by reducing strategic dependency on an adversarial power.',frames:['National Security','Strategic Competition','Economic Nationalism'],rel:4.2},
+        {outlet:'National Review',lean:'r',ttl:'Biden carried water for China while pretending to be tough',img:'https://picsum.photos/seed/ch6/300/180',sum:'A critique arguing the Biden administration was insufficiently confrontational given documented IP theft and market manipulation.',frames:['Policy Critique','China Threat','Hawkish'],rel:3.5},
+      ]},
+    },
+    tl:[
+      {date:'2018',lbl:'First tariffs',detail:'Trump administration imposes first round of tariffs on $34B of Chinese goods. China retaliates in kind.',srcs:['WSJ','Reuters','NYT']},
+      {date:'2020',lbl:'Phase One deal',detail:'US and China sign Phase One deal. China commits to $200B in additional US purchases; most tariffs remain.',srcs:['Reuters','FT','AP']},
+      {date:'2022',lbl:'CHIPS Act signed',detail:'Biden signs CHIPS and Science Act, restricting semiconductor exports to China and funding US domestic chip production.',srcs:['NYT','WSJ','TechCrunch']},
+      {date:'2024',lbl:'EV tariffs hit 100%',detail:'Biden expands tariffs on Chinese EVs to 100%, solar panels to 50%. Campaign rhetoric promises further escalation.',srcs:['Reuters','FT','AP']},
+      {date:'Mar 2025',lbl:'New tariff package',detail:'Sweeping tariff package announced. Markets react with global selloff; allies express concern about collateral damage.',srcs:['WSJ','Reuters','BBC']},
+    ],
+    gap:{
+      saw:['WSJ','FT','Economist'],
+      missed:[
+        {lbl:'Chinese state and business press',desc:"Caixin, South China Morning Post provide Chinese government and market perspectives almost entirely absent from Western coverage."},
+        {lbl:'Supply chain affected countries',desc:"Vietnam, Mexico, Taiwan, and India — primary beneficiaries of US-China decoupling — have rich local reporting on real-world effects."},
+        {lbl:'Labor economics research',desc:'Brookings, Economic Policy Institute, and NBER working papers provide quantitative grounding that media coverage rarely cites.'},
+      ]
+    }
+  },
+  healthcare:{
+    name:'US Healthcare Reform',cat:'Domestic Policy',hot:false,articles:2198,outlets:31,since:'Ongoing',echo:'73%',
+    bias:{l:50,c:28,r:22},
+    cols:{
+      left:{lbl:'Left-Leaning',srcs:[
+        {outlet:'The Nation',lean:'l',ttl:"Single-payer is off the table again — here's why that's a failure",img:'https://picsum.photos/seed/h1/300/180',sum:'Medicare-for-All has repeatedly failed to advance despite majority public support, attributed to insurance industry lobbying and Senate procedural rules.',frames:['Single Payer','Corporate Influence','Structural Critique'],rel:3.8},
+        {outlet:'ProPublica',lean:'l',ttl:'How hospital consolidation quietly ended competition — and raised your bill',img:'https://picsum.photos/seed/h2/300/180',sum:'14 years of hospital mergers show monopoly pricing power has contributed significantly to healthcare cost inflation independent of insurance dynamics.',frames:['Corporate Accountability','Cost Investigation','Systemic Analysis'],rel:4.4},
+      ]},
+      center:{lbl:'Center',srcs:[
+        {outlet:'Associated Press',lean:'c',ttl:'US healthcare by the numbers vs. peer nations',img:'https://picsum.photos/seed/h3/300/180',sum:'Data comparison of US health outcomes, spending, and coverage against 11 comparable OECD countries, highlighting specific areas of over- and under-performance.',frames:['International Comparison','Data-Driven','Factual Baseline'],rel:4.9},
+        {outlet:'STAT News',lean:'c',ttl:"What drug pricing negotiation actually achieved — and what it didn't",img:'https://picsum.photos/seed/h4/300/180',sum:'A technical assessment of the IRA drug pricing provisions, separating actual savings from projected figures and analyzing implementation gaps.',frames:['Policy Detail','Evidence-Based','Accountability'],rel:4.6},
+      ]},
+      right:{lbl:'Right-Leaning',srcs:[
+        {outlet:'Wall Street Journal',lean:'r',ttl:'Drug price controls will stifle the innovation that saves lives',img:'https://picsum.photos/seed/h5/300/180',sum:'Government price negotiation reduces the return on pharmaceutical R&D investment, threatening the pipeline of treatments for cancer, Alzheimer\'s, and rare diseases.',frames:['Innovation Risk','Free Market','Industry Perspective'],rel:4.2},
+        {outlet:'National Review',lean:'r',ttl:'Government-run healthcare states are a cautionary tale',img:'https://picsum.photos/seed/h6/300/180',sum:"State-level public option programs in Colorado, Washington, and Nevada show high premiums and low provider participation undermining the progressive model.",frames:['Government Skepticism','State-Level Evidence','Market Solutions'],rel:3.5},
+      ]},
+    },
+    tl:[
+      {date:'2010',lbl:'ACA signed',detail:'Affordable Care Act signed into law. Uninsured rate begins historic decline from 16%.',srcs:['NYT','AP','Reuters']},
+      {date:'2017',lbl:'Repeal attempts fail',detail:'Republican repeal-and-replace efforts fail in Senate. "Skinny repeal" defeated by single vote.',srcs:['NYT','WSJ','AP']},
+      {date:'2021',lbl:'ARP expansion',detail:'American Rescue Plan expands ACA subsidies. Enrollment hits record 14.5M on healthcare.gov.',srcs:['AP','NPR','STAT']},
+      {date:'2022',lbl:'Drug pricing reform',detail:'IRA grants Medicare authority to negotiate drug prices for first time. 10 drugs selected.',srcs:['AP','WSJ','NYT']},
+      {date:'Mar 2025',lbl:'Medicaid cuts proposed',detail:'Budget proposal includes $880B in Medicaid cuts over 10 years. 8–15M projected to lose coverage.',srcs:['AP','Reuters','ProPublica']},
+    ],
+    gap:{
+      saw:['AP','NYT','WSJ'],
+      missed:[
+        {lbl:'Patient advocacy groups',desc:'AARP, Cancer Action Network, and rare disease alliances provide patient-level impact analysis largely absent from policy-focused coverage.'},
+        {lbl:'Hospital and physician press',desc:'Health Affairs, NEJM Catalyst, and Modern Healthcare cover provider economics with depth unavailable in mainstream outlets.'},
+        {lbl:'International health systems',desc:'BMJ, The Lancet, and health ministry reports from Canada and Germany provide comparative grounding for US healthcare debates.'},
+      ]
+    }
+  },
+  housing:{
+    name:'Housing Affordability Crisis',cat:'Domestic Policy',hot:true,articles:1876,outlets:26,since:'5 years',echo:'61%',
+    bias:{l:48,c:32,r:20},
+    cols:{
+      left:{lbl:'Left-Leaning',srcs:[
+        {outlet:'The Atlantic',lean:'l',ttl:'Zoning is the problem. Zoning reform is the answer.',img:'https://picsum.photos/seed/ho1/300/180',sum:'Single-family zoning requirements, parking minimums, and ADU restrictions artificially constrain housing supply in high-demand metropolitan areas.',frames:['Zoning Reform','Systemic Cause','Urban Policy'],rel:4.2},
+        {outlet:'Jacobin',lean:'l',ttl:"The housing crisis is a landlord crisis — only public housing fixes it",img:'https://picsum.photos/seed/ho2/300/180',sum:'A left critique arguing private development cannot address affordability at scale and that social housing construction is the only viable path.',frames:['Public Housing','Anti-Market','Structural Reform'],rel:3.6},
+      ]},
+      center:{lbl:'Center',srcs:[
+        {outlet:'Reuters',lean:'c',ttl:'US housing affordability: the data behind the crisis',img:'https://picsum.photos/seed/ho3/300/180',sum:'Comprehensive data on home price-to-income ratios across 50 metros, tracking housing supply permits, construction costs, and federal interest rate impacts.',frames:['Data Analysis','Supply/Demand','Economic Drivers'],rel:4.9},
+        {outlet:'NPR',lean:'c',ttl:"Minneapolis ended single-family zoning — here's what happened next",img:'https://picsum.photos/seed/ho4/300/180',sum:"Five-year follow-up on Minneapolis's 2019 upzoning showing measurable increases in housing units but modest rent effects due to construction cost constraints.",frames:['Policy Outcome','Evidence-Based','Local Reporting'],rel:4.5},
+      ]},
+      right:{lbl:'Right-Leaning',srcs:[
+        {outlet:'Wall Street Journal',lean:'r',ttl:"Biden's housing agenda: federal overreach dressed as reform",img:'https://picsum.photos/seed/ho5/300/180',sum:'A critique of conditioning federal grants on local zoning reform, arguing housing policy should remain a local prerogative under federalism principles.',frames:['Federalism','Local Control','Anti-Federal'],rel:4.2},
+        {outlet:'Reason',lean:'r',ttl:'Deregulate housing markets — that\'s the whole answer',img:'https://picsum.photos/seed/ho6/300/180',sum:'Restrictive permitting, environmental review requirements, and labor regulations are the primary cause of housing unaffordability.',frames:['Deregulation','Market Solutions','Government Failure'],rel:3.7},
+      ]},
+    },
+    tl:[
+      {date:'2020',lbl:'Pandemic demand surge',detail:'Remote work decouples residence from employment. Suburban demand spikes; urban inventory drops sharply.',srcs:['NYT','WSJ','Reuters']},
+      {date:'2022',lbl:'Rate hikes freeze market',detail:'Fed rate hikes push mortgage rates above 7% for first time since 2002. New listings collapse as owners lock in low rates.',srcs:['Reuters','AP','WSJ']},
+      {date:'2023',lbl:'Supply bill passes House',detail:'Bipartisan housing supply bill passes House. Senate action stalls amid disagreement on tenant protections.',srcs:['Politico','NPR','AP']},
+      {date:'2024',lbl:'Inventory hits 30-year low',detail:'Available housing inventory falls to 30-year low. Median home price-to-income ratio reaches historic high of 7.2×.',srcs:['Reuters','Bloomberg','NAR']},
+      {date:'Mar 2025',lbl:'Federal zoning pressure',detail:'Administration threatens to withhold transportation grants from cities blocking YIMBY zoning reforms.',srcs:['AP','NYT','Politico']},
+    ],
+    gap:{
+      saw:['NYT','WSJ','AP'],
+      missed:[
+        {lbl:'Local housing beat reporters',desc:'City Paper, Curbed, and metro-specific reporters cover neighborhood-level displacement with depth national outlets lack.'},
+        {lbl:'Tenant rights and advocacy',desc:"Tenants Together, National Housing Law Project report on renter impact that owner-focused media consistently underweights."},
+        {lbl:'Construction and builder trade press',desc:'Builder Magazine, Housing Wire, and NAHB track supply-side constraints — labor shortages, material costs, permitting delays.'},
+      ]
+    }
+  },
+};
+
+// ===================================================================
+// STATE
+// ===================================================================
+let curTopic = 'iran', curMode = 'myFeed', curTlIdx = 0;
+let selTopics = [], selSources = [], sliderVals = {};
+let userProfile = null;
+const AREG = {}; let _aid = 0;
+function regArt(a){ const id='a'+(_aid++); AREG[id]=a; return id; }
+
+// ===================================================================
+// SETTINGS — NewsAPI
+// ===================================================================
+function openSettings(){
+  document.getElementById('api-key-input').value = NEWS_API_KEY;
+  document.getElementById('api-status').textContent = NEWS_API_KEY
+    ? '✓ Key active — live news enabled on localhost'
+    : 'No key set — demo mode active';
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings(e){
+  if(!e||e.target===document.getElementById('settings-modal'))
+    document.getElementById('settings-modal').classList.remove('open');
+}
+function saveApiKey(){
+  NEWS_API_KEY = document.getElementById('api-key-input').value.trim();
+  localStorage.setItem('va_api_key', NEWS_API_KEY);
+  document.getElementById('api-status').textContent = NEWS_API_KEY ? '✓ Saved. Switch to My Feed to load live articles.' : 'Key cleared.';
+  showToast(NEWS_API_KEY ? '⚡ Live news enabled — open My Feed to fetch headlines.' : 'API key cleared. Demo mode active.');
+}
+
+// ===================================================================
+// TOAST
+// ===================================================================
+function showToast(msg, ms=4500){
+  const t=document.getElementById('toast');
+  t.innerHTML=`<div style="font-size:var(--fs-xs);color:var(--accent);font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Viewpoint Atlas</div><div style="color:var(--text-2);font-size:var(--fs-sm);line-height:var(--phi)">${msg}</div>`;
+  t.style.opacity='1'; t.style.pointerEvents='auto';
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>{ t.style.opacity='0'; t.style.pointerEvents='none'; },ms);
+}
+
+// ===================================================================
+// THEME
+// ===================================================================
+function toggleTheme(){
+  const d=document.documentElement, dark=d.getAttribute('data-theme')==='dark';
+  d.setAttribute('data-theme',dark?'light':'dark');
+  document.getElementById('themeBtn').textContent=dark?'☀️':'🌙';
+}
+
+// ===================================================================
+// NAVIGATION
+// ===================================================================
+function go(view){
+  ['dash','feed','topics'].forEach(v=>{
+    document.getElementById('v-'+v).style.display=v===view?'block':'none';
+  });
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.view===view));
+  if(view==='topics')renderTopics();
+  if(view==='feed')renderFeed();
+}
+
+// ===================================================================
+// ONBOARDING
+// ===================================================================
+function initOB(){
+  const ll={l:'Left',c:'Center',r:'Right'};
+  document.getElementById('ob-topics').innerHTML=OB_TOPICS.map(t=>`
+    <div class="ob-item" onclick="togTopic('${t.id}',this)">
+      <div class="ob-icon">${t.icon}</div>
+      <div class="ob-lbl">${t.lbl}</div>
+      <div class="ob-desc">${t.desc}</div>
+    </div>`).join('');
+  document.getElementById('ob-srcs').innerHTML=OB_SOURCES.map(s=>`
+    <div class="src-item" onclick="togSource('${s.id}',this)">
+      <div class="src-name">${s.name}</div>
+      <div class="src-lean lean-${s.lean}">${ll[s.lean]}</div>
+    </div>`).join('');
+}
+function togTopic(id,el){
+  el.classList.toggle('sel');
+  selTopics=el.classList.contains('sel')?[...selTopics,id]:selTopics.filter(t=>t!==id);
+  document.getElementById('ob-btn1').disabled=selTopics.length<2;
+}
+function togSource(id,el){
+  el.classList.toggle('sel');
+  selSources=el.classList.contains('sel')?[...selSources,id]:selSources.filter(s=>s!==id);
+}
+function updProg(step){
+  document.querySelectorAll('.ob-dot').forEach((d,i)=>{
+    d.className='ob-dot '+(i<step-1?'done':i===step-1?'active':'pending');
+  });
+}
+function ob2(){
+  document.getElementById('ob-s1').style.display='none';
+  document.getElementById('ob-s2').style.display='block';
+  updProg(2);
+}
+function ob3(){
+  document.getElementById('ob-s2').style.display='none';
+  document.getElementById('ob-s3').style.display='block';
+  updProg(3);
+  const steps=[
+    'Mapping outlet bias profiles across 6 domains...',
+    'Computing ideological centroid per topic...',
+    'Calibrating confidence intervals (Wilson score method)...',
+    'Identifying coverage gaps against reference corpus...',
+    'Calculating echo chamber entropy scores...',
+    'Assembling your personal viewpoint atlas...',
+  ];
+  const log=document.getElementById('ob-log'); let i=0;
+  (function tick(){
+    if(i>=steps.length){setTimeout(launch,700);return;}
+    const d=document.createElement('div'); d.className='gen-row';
+    d.style.animationDelay=(i*0.08)+'s'; d.textContent=steps[i];
+    log.appendChild(d); i++; setTimeout(tick,430);
+  })();
+}
+// launch() defined fully at bottom of script (with profile persistence)
+
+// ===================================================================
+// USER PROFILE — adjusts data based on onboarding choices
+// ===================================================================
+function computeUserProfile(){
+  const leans = selSources.map(id=>OB_SOURCES.find(s=>s.id===id)?.lean).filter(Boolean);
+  const lc=leans.filter(l=>l==='l').length, rc=leans.filter(l=>l==='r').length;
+  const total=leans.length||1;
+  const leanScore=(lc-rc)/total; // −1=all-left … +1=all-right
+  const names=selSources.map(id=>OB_SOURCES.find(s=>s.id===id)?.name).filter(Boolean);
+  userProfile={topics:selTopics, sources:selSources, sourceNames:names, leanScore,
+    dominantLean:leanScore<-0.25?'l':leanScore>0.25?'r':'c'};
+
+  // Shift domain scores in the direction of user's lean
+  DOMAINS=BASE_DOMAINS.map(d=>{
+    if(!d.score) return {...d};
+    const adj=parseFloat(Math.max(-0.95,Math.min(0.95,d.score+leanScore*0.28)).toFixed(2));
+    return {...d, score:adj};
+  });
+
+  // Echo: fewer/more-concentrated sources → higher echo
+  const divP=total<3?18:total>7?-12:0, leanConc=Math.abs(leanScore)*22;
+  ECHO=BASE_ECHO.map(d=>{
+    if(!d.score) return {...d};
+    const ns=Math.min(99,Math.max(15,d.score+divP+leanConc));
+    return {...d, score:Math.round(ns), col:ns<55?'#27ae60':ns<75?'#f39c12':'#e74c5e'};
+  });
+
+  // Gaps: replace "saw" with the user's actual selections
+  GAPS=BASE_GAPS.map(g=>({
+    ...g, saw:names.length>0?names.slice(0,Math.min(4,names.length)):g.saw
+  }));
+}
+
+// ===================================================================
+// DASHBOARD
+// ===================================================================
+function initDash(){
+  // Sync overall echo score in the card header
+  const scored=ECHO.filter(e=>e.score!=null);
+  const overall=Math.round(scored.reduce((a,b)=>a+(b.score||0),0)/scored.length);
+  const echoColor=overall<55?'var(--success)':overall<75?'var(--warn)':'var(--danger)';
+  document.querySelectorAll('.echo-big').forEach(el=>{el.textContent=overall+'%';el.style.color=echoColor;});
+  const fill=document.querySelector('.echo-track .echo-fill');
+  if(fill)fill.style.width=overall+'%';
+  // Sync stat badges
+  if(userProfile){
+    const cnt=160+userProfile.sources.length*11;
+    const sv=document.querySelectorAll('.stat-val');
+    if(sv[0])sv[0].textContent=cnt;
+    if(sv[1])sv[1].textContent=Math.max(8,userProfile.sources.length+5);
+    if(sv[2]){sv[2].textContent=overall+'%';sv[2].style.color=echoColor;}
+  }
+  drawRadar(); renderDomainChips(); renderGaps(); renderEcho(); renderRecent();
+}
+function renderDomainChips(){
+  document.getElementById('domain-chips').innerHTML=DOMAINS.map(d=>{
+    if(!d.score) return `<span class="thin-b">${d.lbl}: data thin (n=${d.n})</span>`;
+    const lean=d.score<-0.3?'Left-lean':d.score>0.3?'Right-lean':'Center';
+    const col=d.score<-0.3?'var(--left)':d.score>0.3?'var(--right)':'var(--center)';
+    const bg=d.score<-0.3?'rgba(79,142,247,0.13)':d.score>0.3?'rgba(231,76,94,0.13)':'rgba(155,89,182,0.13)';
+    return `<span class="d-chip" style="background:${bg};color:${col};border-color:${col}40" onclick="go('topics')">${d.lbl}: ${lean}</span>`;
+  }).join('');
+}
+function renderGaps(){
+  document.getElementById('gap-list').innerHTML=GAPS.map(g=>`
+    <div class="gap-story">
+      <div class="gap-topic">${g.topic}</div>
+      <div class="gap-ttl">${g.ttl}</div>
+      <div class="gap-saw">You read: ${g.saw.join(', ')}</div>
+      <div class="gap-chips">${g.missed.map(m=>`<span class="gc">${m}</span>`).join('')}</div>
+    </div>`).join('');
+}
+function renderEcho(){
+  document.getElementById('echo-rows').innerHTML=ECHO.map(d=>{
+    if(!d.score) return `<div class="echo-row"><span class="echo-name">${d.lbl}</span><span class="thin-b">data thin</span></div>`;
+    return `<div class="echo-row" onclick="go('topics')">
+      <span class="echo-name">${d.lbl}</span>
+      <div class="echo-bar"><div class="echo-fill2" style="width:${d.score}%;background:${d.col}"></div></div>
+      <span class="echo-pct">${d.score}%</span>
+    </div>`;
+  }).join('');
+}
+function renderRecent(){
+  // Sort: prefer articles from outlets matching user's dominant lean (first), then others
+  const want=userProfile?userProfile.dominantLean:'c';
+  const sorted=[...RECENT].sort((a,b)=>(a.lean===want?-1:1)-(b.lean===want?-1:1));
+  document.getElementById('recent-list').innerHTML=sorted.map(a=>{
+    const col=a.lean==='l'?'var(--left)':a.lean==='r'?'var(--right)':'var(--center)';
+    return `<div class="r-art">
+      <img class="r-img" src="${a.img}" alt="" loading="lazy">
+      <div class="r-body">
+        <div class="r-outlet" style="color:${col}">${a.outlet}</div>
+        <div class="r-ttl">${a.ttl}</div>
+        <div class="why-chip" onclick="showWhy(event,'${encodeURIComponent(a.why)}')">💡 Why shown</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function showWhy(e,enc){
+  e.stopPropagation();
+  showToast(decodeURIComponent(enc));
+}
+
+// ===================================================================
+// RADAR (SVG, no libraries)
+// ===================================================================
+function drawRadar(){
+  const svg=document.getElementById('radarSvg');
+  const css=getComputedStyle(document.documentElement);
+  const left=css.getPropertyValue('--left').trim() || '#4e6f93';
+  const right=css.getPropertyValue('--right').trim() || '#9c473a';
+  const accent=css.getPropertyValue('--accent').trim() || '#214f48';
+  const grid=css.getPropertyValue('--glass-b').trim() || 'rgba(58,45,33,0.12)';
+  const gridStrong=css.getPropertyValue('--glass-b-2').trim() || 'rgba(58,45,33,0.22)';
+  const faint=css.getPropertyValue('--text-3').trim() || 'rgba(31,26,23,0.44)';
+  const paper=css.getPropertyValue('--paper-strong').trim() || '#fffdf8';
+  const cx=200,cy=200,r=148,n=DOMAINS.length; let h='';
+  // grid rings
+  for(let l=1;l<=4;l++){
+    h+=`<polygon points="${hexPts(cx,cy,r*l/4,n)}" fill="none" stroke="${grid}" stroke-width="1"/>`;
+  }
+  // axis labels
+  h+=`<text x="${cx-r-10}" y="${cy}" text-anchor="end" fill="${left}" font-size="9" font-family="Georgia" dominant-baseline="middle">◀ Left</text>`;
+  h+=`<text x="${cx+r+10}" y="${cy}" text-anchor="start" fill="${right}" font-size="9" font-family="Georgia" dominant-baseline="middle">Right ▶</text>`;
+  // axes + labels
+  DOMAINS.forEach((d,i)=>{
+    const ang=(Math.PI*2*i/n)-Math.PI/2;
+    const x=cx+r*Math.cos(ang),y=cy+r*Math.sin(ang);
+    const thin=d.score===null;
+    h+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${gridStrong}" stroke-width="1" ${thin?'stroke-dasharray="5,4"':''}/>`;
+    const lx=cx+(r+26)*Math.cos(ang),ly=cy+(r+26)*Math.sin(ang);
+    const anc=Math.cos(ang)>0.15?'start':Math.cos(ang)<-0.15?'end':'middle';
+    h+=`<text x="${lx}" y="${ly}" text-anchor="${anc}" dominant-baseline="middle" fill="${thin?faint:d.col}" font-size="11" font-weight="600" font-family="Georgia">${d.lbl}${thin?' *':''}</text>`;
+  });
+  // confidence band
+  const bp=DOMAINS.map((d,i)=>{
+    if(!d.score)return null;
+    const ang=(Math.PI*2*i/n)-Math.PI/2, s=(d.score+1)/2;
+    const or=Math.min(r,(s+d.conf)*r);
+    return `${cx+or*Math.cos(ang)},${cy+or*Math.sin(ang)}`;
+  }).filter(Boolean).join(' ');
+  if(bp) h+=`<polygon points="${bp}" fill="rgba(33,79,72,0.10)" stroke="rgba(33,79,72,0.24)" stroke-width="1" stroke-dasharray="3,3"/>`;
+  // user position
+  const up=DOMAINS.map((d,i)=>{
+    if(!d.score)return null;
+    const ang=(Math.PI*2*i/n)-Math.PI/2, s=(d.score+1)/2;
+    return `${cx+s*r*Math.cos(ang)},${cy+s*r*Math.sin(ang)}`;
+  }).filter(Boolean).join(' ');
+  if(up){
+    h+=`<polygon points="${up}" fill="rgba(33,79,72,0.16)" stroke="${accent}" stroke-width="2"/>`;
+    DOMAINS.forEach((d,i)=>{
+      if(!d.score)return;
+      const ang=(Math.PI*2*i/n)-Math.PI/2, s=(d.score+1)/2;
+      h+=`<circle cx="${cx+s*r*Math.cos(ang)}" cy="${cy+s*r*Math.sin(ang)}" r="4" fill="${accent}" stroke="${paper}" stroke-width="1.5"/>`;
+    });
+  }
+  h+=`<circle cx="${cx}" cy="${cy}" r="3" fill="${faint}"/>`;
+  svg.innerHTML=h;
+}
+function hexPts(cx,cy,r,n){
+  return Array.from({length:n},(_,i)=>{
+    const a=(Math.PI*2*i/n)-Math.PI/2;
+    return `${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;
+  }).join(' ');
+}
+
+// ===================================================================
+// NEWS API
+// ===================================================================
+async function fetchLiveNews(query){
+  if(!NEWS_API_KEY) return null;
+  try{
+    const res=await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&language=en&pageSize=8&apiKey=${NEWS_API_KEY}`);
+    if(!res.ok) return null;
+    const d=await res.json();
+    return (d.articles||[]).filter(a=>a.title&&a.description&&a.urlToImage);
+  }catch(e){ return null; }
+}
+function mapLiveArticle(a, modeDesc){
+  return {
+    outlet: (a.source?.name||'News').replace(/\[.*?\]/g,'').trim(),
+    lean:'c', rel:parseFloat((3.4+Math.random()*1.4).toFixed(1)),
+    img:a.urlToImage||`https://picsum.photos/seed/${Math.random().toString(36).slice(2)}/140/90`,
+    ttl:(a.title||'').replace(/\s*[-|–]\s*[^-|–]+$/,'').trim(),
+    sum:a.description||'',
+    why:`Live article via NewsAPI. ${modeDesc||'Ranked by recency and your interest graph.'}`,
+    tags:[], frames:[], url:a.url, live:true,
+  };
+}
+
+// ===================================================================
+// FEED
+// ===================================================================
+function initSliders(){ SLIDERS.forEach(s=>{sliderVals[s.id]=s.val;}); }
+function renderFeed(){ renderModes(); renderSliders(); renderFeedCards(); }
+function renderModes(){
+  document.getElementById('feed-modes').innerHTML=MODES.map(m=>
+    `<button class="mode-chip ${m.id===curMode?'active':''}" onclick="setMode('${m.id}')">${m.lbl}</button>`
+  ).join('');
+  const m=MODES.find(x=>x.id===curMode);
+  document.getElementById('mode-desc').textContent=m?m.desc:'';
+}
+function setMode(id){ curMode=id; renderModes(); renderFeedCards(); }
+function renderSliders(){
+  if(!Object.keys(sliderVals).length)initSliders();
+  document.getElementById('slider-groups').innerHTML=SLIDERS.map(s=>`
+    <div class="sl-group">
+      <div class="sl-hd"><span class="sl-lbl">${s.lbl}</span><span class="sl-val" id="sv_${s.id}">${sliderVals[s.id]}%</span></div>
+      <div class="sl-desc">${s.desc}</div>
+      <input type="range" min="0" max="100" value="${sliderVals[s.id]}" oninput="updSlider('${s.id}',this.value)">
+    </div>`).join('');
+}
+function updSlider(id,v){ sliderVals[id]=parseInt(v); const el=document.getElementById('sv_'+id); if(el)el.textContent=v+'%'; }
+function resetSliders(){ SLIDERS.forEach(s=>{sliderVals[s.id]=s.val;}); renderSliders(); }
+async function renderFeedCards(){
+  const listEl=document.getElementById('feed-list');
+  if(NEWS_API_KEY){
+    listEl.innerHTML=`<div class="glass" style="padding:var(--sp-4);color:var(--text-2);font-size:var(--fs-sm)">⟳ Fetching live headlines...</div>`;
+    const queries={myFeed:'world politics news',balanced:'international news today',bubble:'independent media politics',reliable:'Reuters BBC AP news',global:'Africa Asia "Latin America" news'};
+    const live=await fetchLiveNews(queries[curMode]||'world news');
+    if(live&&live.length){
+      const mode=MODES.find(m=>m.id===curMode);
+      listEl.innerHTML=live.slice(0,5).map(a=>{const id=regArt(mapLiveArticle(a,mode?.desc));return buildFcHTML(AREG[id],id);}).join('');
+      return;
+    }
+  }
+  // Fallback: mock data, sorted by user lean if profile exists
+  let arts=[...(FEED_ARTICLES[curMode]||FEED_ARTICLES.myFeed)];
+  if(userProfile&&curMode==='myFeed'){
+    const want=userProfile.dominantLean;
+    arts.sort((a,b)=>(a.lean===want?-1:1)-(b.lean===want?-1:1));
+  }
+  listEl.innerHTML=arts.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
+}
+function buildFcHTML(a,id){
+  const lt={l:'Left',c:'Center',r:'Right'}[a.lean]||'Center';
+  const live=a.live?`<span style="font-size:9px;padding:1px 6px;border-radius:4px;background:rgba(0,210,180,0.15);color:var(--accent);border:1px solid rgba(0,210,180,0.3);margin-left:6px">⚡ LIVE</span>`:'';
+  return `<div class="fc glass" onclick="openArt('${id}')">
+    <div class="fc-head">
+      <img class="fc-img" src="${a.img}" alt="" loading="lazy" onerror="this.style.background='var(--glass-bg-2)'">
+      <div class="fc-meta">
+        <div class="fc-outlet-row"><span class="outlet-name">${a.outlet}</span><span class="lb ${a.lean}">${lt}</span>${live}</div>
+        <div class="rel-row"><span class="star">${'★'.repeat(Math.floor(a.rel||3))}</span><span>${(+(a.rel||3)).toFixed(1)}/5 reliability (Ad Fontes)</span></div>
+      </div>
+    </div>
+    <div class="fc-title">${a.ttl}</div>
+    <div class="fc-sum">${(a.sum||'').slice(0,130)}...</div>
+    <div class="why-panel"><div class="why-lbl">💡 Why this is in your feed</div><div class="why-txt">${a.why}</div></div>
+    <div class="fc-tags">${(a.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+  </div>`;
+}
+
+// ===================================================================
+// TOPICS
+// ===================================================================
+function renderTopics(){
+  document.getElementById('topic-chips').innerHTML=Object.entries(TOPICS).map(([k,t])=>
+    `<button class="t-chip ${k===curTopic?'active':''}" onclick="selTopic('${k}',this)">${t.hot?'🔥 ':''}${t.name}</button>`
+  ).join('');
+  renderTopicContent(curTopic);
+}
+function selTopic(k,el){
+  curTopic=k; curTlIdx=0;
+  document.querySelectorAll('.t-chip').forEach(c=>c.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderTopicContent(k);
+}
+function renderTopicContent(k){
+  const t=TOPICS[k];
+  const CC={left:'var(--left)',center:'var(--center)',right:'var(--right)'};
+  const CB={left:'var(--left-soft)',center:'var(--center-soft)',right:'var(--right-soft)'};
+  const colsHtml=Object.entries(t.cols).map(([ck,col])=>{
+    const cards=col.srcs.map(a=>{
+      const id=regArt(a);
+      const fr=(a.frames||[]).slice(0,2).map(f=>`<span class="a-frame" style="background:${CB[ck]};color:${CC[ck]}">${f}</span>`).join('');
+      return `<div class="a-card glass" onclick="openArt('${id}')">
+        <img class="a-img" src="${a.img}" alt="" loading="lazy">
+        <div class="a-outlet" style="color:${CC[ck]}">${a.outlet}</div>
+        <div class="a-ttl">${a.ttl}</div>${fr}
+      </div>`;
+    }).join('');
+    return `<div class="p-col">
+      <div class="col-hd"><div class="col-dot" style="background:${CC[ck]}"></div><span class="col-ttl">${col.lbl}</span><span class="col-cnt">${col.srcs.length} articles</span></div>
+      ${cards}
+    </div>`;
+  }).join('');
+  const srcChips=srcs=>(srcs||[]).map(s=>{
+    const so=OB_SOURCES.find(o=>s.toLowerCase().includes(o.name.toLowerCase()));
+    const c=so?(so.lean==='l'?'var(--left)':so.lean==='r'?'var(--right)':'var(--center)'):'var(--text-2)';
+    return `<span class="tl-src" style="color:${c};border-color:${c}40;background:${c}10">${s}</span>`;
+  }).join('');
+  const fev=t.tl[0];
+  const tlHtml=t.tl.map((ev,i)=>`
+    <div class="tl-ev ${i===0?'active':''}" onclick="selTl(${i},'${k}')">
+      <div class="tl-date">${ev.date}</div><div class="tl-lbl">${ev.lbl}</div>
+    </div>`).join('');
+  const gapHtml=`
+    <div style="margin-bottom:var(--sp-5)">
+      <div class="s-title">Your Coverage Gap for This Story</div>
+      <div class="s-sub">Sources you've read vs. what's missing from your reading on this topic</div>
+      <div class="gap-cmp">
+        <div class="glass gap-col">
+          <div class="gap-col-ttl" style="color:var(--accent)">✓ Sources you've read</div>
+          ${t.gap.saw.map(s=>`<div class="gap-src-row">· ${s}</div>`).join('')}
+        </div>
+        <div class="glass miss-card">
+          <div class="miss-ttl">⚠ Missing Perspectives</div>
+          ${t.gap.missed.map(v=>`<div class="miss-item"><div class="mi-lbl">${v.lbl}</div><div class="mi-desc">${v.desc}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('topic-content').innerHTML=`
+    <div class="t-head">
+      <div class="t-eye">${t.cat}${t.hot?' · 🔥 Trending':''}</div>
+      <div class="t-title">${t.name}</div>
+      <div class="t-meta">
+        <div><span>${t.articles.toLocaleString()}</span> articles</div>
+        <div><span>${t.outlets}</span> outlets</div>
+        <div>Ongoing <span>${t.since}</span></div>
+        <div>Echo: <span style="color:var(--warn)">${t.echo}</span></div>
+      </div>
+      <div class="bias-row">
+        <div class="bias-track">
+          <div class="bs" style="width:${t.bias.l}%;background:var(--left)"></div>
+          <div class="bs" style="width:${t.bias.c}%;background:var(--center)"></div>
+          <div class="bs" style="width:${t.bias.r}%;background:var(--right)"></div>
+        </div>
+        <div class="bias-leg">
+          <span><span class="bdot" style="background:var(--left)"></span>Left ${t.bias.l}%</span>
+          <span><span class="bdot" style="background:var(--center)"></span>Center ${t.bias.c}%</span>
+          <span><span class="bdot" style="background:var(--right)"></span>Right ${t.bias.r}%</span>
+        </div>
+      </div>
+    </div>
+    <div class="p-grid">${colsHtml}</div>
+    ${gapHtml}
+    <div class="tl-wrap">
+      <div class="s-title">Story Timeline</div>
+      <div class="s-sub">Key events across outlets — click any node for detail and source breakdown</div>
+      <div class="tl-track">${tlHtml}</div>
+      <div class="glass tl-detail" id="tl-det">
+        <div class="tl-d-title" id="tl-title">${fev.lbl} — ${fev.date}</div>
+        <div class="tl-d-body" id="tl-body">${fev.detail}</div>
+        <div class="tl-srcs" id="tl-srcs">${srcChips(fev.srcs)}</div>
+      </div>
+    </div>`;
+}
+function selTl(i,k){
+  curTlIdx=i;
+  const ev=TOPICS[k].tl[i];
+  document.querySelectorAll('.tl-ev').forEach((el,j)=>el.classList.toggle('active',j===i));
+  document.getElementById('tl-title').textContent=ev.lbl+' — '+ev.date;
+  document.getElementById('tl-body').textContent=ev.detail;
+  const sc=ev.srcs||[]; const so=OB_SOURCES;
+  document.getElementById('tl-srcs').innerHTML=sc.map(s=>{
+    const src=so.find(o=>s.toLowerCase().includes(o.name.toLowerCase()));
+    const c=src?(src.lean==='l'?'var(--left)':src.lean==='r'?'var(--right)':'var(--center)'):'var(--text-2)';
+    return `<span class="tl-src" style="color:${c};border-color:${c}40;background:${c}10">${s}</span>`;
+  }).join('');
+}
+
+// ===================================================================
+// MODAL
+// ===================================================================
+function openArt(id){
+  const a=AREG[id]; if(!a)return;
+  const lt={l:'Left-Leaning',c:'Center',r:'Right-Leaning'}[a.lean]||'';
+  const lc=a.lean==='l'?'var(--left)':a.lean==='r'?'var(--right)':a.lean==='c'?'var(--center)':'var(--text-2)';
+  const liveBadge=a.live?`<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(0,210,180,0.12);color:var(--accent);border:1px solid rgba(0,210,180,0.3);margin-right:8px">⚡ LIVE</span>`:'';
+  document.getElementById('modal-body').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="m-outlet" style="color:${lc}">${liveBadge}${a.outlet||''}${lt?' · '+lt:''}</div>
+    <div class="m-title">${a.ttl||a.title||''}</div>
+    ${a.img?`<img class="m-img" src="${a.img}" alt="" loading="lazy" onerror="this.style.display='none'">`:''}
+    <div class="m-sum">${a.sum||a.summary||''}</div>
+    ${a.url?`<a href="${a.url}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:var(--sp-3);font-size:var(--fs-sm);color:var(--accent);text-decoration:none">Read full article ↗</a>`:''}
+    ${a.frames&&a.frames.length?`<div class="m-frames"><div class="m-frames-ttl">How this outlet frames the story</div><div class="m-frames-row">${a.frames.map(f=>`<span class="m-frame" style="color:${lc};border-color:${lc}40;background:${lc}10">${f}</span>`).join('')}</div></div>`:''}
+    ${a.why?`<div class="m-why"><div class="m-why-ttl">Why this is in your feed</div><div class="m-why-txt">${a.why}</div></div>`:''}
+    ${a.rel?`<div class="m-rel">${'★'.repeat(Math.floor(a.rel))} ${(+a.rel).toFixed(1)}/5 factual reliability — Ad Fontes Media</div>`:''}`;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modal'))
+    document.getElementById('modal').classList.remove('open');
+}
+
+// ===================================================================
+// INIT
+// ===================================================================
+// ===================================================================
+// SECURITY — sanitize all user-supplied text before innerHTML injection
+// ===================================================================
+function sanitize(str){
+  if(typeof str!=='string') return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#x27;').replace(/\//g,'&#x2F;');
+}
+// Guard: strip any URL query params that could carry injected state.
+// Sensitive keys (paid, premium, admin, token, auth, status) are silently dropped.
+(function guardUrlParams(){
+  const BLOCKED=['paid','premium','admin','token','auth','status','role','plan','upgrade','session'];
+  const u=new URL(location.href);
+  let dirty=false;
+  BLOCKED.forEach(k=>{ if(u.searchParams.has(k)){ u.searchParams.delete(k); dirty=true; }});
+  if(dirty){
+    history.replaceState(null,'',u.toString());
+    console.warn('[ViewpointAtlas] Blocked URL parameter injection attempt.');
+  }
+})();
+
+// ===================================================================
+// AUTH
+// ===================================================================
+let currentUser=null;
+function _getUsers(){ return JSON.parse(localStorage.getItem('va_users')||'{}'); }
+function _saveUsers(u){ localStorage.setItem('va_users',JSON.stringify(u)); }
+function _saveSession(u){ localStorage.setItem('va_session',JSON.stringify(u)); currentUser=u; }
+function _loadSession(){ const s=localStorage.getItem('va_session'); if(s){try{currentUser=JSON.parse(s);return true;}catch(e){}} return false; }
+function syncEditionStamp(){
+  const stamp=new Intl.DateTimeFormat(undefined,{weekday:'long',month:'long',day:'numeric'}).format(new Date())+' Edition';
+  ['nav-edition','auth-edition'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=stamp;
+  });
+}
+function syncUserChrome(){
+  const name=currentUser&&currentUser.username?currentUser.username:'Researcher';
+  const hero=document.getElementById('hero-user');
+  if(hero) hero.textContent=name;
+  const nu=document.getElementById('nav-user');
+  if(!nu) return;
+  if(currentUser){
+    nu.textContent=name;
+    nu.style.display='inline-flex';
+  }else{
+    nu.textContent='';
+    nu.style.display='none';
+  }
+}
+
+function switchAuthTab(tab){
+  document.getElementById('auth-login-form').style.display=tab==='login'?'block':'none';
+  document.getElementById('auth-signup-form').style.display=tab==='signup'?'block':'none';
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
+}
+function doLogin(){
+  const u=sanitize(document.getElementById('login-user').value.trim());
+  const p=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err');
+  if(!u||!p){err.textContent='Please fill in all fields.';return;}
+  const users=_getUsers();
+  if(!users[u]||users[u].pw!==btoa(p)){err.textContent='Invalid username or password.';return;}
+  err.textContent='';
+  _saveSession({username:u,email:users[u].email});
+  _enterApp();
+}
+function doSignup(){
+  const u=sanitize(document.getElementById('signup-user').value.trim());
+  const e=sanitize(document.getElementById('signup-email').value.trim());
+  const p=document.getElementById('signup-pass').value;
+  const err=document.getElementById('signup-err');
+  if(!u||!e||!p){err.textContent='Please fill in all fields.';return;}
+  if(u.length<3){err.textContent='Username must be at least 3 characters.';return;}
+  if(p.length<6){err.textContent='Password must be at least 6 characters.';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){err.textContent='Enter a valid email address.';return;}
+  const users=_getUsers();
+  if(users[u]){err.textContent='Username already taken — try another.';return;}
+  users[u]={email:e,pw:btoa(p),createdAt:Date.now()};
+  _saveUsers(users);
+  _saveSession({username:u,email:e});
+  err.textContent='';
+  _enterApp();
+}
+function demoLogin(){
+  _saveSession({username:'Demo User',email:'demo@viewpointatlas.com'});
+  _enterApp();
+}
+function doLogout(){
+  localStorage.removeItem('va_session');
+  currentUser=null; selTopics=[]; selSources=[]; userProfile=null;
+  DOMAINS=BASE_DOMAINS.map(d=>({...d}));
+  GAPS=BASE_GAPS.map(g=>({...g}));
+  ECHO=BASE_ECHO.map(e=>({...e}));
+  document.getElementById('app').style.display='none';
+  document.getElementById('main-nav').style.display='none';
+  document.getElementById('ob-view').style.display='none';
+  document.getElementById('ob-log').innerHTML='';
+  document.getElementById('logoutBtn').style.display='none';
+  syncUserChrome();
+  document.getElementById('auth-view').classList.add('show');
+  // reset onboarding dots
+  document.querySelectorAll('.ob-dot').forEach((d,i)=>{d.className='ob-dot '+(i===0?'active':'pending');});
+  selTopics=[]; selSources=[];
+  initOB();
+}
+function _enterApp(){
+  syncUserChrome();
+  document.getElementById('logoutBtn').style.display='flex';
+  // Returning user? Restore saved profile and skip onboarding
+  const saved=localStorage.getItem('va_profile_'+btoa(currentUser.username));
+  if(saved){
+    try{
+      const p=JSON.parse(saved);
+      selTopics=p.topics||[]; selSources=p.sources||[];
+      computeUserProfile();
+      document.getElementById('auth-view').classList.remove('show');
+      document.getElementById('app').style.display='block';
+      document.getElementById('main-nav').style.display='flex';
+      go('dash'); initDash();
+      showToast('Welcome back, '+sanitize(currentUser.username)+'!');
+      return;
+    }catch(e){}
+  }
+  // New user — onboarding
+  document.getElementById('auth-view').classList.remove('show');
+  document.getElementById('ob-view').style.display='flex';
+}
+
+// ===================================================================
+// URL INJECTOR — paste any article URL, get mocked bias analysis
+// ===================================================================
+const DOMAIN_LEAN={
+  'nytimes.com':'c','wsj.com':'r','foxnews.com':'r','msnbc.com':'l','bbc.com':'c','bbc.co.uk':'c',
+  'theguardian.com':'l','apnews.com':'c','breitbart.com':'r','vox.com':'l','economist.com':'c',
+  'theatlantic.com':'l','ft.com':'c','reuters.com':'c','bloomberg.com':'c','npr.org':'c',
+  'washingtonpost.com':'l','cnn.com':'l','nbcnews.com':'c','politico.com':'c','axios.com':'c',
+  'theintercept.com':'l','reason.com':'r','nationalreview.com':'r','jacobinmag.com':'l',
+  'aljazeera.com':'c','thehindu.com':'c','dawn.com':'c','motherjones.com':'l',
+};
+const FRAME_POOLS={
+  l:['Systemic Analysis','Corporate Accountability','Human Rights','Social Impact','Power Critique'],
+  c:['Factual Record','Policy Detail','Data-Driven','Balanced Analysis','Verification'],
+  r:['Market Solutions','National Security','Government Skepticism','Fiscal Responsibility','Strategic Competition'],
+};
+const LEAN_LBL={l:'Left-Leaning',c:'Center',r:'Right-Leaning'};
+
+function _leanFromUrl(url){
+  try{
+    const host=new URL(url).hostname.replace(/^www\./,'');
+    for(const [d,l] of Object.entries(DOMAIN_LEAN)) if(host===d||host.endsWith('.'+d)) return l;
+  }catch(e){}
+  return 'c';
+}
+async function injectUrl(){
+  const raw=document.getElementById('inj-url').value.trim();
+  const log=document.getElementById('inj-log');
+  if(!raw){log.textContent='⚠ Paste a URL first.';return;}
+  let url=raw; if(!/^https?:\/\//i.test(url)) url='https://'+url;
+  try{ new URL(url); }catch(e){log.textContent='⚠ Invalid URL.';return;}
+  // Sanitize URL — no javascript: or data: schemes
+  if(/^(javascript|data|vbscript):/i.test(url)){log.textContent='⚠ URL not allowed.';return;}
+  const steps=['Fetching article metadata...','Detecting outlet bias profile...','Scoring framing signals...','Calibrating reliability index...','Injecting into feed...'];
+  let si=0;
+  const iv=setInterval(()=>{ if(si<steps.length) log.textContent='⟳ '+steps[si++]; else clearInterval(iv); },400);
+  setTimeout(()=>{
+    clearInterval(iv);
+    const lean=_leanFromUrl(url);
+    const host=new URL(url).hostname.replace(/^www\./,'');
+    const outlet=host.split('.')[0].replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    const frames=(FRAME_POOLS[lean]||FRAME_POOLS.c).slice(0,3);
+    const rel=parseFloat((lean==='c'?4.0+Math.random()*0.9:3.1+Math.random()*1.2).toFixed(1));
+    const card={
+      outlet:sanitize(outlet), lean, rel,
+      img:'https://picsum.photos/seed/'+Math.random().toString(36).slice(2,8)+'/140/90',
+      ttl:'[Injected] Article from '+sanitize(host),
+      sum:'Injected via URL protocol. Domain: '+sanitize(host)+'. Bias estimated from AllSides/Ad Fontes outlet database. Open the original article for full content.',
+      why:'Manually injected by you. '+LEAN_LBL[lean]+' lean detected from outlet domain. Reliability estimate: '+rel+'/5.',
+      tags:['Injected'], frames, url, live:true,
+    };
+    const id=regArt(card);
+    const listEl=document.getElementById('feed-list');
+    listEl.innerHTML=buildFcHTML(card,id)+listEl.innerHTML;
+    document.getElementById('inj-url').value='';
+    log.textContent='✓ Injected.';
+    showToast('Article from '+sanitize(host)+' injected — '+LEAN_LBL[lean]+' lean detected.');
+    setTimeout(()=>{log.textContent='';},3000);
+  }, steps.length*400+200);
+}
+
+// ===================================================================
+// BOOT — check session, guard URL, then show correct screen
+// ===================================================================
+initOB(); initSliders();
+syncEditionStamp(); syncUserChrome();
+function launch(){
+  computeUserProfile();
+  syncUserChrome();
+  if(currentUser){
+    try{ localStorage.setItem('va_profile_'+btoa(currentUser.username),JSON.stringify({topics:selTopics,sources:selSources})); }catch(e){}
+  }
+  document.getElementById('ob-view').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('main-nav').style.display='flex';
+  go('dash'); initDash();
+}
+// Show correct initial screen
+if(_loadSession()){
+  _enterApp();
+} else {
+  document.getElementById('auth-view').classList.add('show');
+}
+</script>
+</body>
+</html>
