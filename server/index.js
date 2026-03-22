@@ -36,9 +36,13 @@ app.get('/api/health', (_req, res) =>
 // ── 404 ──────────────────────────────────────────────────────────────────────
 app.use((_req, res) => res.status(404).json({ error: 'Route not found' }));
 
-// ── Start ────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n  Viewpoint Atlas API`);
-  console.log(`  Running on http://localhost:${PORT}`);
-  console.log(`  Health: http://localhost:${PORT}/api/health\n`);
-});
+// ── Start (local dev) / Export (Vercel serverless) ───────────────────────────
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n  Viewpoint Atlas API`);
+    console.log(`  Running on http://localhost:${PORT}`);
+    console.log(`  Health: http://localhost:${PORT}/api/health\n`);
+  });
+}
+
+module.exports = app;
