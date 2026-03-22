@@ -15,7 +15,8 @@ const fetch  = require('node-fetch');
 const { getSource }          = require('../data/sources');
 const { detectFrames, detectEmotionalTone, generateWhyShown } = require('../data/analysis');
 
-const NEWS_API_KEY = 'f8af41eaeaa84575b02930eb91348404';
+// Prefer the Vercel environment variable; fall back to the bundled dev key
+const NEWS_API_KEY = process.env.NEWS_API_KEY || 'f8af41eaeaa84575b02930eb91348404';
 const NEWS_API_BASE = 'https://newsapi.org/v2';
 
 // Topic → NewsAPI search query mapping
