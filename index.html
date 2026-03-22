@@ -4472,16 +4472,23 @@ async function renderFeedCards(){
   listEl.innerHTML=`<div class="glass" style="padding:var(--sp-4);color:var(--text-2);font-size:var(--fs-sm)">⟳ Fetching live headlines...</div>`;
   const queries={myFeed:'world politics news',balanced:'international news today',bubble:'independent media politics',reliable:'Reuters BBC AP news',global:'Africa Asia "Latin America" news'};
   const live=await fetchLiveNews(queries[curMode]||'world news');
+  function _prependInjected(el){
+    if(!_injectedArticles.length) return;
+    const pin=_injectedArticles.map(({article,id})=>buildFcHTML(article,id)).join('');
+    el.innerHTML=pin+el.innerHTML;
+  }
   if(live&&live.length){
     const mode=MODES.find(m=>m.id===curMode);
     const ranked=rerankArticles(live.map(a=>hydrateArticle(mapLiveArticle(a,mode?.desc), { modeId:curMode })), curMode).slice(0,6);
     listEl.innerHTML=ranked.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
+    _prependInjected(listEl);
     renderFeedIntelCard(ranked);
     return;
   }
   // Fallback: mock data
   const arts=rerankArticles(currentFeedSeed(curMode), curMode).slice(0,6);
   listEl.innerHTML=arts.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
+  _prependInjected(listEl);
   renderFeedIntelCard(arts);
 }
 function buildFcHTML(a,id){
@@ -4945,6 +4952,7 @@ function _enterApp(){
 // ===================================================================
 // URL INJECTOR — paste any article URL, get mocked bias analysis
 // ===================================================================
+const _injectedArticles=[]; // persists across feed re-renders
 const DOMAIN_LEAN={
   'nytimes.com':'c','wsj.com':'r','foxnews.com':'r','msnbc.com':'l','bbc.com':'c','bbc.co.uk':'c',
   'theguardian.com':'l','apnews.com':'c','breitbart.com':'r','vox.com':'l','economist.com':'c',
@@ -4995,10 +5003,11 @@ async function injectUrl(){
     };
     const article=hydrateArticle(card);
     const id=regArt(article);
+    _injectedArticles.unshift({article,id}); // store so feed re-renders don't wipe it
     const listEl=document.getElementById('feed-list');
-    listEl.innerHTML=buildFcHTML(article,id)+listEl.innerHTML;
+    if(listEl) listEl.innerHTML=buildFcHTML(article,id)+listEl.innerHTML;
     document.getElementById('inj-url').value='';
-    log.textContent='✓ Injected.';
+    log.textContent='✓ Injected — scroll up to see your article.';
     showToast('Article from '+sanitize(host)+' injected — '+LEAN_LBL[lean]+' lean detected.');
     setTimeout(()=>{log.textContent='';},3000);
   }, steps.length*400+200);
