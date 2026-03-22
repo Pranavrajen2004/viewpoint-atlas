@@ -134,6 +134,29 @@ function applySliders(articles, sliders = {}) {
   return filtered;
 }
 
+// ── GET /api/news/proxy ───────────────────────────────────────────────────────
+/**
+ * Transparent proxy to NewsAPI — lets the browser call this endpoint and
+ * bypass the CORS restriction that NewsAPI enforces on non-localhost origins.
+ * Query params:
+ *   q         — search string
+ *   pageSize  — max results (default 8, max 20)
+ *   sortBy    — 'publishedAt' | 'relevancy' (default 'publishedAt')
+ */
+router.get('/proxy', async (req, res) => {
+  try {
+    const { q = 'world news', sortBy = 'publishedAt' } = req.query;
+    const pageSize = Math.min(parseInt(req.query.pageSize) || 8, 20);
+    const data = await fetchFromNewsAPI('everything', {
+      q, language: 'en', sortBy, pageSize
+    });
+    res.json(data);
+  } catch (err) {
+    console.error('[/api/news/proxy]', err.message);
+    res.status(502).json({ error: err.message });
+  }
+});
+
 // ── GET /api/news/feed ────────────────────────────────────────────────────────
 /**
  * Query params:

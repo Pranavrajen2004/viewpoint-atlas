@@ -4406,6 +4406,16 @@ function hexPts(cx,cy,r,n){
 // NEWS API
 // ===================================================================
 async function fetchLiveNews(query){
+  // Try backend proxy first (works on Vercel, bypasses NewsAPI CORS restriction)
+  try{
+    const res=await fetch(`/api/news/proxy?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt`);
+    if(res.ok){
+      const d=await res.json();
+      const arts=(d.articles||[]).filter(a=>a.title&&a.description&&a.urlToImage);
+      if(arts.length) return arts;
+    }
+  }catch(e){}
+  // Fallback: direct NewsAPI (works on localhost if user has set a key)
   if(!NEWS_API_KEY) return null;
   try{
     const res=await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&language=en&pageSize=8&apiKey=${NEWS_API_KEY}`);
@@ -4459,19 +4469,17 @@ function updSlider(id,v){
 function resetSliders(){ SLIDERS.forEach(s=>{sliderVals[s.id]=s.val;}); renderSliders(); renderFeedCards(); }
 async function renderFeedCards(){
   const listEl=document.getElementById('feed-list');
-  if(NEWS_API_KEY){
-    listEl.innerHTML=`<div class="glass" style="padding:var(--sp-4);color:var(--text-2);font-size:var(--fs-sm)">⟳ Fetching live headlines...</div>`;
-    const queries={myFeed:'world politics news',balanced:'international news today',bubble:'independent media politics',reliable:'Reuters BBC AP news',global:'Africa Asia "Latin America" news'};
-    const live=await fetchLiveNews(queries[curMode]||'world news');
-    if(live&&live.length){
-      const mode=MODES.find(m=>m.id===curMode);
-      const ranked=rerankArticles(live.map(a=>hydrateArticle(mapLiveArticle(a,mode?.desc), { modeId:curMode })), curMode).slice(0,6);
-      listEl.innerHTML=ranked.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
-      renderFeedIntelCard(ranked);
-      return;
-    }
+  listEl.innerHTML=`<div class="glass" style="padding:var(--sp-4);color:var(--text-2);font-size:var(--fs-sm)">⟳ Fetching live headlines...</div>`;
+  const queries={myFeed:'world politics news',balanced:'international news today',bubble:'independent media politics',reliable:'Reuters BBC AP news',global:'Africa Asia "Latin America" news'};
+  const live=await fetchLiveNews(queries[curMode]||'world news');
+  if(live&&live.length){
+    const mode=MODES.find(m=>m.id===curMode);
+    const ranked=rerankArticles(live.map(a=>hydrateArticle(mapLiveArticle(a,mode?.desc), { modeId:curMode })), curMode).slice(0,6);
+    listEl.innerHTML=ranked.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
+    renderFeedIntelCard(ranked);
+    return;
   }
-  // Fallback: mock data, sorted by user lean if profile exists
+  // Fallback: mock data
   const arts=rerankArticles(currentFeedSeed(curMode), curMode).slice(0,6);
   listEl.innerHTML=arts.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
   renderFeedIntelCard(arts);
