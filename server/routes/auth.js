@@ -12,10 +12,28 @@
  */
 
 const router = require('express').Router();
+const fetch  = require('node-fetch');
 
 // In-memory user store (keyed by lowercase username)
 // Structure: { username, email, passwordB64, createdAt }
 const USERS = new Map();
+
+// ── reCAPTCHA verification ────────────────────────────────────────────────────
+const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || '6LeIxAcTAAAAAGG-vFI1TnRWxMXAXPJaQ9RNfPGY'; // test secret
+
+async function verifyCaptcha(token) {
+  if (!token) return false;
+  try {
+    const res = await fetch(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET}&response=${token}`,
+      { method: 'POST' }
+    );
+    const data = await res.json();
+    return data.success === true;
+  } catch (e) {
+    return false;
+  }
+}
 
 // Seed a demo account so presenters can always log in
 USERS.set('demo', {
@@ -26,8 +44,13 @@ USERS.set('demo', {
 });
 
 // ── POST /api/auth/signup ────────────────────────────────────────────────────
-router.post('/signup', (req, res) => {
-  const { username, email, password } = req.body;
+router.post('/signup', async (req, res) => {
+  const { username, email, password, captchaToken } = req.body;
+
+  // Server-side CAPTCHA verification
+  const captchaOk = await verifyCaptcha(captchaToken);
+  if (!captchaOk)
+    return res.status(400).json({ error: 'CAPTCHA verification failed. Please try again.' });
 
   if (!username || !email || !password)
     return res.status(400).json({ error: 'username, email and password are required.' });
@@ -55,11 +78,16 @@ router.post('/signup', (req, res) => {
 });
 
 // ── POST /api/auth/login ─────────────────────────────────────────────────────
-router.post('/login', (req, res) => {
-  const { username, password } = req.body;
+router.post('/login', async (req, res) => {
+  const { username, password, captchaToken } = req.body;
 
   if (!username || !password)
     return res.status(400).json({ error: 'username and password are required.' });
+
+  // Server-side CAPTCHA verification
+  const captchaOk = await verifyCaptcha(captchaToken);
+  if (!captchaOk)
+    return res.status(400).json({ error: 'CAPTCHA verification failed. Please try again.' });
 
   const key  = username.toLowerCase();
   const user = USERS.get(key);
@@ -69,6 +97,71 @@ router.post('/login', (req, res) => {
 
   req.session.user = { username: user.username, email: user.email };
   res.json({ message: 'Logged in.', user: { username: user.username, email: user.email } });
+});
+
+// ── PUT /api/auth/update ─────────────────────────────────────────────────────
+/**
+ * Update the authenticated user's email and/or password.
+ * Body: { email?, newPassword?, currentPassword (required) }
+ */
+router.put('/update', (req, res) => {
+  if (!req.session.user)
+    return res.status(401).json({ error: 'Not authenticated.' });
+
+  const { email, newPassword, currentPassword } = req.body;
+  if (!currentPassword)
+    return res.status(400).json({ error: 'currentPassword is required to update your profile.' });
+
+  const key  = req.session.user.username.toLowerCase();
+  const user = USERS.get(key);
+  if (!user)
+    return res.status(404).json({ error: 'User not found.' });
+
+  // Verify current password
+  if (Buffer.from(currentPassword).toString('base64') !== user.passwordB64)
+    return res.status(401).json({ error: 'Current password is incorrect.' });
+
+  // Validate new values
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    return res.status(400).json({ error: 'Invalid email address.' });
+
+  if (newPassword && newPassword.length < 6)
+    return res.status(400).json({ error: 'New password must be at least 6 characters.' });
+
+  // Apply updates
+  if (email)       user.email       = email;
+  if (newPassword) user.passwordB64 = Buffer.from(newPassword).toString('base64');
+  USERS.set(key, user);
+
+  req.session.user = { username: user.username, email: user.email };
+  res.json({ message: 'Profile updated.', user: { username: user.username, email: user.email } });
+});
+
+// ── DELETE /api/auth/account ─────────────────────────────────────────────────
+/**
+ * Permanently delete the authenticated user's account.
+ * Body: { password (required for confirmation) }
+ */
+router.delete('/account', (req, res) => {
+  if (!req.session.user)
+    return res.status(401).json({ error: 'Not authenticated.' });
+
+  const { password } = req.body;
+  if (!password)
+    return res.status(400).json({ error: 'password is required to delete your account.' });
+
+  const key  = req.session.user.username.toLowerCase();
+  const user = USERS.get(key);
+  if (!user)
+    return res.status(404).json({ error: 'User not found.' });
+
+  if (Buffer.from(password).toString('base64') !== user.passwordB64)
+    return res.status(401).json({ error: 'Incorrect password.' });
+
+  USERS.delete(key);
+  req.session.destroy(() => {
+    res.json({ message: 'Account deleted successfully.' });
+  });
 });
 
 // ── POST /api/auth/logout ────────────────────────────────────────────────────

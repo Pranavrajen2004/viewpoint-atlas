@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
+  <!-- Google reCAPTCHA v2 -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script>
     (function(){
       try{
@@ -2482,6 +2484,7 @@
   <div class="nav-right">
     <span class="nav-user" id="nav-user" style="display:none"></span>
     <button class="theme-btn" id="apiBtn" onclick="openSettings()" title="Live News Settings" style="font-size:13px">⚙</button>
+    <button class="theme-btn" id="acctBtn" onclick="openAccountModal()" title="Account Settings" style="font-size:13px;display:none">👤</button>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
     <button class="theme-btn" id="logoutBtn" onclick="doLogout()" title="Sign out" style="display:none;font-size:11px" title="Sign out">⏏</button>
   </div>
@@ -2536,6 +2539,10 @@
             <input class="auth-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
           </div>
           <div class="auth-err" id="login-err"></div>
+          <!-- reCAPTCHA v2 — test key always passes (swap for prod key before launch) -->
+          <div class="g-recaptcha" id="login-captcha"
+               data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+               style="margin:var(--sp-3) 0;transform:scale(0.88);transform-origin:left"></div>
           <button class="ob-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
@@ -2554,6 +2561,10 @@
             <input class="auth-input" id="signup-pass" type="password" placeholder="min 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()">
           </div>
           <div class="auth-err" id="signup-err"></div>
+          <!-- reCAPTCHA v2 — test key always passes -->
+          <div class="g-recaptcha" id="signup-captcha"
+               data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+               style="margin:var(--sp-3) 0;transform:scale(0.88);transform-origin:left"></div>
           <button class="ob-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
@@ -2759,7 +2770,10 @@
           <div class="page-sub">Ranked by your slider settings · Each card includes a recommendation explainer</div>
         </div>
       </div>
-      <div class="feed-modes" id="feed-modes"></div>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);flex-wrap:wrap;margin-bottom:var(--sp-3)">
+        <div class="feed-modes" id="feed-modes" style="margin-bottom:0;flex:1"></div>
+        <button class="reset-btn" style="white-space:nowrap;padding:6px 14px" onclick="renderFeedCards(true)">⟳ Refresh Feed</button>
+      </div>
       <div class="mode-desc-bar" id="mode-desc"></div>
       <div class="feed-layout">
         <div class="feed-list" id="feed-list"></div>
@@ -2925,6 +2939,53 @@
       onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--glass-b-2)'">
     <button onclick="saveApiKey()" class="ob-btn" style="width:100%;margin-bottom:var(--sp-3)">Save &amp; Enable Live News</button>
     <div id="api-status" style="font-size:var(--fs-xs);color:var(--text-2);text-align:center"></div>
+  </div>
+</div>
+
+<!-- ACCOUNT SETTINGS MODAL -->
+<div class="modal-ov" id="account-modal" onclick="closeAccountModal(event)">
+  <div class="modal-box glass-2" style="max-width:460px">
+    <button class="modal-close" onclick="closeAccountModal()">✕</button>
+    <div class="m-title" style="margin-bottom:var(--sp-4)">Account Settings</div>
+
+    <!-- UPDATE PROFILE (UPDATE) -->
+    <div style="margin-bottom:var(--sp-5)">
+      <div class="c-eye" style="margin-bottom:var(--sp-3)">Update Profile</div>
+      <div class="auth-field">
+        <label class="auth-lbl">New Email</label>
+        <input class="auth-input" id="acct-email" type="email" placeholder="new email address" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label class="auth-lbl">New Password <span style="color:var(--text-3);font-weight:400">(leave blank to keep current)</span></label>
+        <input class="auth-input" id="acct-pass" type="password" placeholder="min 6 characters" autocomplete="new-password">
+      </div>
+      <div class="auth-field">
+        <label class="auth-lbl">Confirm Current Password</label>
+        <input class="auth-input" id="acct-curr-pass" type="password" placeholder="required to save changes" autocomplete="current-password">
+      </div>
+      <div class="auth-err" id="acct-err" style="min-height:20px"></div>
+      <div id="acct-ok" style="font-size:var(--fs-xs);color:#4caf50;min-height:20px;margin-bottom:var(--sp-2)"></div>
+      <button class="ob-btn" style="width:100%" onclick="doUpdateProfile()">Save Changes →</button>
+    </div>
+
+    <!-- DELETE ACCOUNT (DELETE) -->
+    <div style="border-top:1px solid var(--glass-b-2);padding-top:var(--sp-4)">
+      <div class="c-eye" style="margin-bottom:var(--sp-2);color:#c0392b">Danger Zone</div>
+      <p style="font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-3);line-height:var(--phi)">
+        Permanently deletes your account and all saved data. This cannot be undone.
+      </p>
+      <div id="delete-confirm" style="display:none;margin-bottom:var(--sp-3)">
+        <label class="auth-lbl">Type your username to confirm</label>
+        <input class="auth-input" id="acct-del-confirm" type="text" placeholder="your username">
+        <div class="auth-err" id="acct-del-err" style="min-height:18px"></div>
+        <button style="width:100%;padding:var(--sp-3);margin-top:var(--sp-2);background:rgba(192,57,43,0.15);color:#c0392b;border:1.5px solid rgba(192,57,43,0.4);border-radius:var(--r-lg);font-family:inherit;font-size:var(--fs-sm);font-weight:700;cursor:pointer;letter-spacing:.5px" onclick="doDeleteAccount()">
+          Permanently Delete Account
+        </button>
+      </div>
+      <button class="reset-btn" style="width:100%;color:#c0392b;border-color:rgba(192,57,43,0.3)" onclick="document.getElementById('delete-confirm').style.display='block';this.style.display='none'">
+        Delete My Account
+      </button>
+    </div>
   </div>
 </div>
 
@@ -3996,6 +4057,85 @@ function copyWeeklyReport(){
 // ===================================================================
 // SETTINGS — NewsAPI
 // ===================================================================
+// ===================================================================
+// ACCOUNT SETTINGS — Update Profile (UPDATE) & Delete Account (DELETE)
+// ===================================================================
+function openAccountModal(){
+  // Pre-fill email with current value
+  const users=_getUsers();
+  const u=currentUser?.username;
+  if(u && users[u]) document.getElementById('acct-email').value=users[u].email||'';
+  document.getElementById('acct-pass').value='';
+  document.getElementById('acct-curr-pass').value='';
+  document.getElementById('acct-err').textContent='';
+  document.getElementById('acct-ok').textContent='';
+  document.getElementById('acct-del-confirm').value='';
+  document.getElementById('acct-del-err').textContent='';
+  document.getElementById('delete-confirm').style.display='none';
+  document.querySelectorAll('#account-modal .reset-btn').forEach(b=>b.style.display='');
+  document.getElementById('account-modal').classList.add('open');
+}
+function closeAccountModal(e){
+  if(!e||e.target===document.getElementById('account-modal'))
+    document.getElementById('account-modal').classList.remove('open');
+}
+
+/** UPDATE: validate inputs, update localStorage record, refresh session */
+function doUpdateProfile(){
+  const newEmail=sanitize(document.getElementById('acct-email').value.trim());
+  const newPass=document.getElementById('acct-pass').value;
+  const currPass=document.getElementById('acct-curr-pass').value;
+  const errEl=document.getElementById('acct-err');
+  const okEl=document.getElementById('acct-ok');
+  errEl.textContent=''; okEl.textContent='';
+
+  // Client-side validation
+  if(!newEmail){errEl.textContent='Email cannot be empty.';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)){errEl.textContent='Enter a valid email address.';return;}
+  if(newPass && newPass.length<6){errEl.textContent='New password must be at least 6 characters.';return;}
+  if(!currPass){errEl.textContent='Current password is required to save changes.';return;}
+
+  const users=_getUsers();
+  const u=currentUser?.username;
+  if(!u||!users[u]){errEl.textContent='Session error — please log out and back in.';return;}
+
+  // Server-side equivalent: verify current password
+  if(users[u].pw!==btoa(currPass)){errEl.textContent='Current password is incorrect.';return;}
+
+  // Apply updates
+  users[u].email=newEmail;
+  if(newPass) users[u].pw=btoa(newPass);
+  _saveUsers(users);
+  _saveSession({username:u,email:newEmail});
+  syncUserChrome();
+
+  okEl.textContent='✓ Profile updated successfully.';
+  showToast('Profile updated.');
+}
+
+/** DELETE: confirm username match, wipe all user data, redirect to login */
+function doDeleteAccount(){
+  const typed=document.getElementById('acct-del-confirm').value.trim();
+  const errEl=document.getElementById('acct-del-err');
+  errEl.textContent='';
+
+  if(!currentUser?.username){errEl.textContent='No active session.';return;}
+  if(typed!==currentUser.username){
+    errEl.textContent='Username does not match — please type it exactly.';return;
+  }
+
+  // Remove all user data from localStorage
+  const users=_getUsers();
+  delete users[currentUser.username];
+  _saveUsers(users);
+  localStorage.removeItem('va_profile_'+btoa(currentUser.username));
+  localStorage.removeItem('va_session');
+
+  closeAccountModal();
+  showToast('Account deleted. Goodbye.');
+  setTimeout(()=>doLogout(), 1200);
+}
+
 function openSettings(){
   document.getElementById('api-key-input').value = NEWS_API_KEY;
   document.getElementById('api-status').textContent = NEWS_API_KEY
@@ -4413,25 +4553,16 @@ function hexPts(cx,cy,r,n){
 // NEWS API
 // ===================================================================
 async function fetchLiveNews(query){
-  // Try backend proxy first (works on Vercel, bypasses NewsAPI CORS restriction)
+  // Backend proxy handles multi-source fallback (Guardian → GNews → NewsDataio → MediaStack → NewsAPI)
   try{
-    const keyParam=NEWS_API_KEY?`&userKey=${encodeURIComponent(NEWS_API_KEY)}`:'';
-    const res=await fetch(`/api/news/proxy?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt${keyParam}`);
+    const res=await fetch(`/api/news/proxy?q=${encodeURIComponent(query)}&pageSize=8`);
     if(res.ok){
       const d=await res.json();
-      // Don't require urlToImage — fallback to picsum for missing images
       const arts=(d.articles||[]).filter(a=>a.title&&a.description&&a.title!=='[Removed]');
       if(arts.length) return arts;
     }
   }catch(e){}
-  // Fallback: direct NewsAPI (works on localhost if user has set a key)
-  if(!NEWS_API_KEY) return null;
-  try{
-    const res=await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&language=en&pageSize=8&apiKey=${NEWS_API_KEY}`);
-    if(!res.ok) return null;
-    const d=await res.json();
-    return (d.articles||[]).filter(a=>a.title&&a.description&&a.title!=='[Removed]');
-  }catch(e){ return null; }
+  return null;
 }
 function mapLiveArticle(a, modeDesc){
   const source=getSourceGenome(a.source?.name || '', 'c', 3.9);
@@ -4459,7 +4590,13 @@ function renderModes(){
   const m=MODES.find(x=>x.id===curMode);
   document.getElementById('mode-desc').textContent=m?m.desc:'';
 }
-function setMode(id){ curMode=id; renderModes(); renderFeedCards(); }
+function setMode(id){
+  if(curMode===id) return;
+  curMode=id;
+  renderModes();
+  // Use cached articles for this mode if available; otherwise show stale notice
+  renderFeedCards(false);
+}
 function renderSliders(){
   if(!Object.keys(sliderVals).length)initSliders();
   document.getElementById('slider-groups').innerHTML=SLIDERS.map(s=>`
@@ -4473,29 +4610,57 @@ function updSlider(id,v){
   sliderVals[id]=parseInt(v);
   const el=document.getElementById('sv_'+id);
   if(el)el.textContent=v+'%';
-  renderFeedCards();
+  // Re-rank cached articles only — no API call
+  _reRenderFromCache();
 }
-function resetSliders(){ SLIDERS.forEach(s=>{sliderVals[s.id]=s.val;}); renderSliders(); renderFeedCards(); }
-async function renderFeedCards(){
+function resetSliders(){ SLIDERS.forEach(s=>{sliderVals[s.id]=s.val;}); renderSliders(); _reRenderFromCache(); }
+// Cache: { [modeId]: rawArticleArray }  — populated only on explicit refresh
+const _feedCache = {};
+
+function _prependInjected(el){
+  if(!_injectedArticles.length) return;
+  const pin=_injectedArticles.map(({article,id})=>buildFcHTML(article,id)).join('');
+  el.innerHTML=pin+el.innerHTML;
+}
+
+/** Re-rank and render whatever is already in the cache (no network call). */
+function _reRenderFromCache(){
   const listEl=document.getElementById('feed-list');
-  listEl.innerHTML=`<div class="glass" style="padding:var(--sp-4);color:var(--text-2);font-size:var(--fs-sm)">⟳ Fetching live headlines...</div>`;
-  const queries={myFeed:'world politics news',balanced:'international news today',bubble:'independent media politics',reliable:'Reuters BBC AP news',global:'Africa Asia "Latin America" news'};
-  const live=await fetchLiveNews(queries[curMode]||'world news');
-  function _prependInjected(el){
-    if(!_injectedArticles.length) return;
-    const pin=_injectedArticles.map(({article,id})=>buildFcHTML(article,id)).join('');
-    el.innerHTML=pin+el.innerHTML;
-  }
-  if(live&&live.length){
+  if(!listEl) return;
+  const raw=_feedCache[curMode];
+  if(raw && raw.length){
     const mode=MODES.find(m=>m.id===curMode);
-    const ranked=rerankArticles(live.map(a=>hydrateArticle(mapLiveArticle(a,mode?.desc), { modeId:curMode })), curMode).slice(0,6);
+    const ranked=rerankArticles(raw.map(a=>hydrateArticle(mapLiveArticle(a,mode?.desc),{modeId:curMode})),curMode).slice(0,6);
     listEl.innerHTML=ranked.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
     _prependInjected(listEl);
     renderFeedIntelCard(ranked);
+  } else {
+    // No cache yet — show placeholder prompting refresh
+    const arts=rerankArticles(currentFeedSeed(curMode),curMode).slice(0,6);
+    listEl.innerHTML=arts.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
+    _prependInjected(listEl);
+    renderFeedIntelCard(arts);
+  }
+}
+
+/** Fetch live news, store in cache, then render. Only called by the Refresh button or first open. */
+async function renderFeedCards(forceRefresh=false){
+  const listEl=document.getElementById('feed-list');
+  // Use cache unless forced refresh or cache empty for this mode
+  if(!forceRefresh && _feedCache[curMode]){
+    _reRenderFromCache();
     return;
   }
-  // Fallback: mock data
-  const arts=rerankArticles(currentFeedSeed(curMode), curMode).slice(0,6);
+  listEl.innerHTML=`<div class="glass" style="padding:var(--sp-4);color:var(--text-2);font-size:var(--fs-sm)">⟳ Fetching live headlines…</div>`;
+  const queries={myFeed:'world politics news',balanced:'international news today',bubble:'independent media politics',reliable:'Reuters BBC AP news',global:'Africa Asia "Latin America" news'};
+  const live=await fetchLiveNews(queries[curMode]||'world news');
+  if(live && live.length){
+    _feedCache[curMode]=live;  // store in cache
+    _reRenderFromCache();
+    return;
+  }
+  // Fallback: mock data (no cache — keep prompting user to refresh later)
+  const arts=rerankArticles(currentFeedSeed(curMode),curMode).slice(0,6);
   listEl.innerHTML=arts.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
   _prependInjected(listEl);
   renderFeedIntelCard(arts);
@@ -4883,11 +5048,19 @@ function switchAuthTab(tab){
   document.getElementById('tab-login').classList.toggle('active',tab==='login');
   document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
 }
+function _captchaOk(widgetId){
+  // grecaptcha may not be loaded yet (e.g. offline/localhost) — treat as passed
+  if(typeof grecaptcha==='undefined') return true;
+  try{ return !!grecaptcha.getResponse(widgetId); }catch(e){ return true; }
+}
 function doLogin(){
   const u=sanitize(document.getElementById('login-user').value.trim());
   const p=document.getElementById('login-pass').value;
   const err=document.getElementById('login-err');
   if(!u||!p){err.textContent='Please fill in all fields.';return;}
+  // Client-side CAPTCHA check
+  if(!_captchaOk()){err.textContent='Please complete the CAPTCHA.';return;}
+  // Client-side validation
   const users=_getUsers();
   if(!users[u]||users[u].pw!==btoa(p)){err.textContent='Invalid username or password.';return;}
   err.textContent='';
@@ -4903,6 +5076,8 @@ function doSignup(){
   if(u.length<3){err.textContent='Username must be at least 3 characters.';return;}
   if(p.length<6){err.textContent='Password must be at least 6 characters.';return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){err.textContent='Enter a valid email address.';return;}
+  // Client-side CAPTCHA check
+  if(!_captchaOk()){err.textContent='Please complete the CAPTCHA.';return;}
   const users=_getUsers();
   if(users[u]){err.textContent='Username already taken — try another.';return;}
   users[u]={email:e,pw:btoa(p),createdAt:Date.now()};
@@ -4927,6 +5102,7 @@ function doLogout(){
   document.getElementById('ob-view').style.display='none';
   document.getElementById('ob-log').innerHTML='';
   document.getElementById('logoutBtn').style.display='none';
+  document.getElementById('acctBtn').style.display='none';
   syncUserChrome();
   document.getElementById('auth-view').classList.add('show');
   // reset onboarding dots
@@ -4937,6 +5113,7 @@ function doLogout(){
 function _enterApp(){
   syncUserChrome();
   document.getElementById('logoutBtn').style.display='flex';
+  document.getElementById('acctBtn').style.display='flex';
   loadIntelligenceState();
   // Returning user? Restore saved profile and skip onboarding
   const saved=localStorage.getItem('va_profile_'+btoa(currentUser.username));

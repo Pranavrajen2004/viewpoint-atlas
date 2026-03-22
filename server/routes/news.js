@@ -1,9 +1,14 @@
 /**
  * News Routes — /api/news
  *
- * Proxies NewsAPI, enriches every article with bias label, reliability,
- * detected frames, emotional tone, and a "why shown" explanation.
+ * Multi-source news proxy with fallback chain:
+ *   1. The Guardian API  (free, no production restrictions)
+ *   2. GNews             (100 req/day free)
+ *   3. NewsData.io       (200 req/day free)
+ *   4. MediaStack        (500 req/month free)
+ *   5. NewsAPI           (developer plan — localhost only, last resort)
  *
+ * GET /api/news/proxy    — multi-source proxy used by the frontend
  * GET /api/news/feed     — personalized / mode-filtered feed
  * GET /api/news/topic/:topic — left/center/right breakdown for a topic
  * GET /api/news/search   — free-text article search
@@ -15,9 +20,174 @@ const fetch  = require('node-fetch');
 const { getSource }          = require('../data/sources');
 const { detectFrames, detectEmotionalTone, generateWhyShown } = require('../data/analysis');
 
-// Prefer the Vercel environment variable; fall back to the bundled dev key
-const NEWS_API_KEY = process.env.NEWS_API_KEY || 'f8af41eaeaa84575b02930eb91348404';
-const NEWS_API_BASE = 'https://newsapi.org/v2';
+const NEWS_API_KEY      = process.env.NEWS_API_KEY;
+const GUARDIAN_API_KEY  = process.env.TheGuardianAPI;
+const GNEWS_API_KEY     = process.env.GNews;
+const NEWSDATA_API_KEY  = process.env.NewsDataio;
+const MEDIASTACK_KEY    = process.env.MediaStack;
+const NEWS_API_BASE     = 'https://newsapi.org/v2';
+
+// ── Multi-source proxy helpers ────────────────────────────────────────────────
+
+/**
+ * Normalize any article to the NewsAPI shape the rest of the code expects:
+ *   { title, description, content, url, urlToImage, publishedAt, source: { id, name } }
+ */
+function normalizeGuardian(item) {
+  return {
+    title:       item.webTitle || '',
+    description: item.fields?.trailText || '',
+    content:     item.fields?.bodyText  || '',
+    url:         item.webUrl || '',
+    urlToImage:  item.fields?.thumbnail || null,
+    publishedAt: item.webPublicationDate || null,
+    source: { id: 'the-guardian', name: 'The Guardian' }
+  };
+}
+
+function normalizeGNews(item) {
+  return {
+    title:       item.title       || '',
+    description: item.description || '',
+    content:     item.content     || '',
+    url:         item.url         || '',
+    urlToImage:  item.image       || null,
+    publishedAt: item.publishedAt || null,
+    source: { id: null, name: item.source?.name || 'GNews' }
+  };
+}
+
+function normalizeNewsData(item) {
+  return {
+    title:       item.title       || '',
+    description: item.description || '',
+    content:     item.content     || '',
+    url:         item.link        || '',
+    urlToImage:  item.image_url   || null,
+    publishedAt: item.pubDate     || null,
+    source: { id: item.source_id || null, name: item.source_id || 'NewsData' }
+  };
+}
+
+function normalizeMediaStack(item) {
+  return {
+    title:       item.title       || '',
+    description: item.description || '',
+    content:     item.description || '',
+    url:         item.url         || '',
+    urlToImage:  item.image       || null,
+    publishedAt: item.published_at || null,
+    source: { id: null, name: item.source || 'MediaStack' }
+  };
+}
+
+/**
+ * Try each news source in order, returning normalized articles on first success.
+ * Returns null if all sources fail.
+ */
+async function fetchWithFallback(q, pageSize = 8) {
+  // 1. The Guardian
+  if (GUARDIAN_API_KEY) {
+    try {
+      const url = new URL('https://content.guardianapis.com/search');
+      url.searchParams.set('api-key',     GUARDIAN_API_KEY);
+      url.searchParams.set('q',           q);
+      url.searchParams.set('page-size',   String(pageSize));
+      url.searchParams.set('order-by',    'newest');
+      url.searchParams.set('show-fields', 'thumbnail,trailText,bodyText');
+      const res  = await fetch(url.toString());
+      const data = await res.json();
+      const items = data?.response?.results || [];
+      if (items.length) {
+        console.log(`[news/proxy] source=guardian items=${items.length}`);
+        return items.map(normalizeGuardian);
+      }
+    } catch (e) { console.warn('[news/proxy] guardian failed:', e.message); }
+  }
+
+  // 2. GNews
+  if (GNEWS_API_KEY) {
+    try {
+      const url = new URL('https://gnews.io/api/v4/search');
+      url.searchParams.set('token', GNEWS_API_KEY);
+      url.searchParams.set('q',     q);
+      url.searchParams.set('lang',  'en');
+      url.searchParams.set('max',   String(pageSize));
+      const res  = await fetch(url.toString());
+      const data = await res.json();
+      const items = data?.articles || [];
+      if (items.length) {
+        console.log(`[news/proxy] source=gnews items=${items.length}`);
+        return items.map(normalizeGNews);
+      }
+    } catch (e) { console.warn('[news/proxy] gnews failed:', e.message); }
+  }
+
+  // 3. NewsData.io
+  if (NEWSDATA_API_KEY) {
+    try {
+      const url = new URL('https://newsdata.io/api/1/news');
+      url.searchParams.set('apikey',   NEWSDATA_API_KEY);
+      url.searchParams.set('q',        q);
+      url.searchParams.set('language', 'en');
+      const res  = await fetch(url.toString());
+      const data = await res.json();
+      const items = data?.results || [];
+      if (items.length) {
+        console.log(`[news/proxy] source=newsdata items=${items.length}`);
+        return items.slice(0, pageSize).map(normalizeNewsData);
+      }
+    } catch (e) { console.warn('[news/proxy] newsdata failed:', e.message); }
+  }
+
+  // 4. MediaStack
+  if (MEDIASTACK_KEY) {
+    try {
+      const url = new URL('http://api.mediastack.com/v1/news');
+      url.searchParams.set('access_key', MEDIASTACK_KEY);
+      url.searchParams.set('keywords',   q);
+      url.searchParams.set('languages',  'en');
+      url.searchParams.set('limit',      String(pageSize));
+      const res  = await fetch(url.toString());
+      const data = await res.json();
+      const items = data?.data || [];
+      if (items.length) {
+        console.log(`[news/proxy] source=mediastack items=${items.length}`);
+        return items.map(normalizeMediaStack);
+      }
+    } catch (e) { console.warn('[news/proxy] mediastack failed:', e.message); }
+  }
+
+  // 5. NewsAPI (last resort — free tier is localhost-only)
+  if (NEWS_API_KEY) {
+    try {
+      const url = new URL(`${NEWS_API_BASE}/everything`);
+      url.searchParams.set('apiKey',   NEWS_API_KEY);
+      url.searchParams.set('q',        q);
+      url.searchParams.set('language', 'en');
+      url.searchParams.set('sortBy',   'publishedAt');
+      url.searchParams.set('pageSize', String(pageSize));
+      const res  = await fetch(url.toString());
+      const data = await res.json();
+      const items = data?.articles || [];
+      if (items.length) {
+        console.log(`[news/proxy] source=newsapi items=${items.length}`);
+        return items;
+      }
+    } catch (e) { console.warn('[news/proxy] newsapi failed:', e.message); }
+  }
+
+  return null;
+}
+
+// Legacy helper used by /feed and /topic routes (still uses NewsAPI directly)
+function fetchFromNewsAPI(endpoint, params = {}) {
+  if (!NEWS_API_KEY) return Promise.resolve({ articles: [] });
+  const url = new URL(`${NEWS_API_BASE}/${endpoint}`);
+  url.searchParams.set('apiKey', NEWS_API_KEY);
+  Object.entries(params).forEach(([k, v]) => v != null && url.searchParams.set(k, v));
+  return fetch(url.toString()).then(r => r.ok ? r.json() : { articles: [] });
+}
 
 // Topic → NewsAPI search query mapping
 const TOPIC_QUERIES = {
@@ -137,35 +307,24 @@ function applySliders(articles, sliders = {}) {
 
 // ── GET /api/news/proxy ───────────────────────────────────────────────────────
 /**
- * Transparent proxy to NewsAPI — lets the browser call this endpoint and
- * bypass the CORS restriction that NewsAPI enforces on non-localhost origins.
+ * Multi-source proxy — tries Guardian → GNews → NewsDataio → MediaStack → NewsAPI.
  * Query params:
  *   q         — search string
  *   pageSize  — max results (default 8, max 20)
- *   sortBy    — 'publishedAt' | 'relevancy' (default 'publishedAt')
  */
 router.get('/proxy', async (req, res) => {
   try {
-    const { q = 'world news', sortBy = 'publishedAt', userKey } = req.query;
+    const q        = req.query.q || 'world news';
     const pageSize = Math.min(parseInt(req.query.pageSize) || 8, 20);
-    // Prefer the user's own key (forwarded from frontend localStorage) over the default
-    const apiKey = (userKey && userKey.length > 10) ? userKey : NEWS_API_KEY;
-    const url = new URL(`${NEWS_API_BASE}/everything`);
-    url.searchParams.set('apiKey', apiKey);
-    url.searchParams.set('q', q);
-    url.searchParams.set('language', 'en');
-    url.searchParams.set('sortBy', sortBy);
-    url.searchParams.set('pageSize', String(pageSize));
-    const upstream = await fetch(url.toString());
-    const data = await upstream.json();
-    if (!upstream.ok) {
-      console.error('[/api/news/proxy] NewsAPI error:', data);
-      return res.status(upstream.status).json(data);
+
+    const articles = await fetchWithFallback(q, pageSize);
+    if (!articles || !articles.length) {
+      return res.status(503).json({ error: 'All news sources unavailable or returned no results.', articles: [] });
     }
-    res.json(data);
+    res.json({ status: 'ok', totalResults: articles.length, articles });
   } catch (err) {
     console.error('[/api/news/proxy]', err.message);
-    res.status(502).json({ error: err.message });
+    res.status(502).json({ error: err.message, articles: [] });
   }
 });
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors    = require('cors');
 const session = require('express-session');
+const path    = require('path');
 
 const newsRoutes    = require('./routes/news');
 const profileRoutes = require('./routes/profile');
@@ -33,8 +34,12 @@ app.get('/api/health', (_req, res) =>
   res.json({ status: 'ok', service: 'Viewpoint Atlas API', ts: Date.now() })
 );
 
-// ── 404 ──────────────────────────────────────────────────────────────────────
-app.use((_req, res) => res.status(404).json({ error: 'Route not found' }));
+// ── Static (local dev only) ───────────────────────────────────────────────────
+app.use(express.static(path.join(__dirname, '..')));
+app.get('*', (_req, res) => res.sendFile(path.join(__dirname, '..', 'index.html')));
+
+// ── 404 (API routes only reach here) ─────────────────────────────────────────
+// app.use((_req, res) => res.status(404).json({ error: 'Route not found' }));
 
 // ── Start (local dev) / Export (Vercel serverless) ───────────────────────────
 if (require.main === module) {
