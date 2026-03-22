@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Viewpoint Atlas — Personalized Media Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
   <script>
     (function(){
       try{
@@ -57,7 +60,7 @@
     .bg-orbs::before{width:600px;height:600px;top:-200px;left:-200px;
       background:radial-gradient(circle,rgba(79,142,247,0.18) 0%,transparent 70%);}
     .bg-orbs::after{width:500px;height:500px;bottom:-150px;right:-150px;
-      background:radial-gradient(circle,rgba(0,210,180,0.14) 0%,transparent 70%);animation-delay:-6s;}
+      background:radial-gradient(circle,rgba(204,0,0,0.10) 0%,transparent 70%);animation-delay:-6s;}
     @keyframes orbFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(40px,30px) scale(1.1)}}
 
     /* NAV */
@@ -68,7 +71,7 @@
     .nav-logo{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-base);
       font-weight:700;color:var(--text-1);cursor:pointer;}
     .nav-logo-icon{width:32px;height:32px;border-radius:var(--r-md);
-      background:linear-gradient(135deg,var(--accent),#4f8ef7);
+      background:var(--ink);
       display:flex;align-items:center;justify-content:center;
       font-size:var(--fs-sm);font-weight:900;color:#fff;}
     .nav-logo em{color:var(--accent);font-style:normal;}
@@ -77,7 +80,7 @@
       color:var(--text-2);cursor:pointer;border:none;background:transparent;
       transition:all .2s;font-family:inherit;}
     .nav-tab:hover{color:var(--text-1);background:var(--glass-bg);}
-    .nav-tab.active{color:var(--accent);background:rgba(0,210,180,0.1);}
+    .nav-tab.active{color:var(--accent);background:rgba(204,0,0,0.07);}
     .nav-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-3);}
     .theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--glass-b);
       background:var(--glass-bg);cursor:pointer;font-size:16px;
@@ -103,25 +106,25 @@
     .ob-item{padding:var(--sp-4) var(--sp-3);border-radius:var(--r-xl);
       border:1.5px solid var(--glass-b);background:var(--glass-bg);
       cursor:pointer;transition:all .25s;text-align:center;position:relative;}
-    .ob-item:hover{border-color:var(--accent);background:rgba(0,210,180,0.08);transform:translateY(-2px);}
-    .ob-item.sel{border-color:var(--accent);background:rgba(0,210,180,0.14);}
+    .ob-item:hover{border-color:var(--accent);background:rgba(204,0,0,0.06);transform:translateY(-2px);}
+    .ob-item.sel{border-color:var(--accent);background:rgba(204,0,0,0.10);}
     .ob-item.sel::after{content:'✓';position:absolute;top:8px;right:10px;
       font-size:var(--fs-sm);color:var(--accent);}
     .ob-icon{font-size:26px;margin-bottom:var(--sp-2);}
     .ob-lbl{font-size:var(--fs-sm);font-weight:700;}
     .ob-desc{font-size:var(--fs-xs);color:var(--text-2);margin-top:4px;}
     .ob-btn{padding:var(--sp-3) var(--sp-6);
-      background:linear-gradient(135deg,var(--accent),#4f8ef7);
+      background:var(--ink);
       border:none;border-radius:var(--r-xl);color:#fff;font-size:var(--fs-base);
       font-weight:700;cursor:pointer;transition:all .25s;font-family:inherit;}
-    .ob-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,210,180,0.4);}
+    .ob-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(204,0,0,0.30);}
     .ob-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
     .src-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-2);margin-bottom:var(--sp-5);}
     .src-item{padding:var(--sp-3) var(--sp-2);border-radius:var(--r-lg);
       border:1.5px solid var(--glass-b);background:var(--glass-bg);
       cursor:pointer;transition:all .2s;text-align:center;}
     .src-item:hover{border-color:var(--glass-b-2);transform:translateY(-1px);}
-    .src-item.sel{border-color:var(--accent);background:rgba(0,210,180,0.10);}
+    .src-item.sel{border-color:var(--accent);background:rgba(204,0,0,0.07);}
     .src-name{font-size:var(--fs-sm);font-weight:700;}
     .src-lean{font-size:var(--fs-xs);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
     .lean-l{color:var(--left);}.lean-c{color:var(--center);}.lean-r{color:var(--right);}
@@ -212,7 +215,7 @@
       display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
     .why-chip{display:inline-flex;align-items:center;gap:4px;margin-top:4px;
       padding:2px var(--sp-2);border-radius:var(--r-sm);font-size:var(--fs-xs);
-      background:rgba(0,210,180,0.1);color:var(--accent);border:1px solid rgba(0,210,180,0.2);cursor:pointer;}
+      background:rgba(204,0,0,0.07);color:var(--accent);border:1px solid rgba(204,0,0,0.15);cursor:pointer;}
 
     /* METHODOLOGY FOOTER */
     .mf{padding:var(--sp-5) 0;border-top:1px solid var(--glass-b);margin-top:var(--sp-5);}
@@ -227,9 +230,9 @@
       border:1.5px solid var(--glass-b);background:var(--glass-bg);
       font-size:var(--fs-sm);cursor:pointer;transition:all .2s;font-family:inherit;color:var(--text-2);}
     .mode-chip:hover{border-color:var(--accent);color:var(--text-1);}
-    .mode-chip.active{border-color:var(--accent);background:rgba(0,210,180,0.12);color:var(--accent);font-weight:600;}
+    .mode-chip.active{border-color:var(--accent);background:rgba(204,0,0,0.08);color:var(--accent);font-weight:600;}
     .mode-desc-bar{padding:var(--sp-3) var(--sp-4);border-radius:var(--r-lg);
-      background:rgba(0,210,180,0.06);border:1px solid rgba(0,210,180,0.15);
+      background:rgba(204,0,0,0.04);border:1px solid rgba(204,0,0,0.10);
       font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-4);}
     .feed-layout{display:grid;grid-template-columns:1.618fr 1fr;gap:var(--sp-4);}
     .feed-list{display:flex;flex-direction:column;gap:var(--sp-3);}
@@ -249,7 +252,7 @@
     .fc-title{font-size:var(--fs-base);font-weight:700;margin-bottom:var(--sp-2);}
     .fc-sum{font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-3);}
     .why-panel{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);
-      background:rgba(0,210,180,0.07);border:1px solid rgba(0,210,180,0.18);}
+      background:rgba(204,0,0,0.05);border:1px solid rgba(204,0,0,0.14);}
     .why-lbl{font-size:var(--fs-xs);color:var(--accent);font-weight:700;margin-bottom:3px;}
     .why-txt{font-size:var(--fs-xs);color:var(--text-2);}
     .fc-tags{display:flex;gap:var(--sp-2);margin-top:var(--sp-3);flex-wrap:wrap;}
@@ -267,7 +270,7 @@
       -webkit-appearance:none;background:var(--glass-bg-2);cursor:pointer;outline:none;}
     input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;
       width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;
-      box-shadow:0 0 8px rgba(0,210,180,0.4);}
+      box-shadow:0 0 8px rgba(204,0,0,0.30);}
     .reset-btn{width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-lg);
       border:1px solid var(--glass-b);background:var(--glass-bg);color:var(--text-2);
       font-size:var(--fs-sm);cursor:pointer;font-family:inherit;margin-top:var(--sp-3);transition:all .2s;}
@@ -279,7 +282,7 @@
       border:1.5px solid var(--glass-b);background:var(--glass-bg);
       font-size:var(--fs-sm);cursor:pointer;transition:all .2s;font-family:inherit;color:var(--text-2);}
     .t-chip:hover{border-color:var(--glass-b-2);color:var(--text-1);}
-    .t-chip.active{border-color:var(--accent);background:rgba(0,210,180,0.1);color:var(--accent);font-weight:600;}
+    .t-chip.active{border-color:var(--accent);background:rgba(204,0,0,0.07);color:var(--accent);font-weight:600;}
     .t-head{margin-bottom:var(--sp-4);}
     .t-eye{font-size:var(--fs-xs);color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--sp-2);}
     .t-title{font-size:var(--fs-lg);font-weight:800;margin-bottom:var(--sp-3);}
@@ -330,7 +333,7 @@
     .tl-ev{flex-shrink:0;padding:var(--sp-3);border-radius:var(--r-xl);
       border:1.5px solid var(--glass-b);background:var(--glass-bg);
       cursor:pointer;transition:all .2s;max-width:160px;min-width:140px;}
-    .tl-ev:hover,.tl-ev.active{border-color:var(--accent);background:rgba(0,210,180,0.08);}
+    .tl-ev:hover,.tl-ev.active{border-color:var(--accent);background:rgba(204,0,0,0.06);}
     .tl-date{font-size:var(--fs-xs);color:var(--accent);margin-bottom:4px;font-weight:600;}
     .tl-lbl{font-size:var(--fs-xs);font-weight:600;line-height:1.4;}
     .tl-detail{padding:var(--sp-4);margin-top:var(--sp-3);}
@@ -358,7 +361,7 @@
     .m-frames-row{display:flex;gap:var(--sp-2);flex-wrap:wrap;}
     .m-frame{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);font-size:var(--fs-xs);font-weight:600;border:1px solid;}
     .m-why{padding:var(--sp-3) var(--sp-4);border-radius:var(--r-lg);
-      background:rgba(0,210,180,0.07);border:1px solid rgba(0,210,180,0.2);}
+      background:rgba(204,0,0,0.05);border:1px solid rgba(204,0,0,0.15);}
     .m-why-ttl{font-size:var(--fs-xs);color:var(--accent);font-weight:700;
       margin-bottom:var(--sp-2);text-transform:uppercase;letter-spacing:1px;}
     .m-why-txt{font-size:var(--fs-sm);color:var(--text-2);line-height:var(--phi);}
@@ -369,7 +372,7 @@
     .auth-view.show{display:flex;}
     .auth-box{width:100%;max-width:420px;}
     .auth-logo{text-align:center;margin-bottom:var(--sp-5);}
-    .auth-logo-icon{width:56px;height:56px;border-radius:var(--r-lg);background:linear-gradient(135deg,var(--accent),#4f8ef7);display:inline-flex;align-items:center;justify-content:center;font-size:var(--fs-base);font-weight:900;color:#fff;margin-bottom:var(--sp-3);}
+    .auth-logo-icon{width:56px;height:56px;border-radius:var(--r-lg);background:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:var(--fs-base);font-weight:900;color:#fff;margin-bottom:var(--sp-3);}
     .auth-logo-title{font-size:var(--fs-lg);font-weight:800;line-height:1.15;}
     .auth-logo-sub{font-size:var(--fs-sm);color:var(--text-2);margin-top:var(--sp-2);}
     .auth-tabs{display:flex;border-radius:var(--r-xl) var(--r-xl) 0 0;overflow:hidden;border:1px solid var(--glass-b-2);border-bottom:none;}
@@ -383,11 +386,11 @@
     .auth-err{font-size:var(--fs-xs);color:var(--danger);margin-top:var(--sp-2);min-height:16px;font-weight:600;}
     .auth-demo{width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--glass-b-2);background:transparent;border-radius:var(--r-lg);color:var(--text-2);font-family:inherit;font-size:var(--fs-sm);cursor:pointer;margin-top:var(--sp-3);transition:all .2s;}
     .auth-demo:hover{color:var(--accent);border-color:var(--accent);}
-    .nav-user{font-size:var(--fs-xs);padding:3px 10px;border-radius:var(--r-2xl);background:rgba(0,210,180,0.1);color:var(--accent);border:1px solid rgba(0,210,180,0.25);}
+    .nav-user{font-size:var(--fs-xs);padding:3px 10px;border-radius:var(--r-2xl);background:rgba(204,0,0,0.07);color:var(--accent);border:1px solid rgba(204,0,0,0.18);}
 
     /* ── PREMIUM BANNER ── */
-    .prem-section{margin-top:var(--sp-7);padding:var(--sp-6);background:linear-gradient(135deg,rgba(155,89,182,0.08),rgba(79,142,247,0.06));border:1px solid rgba(155,89,182,0.22);border-radius:var(--r-2xl);}
-    .prem-eye{font-size:var(--fs-xs);color:#9b59b6;text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--sp-2);}
+    .prem-section{margin-top:var(--sp-7);padding:var(--sp-6);background:var(--glass-bg-2);border:1px solid var(--glass-b);border-radius:var(--r-2xl);}
+    .prem-eye{font-size:var(--fs-xs);color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--sp-2);}
     .prem-title{font-size:var(--fs-md);font-weight:800;margin-bottom:var(--sp-2);}
     .prem-sub{font-size:var(--fs-sm);color:var(--text-2);margin-bottom:var(--sp-5);max-width:540px;line-height:var(--phi);}
     .prem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-bottom:var(--sp-5);}
@@ -396,184 +399,127 @@
     .prem-icon{font-size:26px;margin-bottom:var(--sp-2);}
     .prem-fname{font-size:var(--fs-sm);font-weight:700;margin-bottom:4px;}
     .prem-fdesc{font-size:var(--fs-xs);color:var(--text-2);line-height:var(--phi);}
-    .prem-cta{display:inline-flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-6);background:linear-gradient(135deg,#9b59b6,#4f8ef7);border:none;border-radius:var(--r-2xl);color:#fff;font-size:var(--fs-base);font-weight:700;cursor:pointer;font-family:inherit;transition:all .25s;}
-    .prem-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(155,89,182,0.4);}
+    .prem-cta{display:inline-flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-6);background:var(--ink);border:none;border-radius:var(--r-2xl);color:#fff;font-size:var(--fs-base);font-weight:700;cursor:pointer;font-family:inherit;transition:all .25s;}
+    .prem-cta:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
     .prem-price{font-size:var(--fs-xs);color:var(--text-2);margin-top:var(--sp-3);}
 
     /* ── URL INJECTOR ── */
     .inject-card{padding:var(--sp-4);}
     .inj-input{width:100%;padding:var(--sp-2) var(--sp-3);background:var(--glass-bg);border:1.5px solid var(--glass-b-2);border-radius:var(--r-lg);color:var(--text-1);font-family:inherit;font-size:var(--fs-sm);outline:none;margin-bottom:var(--sp-2);transition:border-color .2s;}
     .inj-input:focus{border-color:var(--accent);}
-    .inj-btn{width:100%;padding:var(--sp-2);background:linear-gradient(135deg,var(--accent),#4f8ef7);border:none;border-radius:var(--r-lg);color:#fff;font-size:var(--fs-sm);font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;}
+    .inj-btn{width:100%;padding:var(--sp-2);background:var(--ink);border:none;border-radius:var(--r-lg);color:#fff;font-size:var(--fs-sm);font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;}
     .inj-btn:hover{opacity:.85;}
     .inj-log{font-size:var(--fs-xs);color:var(--text-3);min-height:16px;margin-top:var(--sp-2);}
 
-    /* === EDITORIAL REDESIGN === */
+    /* === EDITORIAL REDESIGN — Tablet Magazine aesthetic === */
     :root{
-      --r-lg:8px;--r-xl:13px;--r-2xl:21px;
-      --font-display:"Iowan Old Style","Palatino Linotype","Book Antiqua","URW Palladio L",Georgia,serif;
-      --font-body:"Avenir Next","Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
-      --paper:#f4efe4;
-      --paper-strong:#fffdf8;
-      --paper-shadow:#e4dac9;
-      --ink:#1f1a17;
-      --ink-soft:rgba(31,26,23,0.74);
-      --ink-faint:rgba(31,26,23,0.44);
-      --line:rgba(58,45,33,0.12);
-      --line-strong:rgba(58,45,33,0.22);
-      --left:#4e6f93;--left-soft:rgba(78,111,147,0.14);
-      --center:#785989;--center-soft:rgba(120,89,137,0.14);
-      --right:#9c473a;--right-soft:rgba(156,71,58,0.12);
-      --accent:#214f48;--warn:#a56b22;--danger:#8f3f31;--success:#416850;
-      --bg:var(--paper);--bg-2:#eee4d4;--nav-bg:rgba(244,239,228,0.94);
+      /* Geometry — slight rounding preserved for inputs; cards are square */
+      --r-sm:2px;--r-md:3px;--r-lg:4px;--r-xl:4px;--r-2xl:6px;
+
+      /* Typography */
+      --font-display:'Playfair Display',Georgia,'Times New Roman',serif;
+      --font-sc:'Playfair Display SC',Georgia,serif;
+      --font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+
+      /* Paper — clean white, not warm cream */
+      --paper:#FFFFFF;
+      --paper-strong:#FAFAF8;
+      --paper-shadow:#E8E8E8;
+      --ink:#111111;
+      --ink-soft:rgba(17,17,17,0.62);
+      --ink-faint:rgba(17,17,17,0.36);
+
+      /* Rules */
+      --line:rgba(0,0,0,0.10);
+      --line-strong:rgba(0,0,0,0.20);
+      --rule-heavy:#111111;
+
+      /* Lean colours — muted, editorial */
+      --left:#1A4A8F;--left-soft:rgba(26,74,143,0.10);
+      --center:#5A3E78;--center-soft:rgba(90,62,120,0.10);
+      --right:#9B1C1C;--right-soft:rgba(155,28,28,0.10);
+
+      /* Accent — editorial red (Tablet-style) */
+      --accent:#CC0000;
+      --accent-soft:rgba(204,0,0,0.08);
+      --warn:#8B6914;--danger:#9B1C1C;--success:#1A5C2A;
+
+      /* Background */
+      --bg:var(--paper);--bg-2:#F2F2F0;--nav-bg:rgba(255,255,255,0.97);
       --text-1:var(--ink);--text-2:var(--ink-soft);--text-3:var(--ink-faint);
-      --glass-bg:rgba(255,253,248,0.84);--glass-bg-2:rgba(255,253,248,0.97);
+      --glass-bg:#FFFFFF;--glass-bg-2:#FAFAF8;
       --glass-b:var(--line);--glass-b-2:var(--line-strong);
-      --shadow:0 18px 42px rgba(68,50,34,0.08);--shadow-lg:0 30px 72px rgba(68,50,34,0.14);
-      --page-glow-1:rgba(33,79,72,0.10);--page-glow-2:rgba(156,71,58,0.06);
-      --texture-line:rgba(58,45,33,0.03);--texture-grid:rgba(58,45,33,0.014);--texture-dot:rgba(58,45,33,0.08);
-      --texture-fade:rgba(255,255,255,0.22);--texture-smudge-1:rgba(255,255,255,0.16);--texture-smudge-2:rgba(110,86,61,0.08);--texture-vignette:rgba(58,45,33,0.05);
-      --panel-highlight:rgba(255,255,255,0.40);--panel-lowlight:rgba(228,218,201,0.12);--panel-sheen:rgba(255,255,255,0.24);--panel-speck:rgba(58,45,33,0.06);
-      --paper-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.05' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0.08 0.14 0.2'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.92'/%3E%3C/svg%3E");
-      --paper-layer-opacity:.92;--paper-fiber:rgba(83,63,46,0.038);--paper-fiber-strong:rgba(83,63,46,0.06);--paper-crease:rgba(125,100,74,0.12);
-      --photo-mat:#f9f4ea;--photo-line:rgba(87,66,47,0.18);--photo-shadow:rgba(56,39,24,0.22);--photo-sheen:rgba(255,255,255,0.26);
+
+      /* Shadows — flat, editorial */
+      --shadow:0 1px 0 rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+      --shadow-lg:0 2px 0 rgba(0,0,0,0.10), 0 8px 32px rgba(0,0,0,0.08);
+
+      /* Subtle page texture (much lighter than before) */
+      --page-glow-1:transparent;--page-glow-2:transparent;
+      --texture-line:rgba(0,0,0,0.012);--texture-grid:rgba(0,0,0,0.006);--texture-dot:rgba(0,0,0,0.03);
+      --texture-fade:rgba(255,255,255,0.0);--texture-smudge-1:rgba(0,0,0,0.01);--texture-smudge-2:rgba(0,0,0,0.01);--texture-vignette:rgba(0,0,0,0.02);
+      --panel-highlight:rgba(255,255,255,0.80);--panel-lowlight:rgba(0,0,0,0.02);--panel-sheen:rgba(255,255,255,0.60);--panel-speck:rgba(0,0,0,0.02);
+      --paper-noise:none;
+      --paper-layer-opacity:0;--paper-fiber:transparent;--paper-fiber-strong:transparent;--paper-crease:transparent;
+      --photo-mat:#F5F5F5;--photo-line:rgba(0,0,0,0.12);--photo-shadow:rgba(0,0,0,0.16);--photo-sheen:rgba(255,255,255,0.40);
       --shell-max:1440px;--reading-max:1090px;--shell-gutter:clamp(18px,3vw,48px);--nav-clearance:96px;
     }
     [data-theme="dark"]{
-      --paper:#161210;
-      --paper-strong:#211c18;
-      --paper-shadow:#0f0c0b;
-      --ink:#f3eadb;
-      --ink-soft:rgba(243,234,219,0.74);
-      --ink-faint:rgba(243,234,219,0.44);
-      --line:rgba(243,234,219,0.10);
-      --line-strong:rgba(243,234,219,0.18);
-      --left:#7da1cb;--left-soft:rgba(125,161,203,0.14);
-      --center:#bc99cc;--center-soft:rgba(188,153,204,0.14);
-      --right:#d37e6d;--right-soft:rgba(211,126,109,0.12);
-      --accent:#8dc1b4;--warn:#d0a35d;--danger:#cb7b6d;--success:#8ab897;
-      --bg:var(--paper);--bg-2:#1d1815;--nav-bg:rgba(22,18,16,0.94);
+      --paper:#111111;
+      --paper-strong:#1A1A1A;
+      --paper-shadow:#0A0A0A;
+      --ink:#F5F5F3;
+      --ink-soft:rgba(245,245,243,0.68);
+      --ink-faint:rgba(245,245,243,0.38);
+      --line:rgba(255,255,255,0.10);
+      --line-strong:rgba(255,255,255,0.18);
+      --rule-heavy:#F5F5F3;
+      --left:#6A9FD8;--left-soft:rgba(106,159,216,0.14);
+      --center:#B099CC;--center-soft:rgba(176,153,204,0.14);
+      --right:#E06060;--right-soft:rgba(224,96,96,0.12);
+      --accent:#E05050;--accent-soft:rgba(224,80,80,0.12);
+      --warn:#D4A84B;--danger:#E06060;--success:#72B88A;
+      --bg:var(--paper);--bg-2:#1A1A1A;--nav-bg:rgba(17,17,17,0.97);
       --text-1:var(--ink);--text-2:var(--ink-soft);--text-3:var(--ink-faint);
-      --glass-bg:rgba(29,24,21,0.90);--glass-bg-2:rgba(29,24,21,0.97);
+      --glass-bg:#1A1A1A;--glass-bg-2:#222222;
       --glass-b:var(--line);--glass-b-2:var(--line-strong);
-      --shadow:0 18px 42px rgba(0,0,0,0.26);--shadow-lg:0 30px 72px rgba(0,0,0,0.42);
-      --page-glow-1:rgba(141,193,180,0.10);--page-glow-2:rgba(211,126,109,0.08);
-      --texture-line:rgba(243,234,219,0.026);--texture-grid:rgba(243,234,219,0.012);--texture-dot:rgba(243,234,219,0.05);
-      --texture-fade:rgba(255,255,255,0.04);--texture-smudge-1:rgba(141,193,180,0.08);--texture-smudge-2:rgba(0,0,0,0.22);--texture-vignette:rgba(0,0,0,0.28);
-      --panel-highlight:rgba(255,255,255,0.08);--panel-lowlight:rgba(0,0,0,0.24);--panel-sheen:rgba(141,193,180,0.06);--panel-speck:rgba(243,234,219,0.05);
-      --paper-layer-opacity:.5;--paper-fiber:rgba(243,234,219,0.018);--paper-fiber-strong:rgba(243,234,219,0.038);--paper-crease:rgba(243,234,219,0.055);
-      --photo-mat:#241d18;--photo-line:rgba(243,234,219,0.12);--photo-shadow:rgba(0,0,0,0.44);--photo-sheen:rgba(255,255,255,0.08);
+      --shadow:0 1px 0 rgba(255,255,255,0.06), 0 4px 16px rgba(0,0,0,0.40);
+      --shadow-lg:0 2px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.60);
+      --page-glow-1:transparent;--page-glow-2:transparent;
+      --texture-line:rgba(255,255,255,0.012);--texture-grid:rgba(255,255,255,0.006);--texture-dot:rgba(255,255,255,0.02);
+      --texture-fade:rgba(0,0,0,0.0);--texture-smudge-1:rgba(0,0,0,0.0);--texture-smudge-2:rgba(0,0,0,0.0);--texture-vignette:rgba(0,0,0,0.0);
+      --panel-highlight:rgba(255,255,255,0.06);--panel-lowlight:rgba(0,0,0,0.20);--panel-sheen:rgba(255,255,255,0.04);--panel-speck:rgba(255,255,255,0.03);
+      --paper-noise:none;
+      --paper-layer-opacity:0;--paper-fiber:transparent;--paper-fiber-strong:transparent;--paper-crease:transparent;
+      --photo-mat:#222222;--photo-line:rgba(255,255,255,0.12);--photo-shadow:rgba(0,0,0,0.60);--photo-sheen:rgba(255,255,255,0.06);
     }
     body{
       font-family:var(--font-body);
-      background:
-        radial-gradient(circle at 14% 8%, rgba(255,255,255,0.18), transparent 24%),
-        radial-gradient(circle at top right, var(--page-glow-1), transparent 32%),
-        radial-gradient(circle at bottom left, var(--page-glow-2), transparent 36%),
-        linear-gradient(180deg, rgba(255,255,255,0.08), transparent 22%),
-        linear-gradient(90deg, transparent 0, transparent 47.5%, rgba(255,255,255,0.035) 50%, transparent 52.5%, transparent 100%),
-        var(--bg);
+      background:var(--bg);
       color:var(--text-1);
+      -webkit-font-smoothing:antialiased;
     }
-    body::before{
-      content:'';
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        linear-gradient(180deg, var(--texture-fade), transparent 18%),
-        var(--paper-noise),
-        repeating-linear-gradient(12deg,
-          transparent 0,
-          transparent 14px,
-          var(--paper-fiber) 14px,
-          var(--paper-fiber) 15px,
-          transparent 15px,
-          transparent 32px),
-        repeating-linear-gradient(-18deg,
-          transparent 0,
-          transparent 22px,
-          var(--paper-fiber-strong) 22px,
-          var(--paper-fiber-strong) 23px,
-          transparent 23px,
-          transparent 43px),
-        repeating-linear-gradient(0deg,
-          transparent 0,
-          transparent 72px,
-          var(--texture-grid) 72px,
-          var(--texture-grid) 73px),
-        repeating-linear-gradient(90deg,
-          transparent 0,
-          transparent 104px,
-          var(--texture-grid) 104px,
-          var(--texture-grid) 105px),
-        radial-gradient(circle at 1px 1px, var(--texture-dot) 1px, transparent 1.1px);
-      background-size:auto, 240px 240px, auto, auto, auto, auto, 18px 18px;
-      opacity:var(--paper-layer-opacity);
-      mix-blend-mode:multiply;
-    }
-    body::after{
-      content:'';
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 14% 12%, var(--texture-smudge-1), transparent 22%),
-        radial-gradient(circle at 82% 72%, var(--texture-smudge-2), transparent 28%),
-        linear-gradient(90deg,
-          transparent 0,
-          transparent 27%,
-          var(--paper-crease) 29%,
-          transparent 33%,
-          transparent 100%),
-        linear-gradient(180deg, transparent 0%, var(--texture-vignette) 100%);
-      opacity:.72;
-    }
-    [data-theme="dark"] body::before{
-      mix-blend-mode:screen;
-    }
+    body::before,body::after{display:none;}
     .bg-orbs{display:none;}
     .glass,.glass-2{
-      background:
-        linear-gradient(180deg, var(--panel-highlight), transparent 24%),
-        linear-gradient(135deg, transparent 20%, var(--panel-lowlight) 100%),
-        var(--glass-bg-2);
+      background:var(--glass-bg-2);
       border:1px solid var(--glass-b);
-      box-shadow:var(--shadow), inset 0 1px 0 var(--panel-sheen);
+      box-shadow:var(--shadow);
       backdrop-filter:none;
       -webkit-backdrop-filter:none;
     }
     nav{
-      padding:var(--sp-4) var(--sp-5) var(--sp-3);
-      align-items:flex-end;
-      background:
-        linear-gradient(180deg, var(--panel-highlight), transparent 100%),
-        var(--nav-bg);
-      border-top:1px solid var(--glass-b-2);
-      border-bottom:3px double var(--glass-b-2);
-      box-shadow:0 10px 28px rgba(68,50,34,0.08);
+      padding:var(--sp-3) var(--sp-5);
+      align-items:center;
+      background:var(--nav-bg);
+      border-top:3px solid var(--rule-heavy);
+      border-bottom:1px solid var(--line);
+      box-shadow:none;
       backdrop-filter:none;
       -webkit-backdrop-filter:none;
-      overflow:hidden;
+      overflow:visible;
     }
-    nav::after{
-      content:'';
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        var(--paper-noise),
-        repeating-linear-gradient(90deg,
-          transparent 0,
-          transparent 88px,
-          var(--texture-grid) 88px,
-          var(--texture-grid) 89px),
-        radial-gradient(circle at 1px 1px, var(--panel-speck) 1px, transparent 1.1px);
-      background-size:220px 220px, auto, 16px 16px;
-      opacity:.24;
-    }
+    nav::after{display:none;}
     .nav-logo{
       gap:var(--sp-3);
       font-family:var(--font-display);
@@ -822,7 +768,7 @@
       max-width:420px;
       padding:var(--sp-3);
       border-radius:var(--r-xl);
-      background:linear-gradient(180deg, rgba(33,79,72,0.06), transparent 70%);
+      background:linear-gradient(180deg, rgba(204,0,0,0.05), transparent 70%);
       border:1px solid var(--glass-b);
     }
     .radar-legend{
@@ -891,8 +837,8 @@
       object-fit:cover;
     }
     .why-chip,.why-panel,.m-why,.mode-desc-bar{
-      background:rgba(33,79,72,0.06);
-      border-color:rgba(33,79,72,0.18);
+      background:rgba(204,0,0,0.05);
+      border-color:rgba(204,0,0,0.12);
       color:var(--accent);
     }
     .mf{
@@ -913,7 +859,7 @@
       margin-top:var(--sp-7);
       padding:var(--sp-6);
       background:
-        linear-gradient(135deg, rgba(33,79,72,0.08), rgba(156,71,58,0.03)),
+        linear-gradient(135deg, rgba(204,0,0,0.06), rgba(156,71,58,0.03)),
         var(--glass-bg-2);
       border-color:var(--glass-b-2);
     }
@@ -1164,7 +1110,7 @@
     }
     .tl-ev:hover,.tl-ev.active{
       border-color:var(--accent);
-      background:rgba(33,79,72,0.06);
+      background:rgba(204,0,0,0.05);
     }
     .tl-date{
       color:var(--accent);
@@ -1295,7 +1241,7 @@
     }
     .auth-tab.active{
       color:var(--accent);
-      background:rgba(33,79,72,0.05);
+      background:rgba(204,0,0,0.04);
     }
     .auth-card{
       padding:var(--sp-5);
@@ -1350,10 +1296,10 @@
     .ob-item:hover,.src-item:hover{
       transform:translateY(-3px);
       border-color:var(--accent);
-      background:rgba(33,79,72,0.05);
+      background:rgba(204,0,0,0.04);
     }
     .ob-item.sel,.src-item.sel{
-      background:rgba(33,79,72,0.08);
+      background:rgba(204,0,0,0.06);
       border-color:var(--accent);
     }
     .ob-item.sel::after{
@@ -1553,6 +1499,897 @@
         padding:var(--sp-4);
       }
     }
+    /* === FRONT-PAGE OVERRIDE === */
+    :root{
+      --font-display:'Cormorant Garamond', Georgia, serif;
+      --font-body:'Newsreader', Georgia, serif;
+      --font-ui:'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif;
+      --paper:#f1e6cf;
+      --paper-strong:#faf4e8;
+      --paper-shadow:#ddcfb5;
+      --ink:#221a12;
+      --ink-soft:rgba(34,26,18,0.74);
+      --ink-faint:rgba(34,26,18,0.48);
+      --line:rgba(66,49,29,0.16);
+      --line-strong:rgba(66,49,29,0.26);
+      --rule-heavy:#1c1510;
+      --left:#204a67;
+      --left-soft:rgba(32,74,103,0.10);
+      --center:#6b5a24;
+      --center-soft:rgba(107,90,36,0.12);
+      --right:#8b3325;
+      --right-soft:rgba(139,51,37,0.12);
+      --accent:#97261a;
+      --accent-soft:rgba(151,38,26,0.08);
+      --warn:#8f6a1d;
+      --danger:#8b3325;
+      --success:#375f38;
+      --bg:var(--paper);
+      --bg-2:#e7d9bb;
+      --nav-bg:rgba(248,241,227,0.94);
+      --text-1:var(--ink);
+      --text-2:var(--ink-soft);
+      --text-3:var(--ink-faint);
+      --glass-bg:#f8efdd;
+      --glass-bg-2:#f9f1e2;
+      --glass-b:var(--line);
+      --glass-b-2:var(--line-strong);
+      --panel-highlight:rgba(255,255,255,0.50);
+      --panel-lowlight:rgba(119,90,54,0.05);
+      --panel-sheen:rgba(255,255,255,0.46);
+      --panel-speck:rgba(80,57,31,0.03);
+      --photo-mat:#e9dcc3;
+      --photo-line:rgba(70,52,31,0.18);
+      --photo-shadow:rgba(53,38,18,0.18);
+      --photo-sheen:rgba(255,255,255,0.22);
+      --shadow:0 1px 0 rgba(34,26,18,0.14), 0 8px 24px rgba(53,38,18,0.08);
+      --shadow-lg:0 1px 0 rgba(34,26,18,0.18), 0 16px 36px rgba(53,38,18,0.12);
+    }
+    [data-theme="dark"]{
+      --paper:#15110d;
+      --paper-strong:#1d1712;
+      --paper-shadow:#090705;
+      --ink:#f1e5cf;
+      --ink-soft:rgba(241,229,207,0.76);
+      --ink-faint:rgba(241,229,207,0.48);
+      --line:rgba(241,229,207,0.12);
+      --line-strong:rgba(241,229,207,0.22);
+      --rule-heavy:#f7ecda;
+      --left:#7eb3d0;
+      --left-soft:rgba(126,179,208,0.16);
+      --center:#c9b56a;
+      --center-soft:rgba(201,181,106,0.16);
+      --right:#d57d68;
+      --right-soft:rgba(213,125,104,0.16);
+      --accent:#de6f5a;
+      --accent-soft:rgba(222,111,90,0.14);
+      --warn:#d3ad59;
+      --danger:#d57d68;
+      --success:#7cb17c;
+      --bg:var(--paper);
+      --bg-2:#1f1812;
+      --nav-bg:rgba(21,17,13,0.94);
+      --text-1:var(--ink);
+      --text-2:var(--ink-soft);
+      --text-3:var(--ink-faint);
+      --glass-bg:#1d1712;
+      --glass-bg-2:#201913;
+      --glass-b:var(--line);
+      --glass-b-2:var(--line-strong);
+      --panel-highlight:rgba(255,255,255,0.04);
+      --panel-lowlight:rgba(0,0,0,0.14);
+      --panel-sheen:rgba(255,255,255,0.06);
+      --panel-speck:rgba(255,255,255,0.03);
+      --photo-mat:#251d16;
+      --photo-line:rgba(241,229,207,0.14);
+      --photo-shadow:rgba(0,0,0,0.48);
+      --photo-sheen:rgba(255,255,255,0.08);
+      --shadow:0 1px 0 rgba(255,255,255,0.06), 0 10px 28px rgba(0,0,0,0.34);
+      --shadow-lg:0 1px 0 rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.48);
+    }
+    body{
+      font-family:var(--font-body);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(153,114,63,0.06), transparent 24%),
+        radial-gradient(circle at 88% 84%, rgba(107,71,38,0.07), transparent 20%),
+        linear-gradient(180deg, rgba(255,251,243,0.45), rgba(220,202,171,0.22) 58%, rgba(154,119,79,0.08)),
+        repeating-linear-gradient(0deg, rgba(83,59,32,0.020) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(90deg, rgba(83,59,32,0.013) 0 1px, transparent 1px 7px),
+        var(--bg);
+      color:var(--text-1);
+    }
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.18), transparent 18%),
+        radial-gradient(circle at 76% 54%, rgba(70,52,31,0.05), transparent 16%),
+        repeating-radial-gradient(circle at 0 0, rgba(74,53,28,0.016) 0 1px, transparent 1px 6px);
+      mix-blend-mode:multiply;
+      opacity:.34;
+      z-index:0;
+    }
+    [data-theme="dark"] body::before{
+      mix-blend-mode:screen;
+      opacity:.16;
+    }
+    nav,.nav-tab,.mode-chip,.t-chip,.theme-btn,.ob-btn,.prem-cta,.inj-btn,.reset-btn,.auth-demo,.auth-tab,.journal-label,.sl-lbl,.sl-val,.gap-topic,.journal-focus,.nav-user,.nav-edition,.page-kicker,.c-eye,.t-eye,.ob-eye,.prem-eye,.m-why-ttl,.why-lbl,.auth-lbl,.gap-col-ttl,.miss-ttl,.m-frames-ttl{
+      font-family:var(--font-ui);
+    }
+    .mode-chip,.t-chip,.nav-tab,.auth-tab{
+      letter-spacing:.18em;
+    }
+    .glass,.glass-2,.fc,.p-col,.modal-box{
+      background:
+        linear-gradient(180deg, var(--panel-highlight), transparent 20%),
+        linear-gradient(135deg, transparent 8%, var(--panel-lowlight) 100%),
+        var(--glass-bg-2);
+    }
+    .theme-btn,.ob-btn,.prem-cta,.inj-btn,.reset-btn,.auth-demo,.journal-input{
+      border-radius:3px;
+    }
+    .d-chip,.thin-b,.tag,.lb,.a-frame,.tl-src,.why-chip,.mode-chip,.t-chip{
+      border-radius:3px;
+    }
+    .page-title,.t-title,.ob-title,.auth-editorial-title,.prem-title,.c-title,.fc-title,.a-ttl,.gap-ttl,.r-ttl,.col-ttl,.m-title,.journal-log-title,.report-headline,.atlas-region,.genome-name,.journal-entry-story{
+      font-family:var(--font-display);
+    }
+    .page-sub,.c-sub,.fc-sum,.m-sum,.tl-d-body,.report-copy,.journal-entry-copy,.atlas-note,.genome-notes,.why-txt,.m-why-txt{
+      font-family:var(--font-body);
+    }
+    .nav-logo-icon,.auth-logo-icon{
+      background:var(--rule-heavy);
+      color:var(--paper-strong);
+    }
+    .page-title,.t-title{
+      max-width:11ch;
+    }
+    .stats{
+      border-left:1px solid var(--line-strong);
+    }
+    .stat-val{
+      color:var(--rule-heavy);
+    }
+    .mode-chip,.t-chip,.nav-tab{
+      color:var(--text-2);
+    }
+    .mode-chip:hover,.t-chip:hover,.mode-chip.active,.t-chip.active,.nav-tab:hover,.nav-tab.active{
+      color:var(--accent);
+    }
+    .why-panel,.m-why,.mode-desc-bar,.why-chip{
+      background:rgba(151,38,26,0.06);
+      border-color:rgba(151,38,26,0.15);
+    }
+    .outlet-name,.m-outlet,.a-outlet,.r-outlet,.gap-topic{
+      color:var(--text-2);
+    }
+    .edition-break{
+      display:flex;
+      align-items:center;
+      gap:var(--sp-3);
+      margin:var(--sp-7) 0 var(--sp-5);
+      color:var(--accent);
+      font-family:var(--font-ui);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.20em;
+      text-transform:uppercase;
+    }
+    .edition-break::before,.edition-break::after{
+      content:'';
+      flex:1;
+      height:1px;
+      background:linear-gradient(90deg, transparent, var(--line-strong), transparent);
+    }
+    .news-grid{
+      display:grid;
+      gap:var(--sp-4);
+      margin-bottom:var(--sp-5);
+    }
+    .news-grid-lede{
+      grid-template-columns:1.618fr 1fr;
+    }
+    .news-grid-secondary{
+      grid-template-columns:1.15fr 0.85fr;
+    }
+    .drift-card,.mood-card,.report-card,.challenge-card,.journal-card,.feed-intel-card{
+      padding:var(--sp-5);
+    }
+    .lede-note{
+      padding:var(--sp-3) var(--sp-4);
+      margin-bottom:var(--sp-4);
+      border-left:3px solid var(--accent);
+      background:rgba(151,38,26,0.04);
+      color:var(--text-2);
+      font-size:15px;
+    }
+    .drift-track{
+      display:grid;
+      gap:var(--sp-3);
+    }
+    .drift-week{
+      padding:var(--sp-3) var(--sp-4);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.10);
+    }
+    .drift-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:var(--sp-3);
+      margin-bottom:var(--sp-2);
+    }
+    .drift-date{
+      font-family:var(--font-ui);
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .drift-score{
+      font-family:var(--font-display);
+      font-size:22px;
+      line-height:1;
+    }
+    .drift-bar{
+      height:10px;
+      display:flex;
+      overflow:hidden;
+      border:1px solid var(--glass-b);
+      background:rgba(66,49,29,0.06);
+      margin-bottom:var(--sp-2);
+    }
+    .drift-seg{
+      height:100%;
+    }
+    .drift-meta{
+      display:flex;
+      justify-content:space-between;
+      gap:var(--sp-3);
+      font-size:13px;
+      color:var(--text-2);
+    }
+    .drift-flag{
+      margin-top:var(--sp-2);
+      font-size:12px;
+      color:var(--accent);
+      font-family:var(--font-ui);
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .mood-meter{
+      margin-bottom:var(--sp-4);
+    }
+    .mood-kpi{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      margin-bottom:var(--sp-2);
+    }
+    .mood-number{
+      font-family:var(--font-display);
+      font-size:62px;
+      line-height:.9;
+    }
+    .mood-label{
+      font-family:var(--font-ui);
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .mood-scale{
+      position:relative;
+      height:12px;
+      border:1px solid var(--glass-b);
+      background:linear-gradient(90deg, rgba(55,95,56,0.45), rgba(143,106,29,0.45), rgba(139,51,37,0.55));
+      margin-bottom:var(--sp-2);
+    }
+    .mood-fill{
+      position:absolute;
+      inset:0 auto 0 0;
+      background:rgba(255,255,255,0.22);
+      border-right:2px solid var(--rule-heavy);
+    }
+    .mood-sub{
+      font-size:14px;
+      color:var(--text-2);
+      margin-bottom:var(--sp-4);
+    }
+    .mood-rows{
+      display:grid;
+      gap:var(--sp-2);
+    }
+    .mood-row{
+      display:grid;
+      grid-template-columns:90px 1fr 40px;
+      gap:var(--sp-2);
+      align-items:center;
+      font-size:13px;
+      color:var(--text-2);
+    }
+    .mood-row-track{
+      height:6px;
+      background:rgba(66,49,29,0.10);
+      overflow:hidden;
+    }
+    .mood-row-fill{
+      height:100%;
+      background:var(--accent);
+    }
+    .report-headline{
+      font-size:36px;
+      line-height:1.04;
+      margin-bottom:var(--sp-4);
+      max-width:16ch;
+    }
+    .report-metrics{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:var(--sp-3);
+      margin-bottom:var(--sp-4);
+    }
+    .report-metric{
+      padding:var(--sp-3);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.10);
+    }
+    .report-kicker{
+      font-family:var(--font-ui);
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--text-3);
+      margin-bottom:6px;
+    }
+    .report-value{
+      font-family:var(--font-display);
+      font-size:26px;
+      line-height:1;
+      margin-bottom:6px;
+    }
+    .report-copy{
+      font-size:14px;
+      color:var(--text-2);
+    }
+    .report-list{
+      display:grid;
+      gap:var(--sp-2);
+      margin-bottom:var(--sp-4);
+    }
+    .report-list-item{
+      padding:var(--sp-3);
+      border-left:2px solid var(--accent);
+      background:rgba(151,38,26,0.04);
+      font-size:15px;
+      color:var(--text-2);
+    }
+    .report-actions{
+      display:flex;
+      gap:var(--sp-2);
+      flex-wrap:wrap;
+    }
+    .challenge-progress{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:var(--sp-3);
+      margin-bottom:var(--sp-4);
+    }
+    .challenge-count{
+      font-family:var(--font-display);
+      font-size:54px;
+      line-height:.9;
+    }
+    .challenge-note{
+      font-size:14px;
+      color:var(--text-2);
+      max-width:24ch;
+    }
+    .challenge-list{
+      display:grid;
+      gap:var(--sp-2);
+    }
+    .challenge-item{
+      display:grid;
+      grid-template-columns:20px 1fr;
+      gap:var(--sp-3);
+      align-items:start;
+      padding:var(--sp-3);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.08);
+    }
+    .challenge-mark{
+      width:20px;
+      height:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid var(--glass-b-2);
+      font-family:var(--font-ui);
+      font-size:11px;
+      color:var(--accent);
+      background:var(--paper-strong);
+    }
+    .challenge-item.done .challenge-mark{
+      background:var(--accent);
+      border-color:var(--accent);
+      color:var(--paper-strong);
+    }
+    .challenge-copy{
+      font-size:14px;
+      color:var(--text-2);
+    }
+    .challenge-copy strong{
+      display:block;
+      color:var(--text-1);
+      font-family:var(--font-display);
+      font-size:24px;
+      line-height:1.06;
+      margin-bottom:4px;
+    }
+    .journal-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:var(--sp-4);
+      margin-bottom:var(--sp-4);
+    }
+    .journal-focus{
+      padding:7px 10px;
+      border:1px solid var(--glass-b-2);
+      color:var(--accent);
+      background:rgba(151,38,26,0.05);
+      white-space:nowrap;
+    }
+    .journal-layout{
+      display:grid;
+      grid-template-columns:1fr 0.88fr;
+      gap:var(--sp-4);
+    }
+    .journal-form,.journal-log{
+      display:grid;
+      gap:var(--sp-2);
+      align-content:start;
+    }
+    .journal-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--text-3);
+      margin-top:var(--sp-2);
+    }
+    .journal-input{
+      width:100%;
+      padding:12px 14px;
+      border:1px solid var(--glass-b-2);
+      background:rgba(255,255,255,0.36);
+      color:var(--text-1);
+      font-family:var(--font-body);
+      font-size:15px;
+      outline:none;
+    }
+    [data-theme="dark"] .journal-input{
+      background:rgba(255,255,255,0.03);
+    }
+    .journal-area{
+      min-height:124px;
+      resize:vertical;
+      line-height:1.6;
+    }
+    .journal-actions{
+      display:flex;
+      gap:var(--sp-2);
+      flex-wrap:wrap;
+      margin-top:var(--sp-3);
+    }
+    .journal-save{
+      min-width:160px;
+    }
+    .journal-clear{
+      width:auto;
+      min-width:120px;
+    }
+    .journal-log-head{
+      padding-bottom:var(--sp-3);
+      border-bottom:1px solid var(--glass-b);
+      margin-bottom:var(--sp-2);
+    }
+    .journal-log-title{
+      font-size:28px;
+      line-height:1.04;
+      margin-bottom:4px;
+    }
+    .journal-log-sub{
+      font-size:14px;
+      color:var(--text-2);
+    }
+    .journal-empty{
+      padding:var(--sp-4);
+      border:1px dashed var(--glass-b-2);
+      color:var(--text-2);
+      font-size:15px;
+    }
+    .journal-entry{
+      padding:var(--sp-3);
+      border-top:1px solid var(--glass-b);
+    }
+    .journal-entry:first-child{
+      border-top:none;
+    }
+    .journal-entry-meta{
+      display:flex;
+      justify-content:space-between;
+      gap:var(--sp-2);
+      margin-bottom:var(--sp-2);
+      font-family:var(--font-ui);
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .journal-entry-story{
+      font-size:22px;
+      line-height:1.06;
+      margin-bottom:6px;
+    }
+    .journal-entry-copy{
+      font-size:14px;
+      color:var(--text-2);
+      display:grid;
+      gap:6px;
+    }
+    .journal-entry-copy strong{
+      color:var(--text-1);
+      font-family:var(--font-ui);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-right:6px;
+    }
+    .feed-side-stack{
+      display:grid;
+      gap:var(--sp-4);
+      align-content:start;
+    }
+    .feed-intel-card{
+      position:sticky;
+      top:108px;
+    }
+    .feed-snapshot{
+      display:grid;
+      gap:var(--sp-3);
+    }
+    .feed-stat-row{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:var(--sp-2);
+    }
+    .feed-stat{
+      padding:var(--sp-3);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.10);
+    }
+    .feed-stat-kicker{
+      font-family:var(--font-ui);
+      font-size:10px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--text-3);
+      margin-bottom:6px;
+    }
+    .feed-stat-value{
+      font-family:var(--font-display);
+      font-size:22px;
+      line-height:1;
+    }
+    .feed-note{
+      padding:var(--sp-3);
+      border-left:2px solid var(--accent);
+      background:rgba(151,38,26,0.04);
+      color:var(--text-2);
+      font-size:14px;
+    }
+    .fc-signal-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:var(--sp-2);
+    }
+    .signal-chip{
+      padding:4px 8px;
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.12);
+      font-family:var(--font-ui);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--text-2);
+    }
+    .signal-chip.heat-hot{
+      border-color:rgba(139,51,37,0.34);
+      color:var(--right);
+      background:rgba(139,51,37,0.08);
+    }
+    .signal-chip.heat-warm{
+      border-color:rgba(143,106,29,0.32);
+      color:var(--warn);
+      background:rgba(143,106,29,0.08);
+    }
+    .signal-chip.heat-cool{
+      border-color:rgba(55,95,56,0.30);
+      color:var(--success);
+      background:rgba(55,95,56,0.08);
+    }
+    .atlas-section,.genome-section{
+      margin-top:var(--sp-6);
+    }
+    .atlas-board{
+      padding:var(--sp-5);
+      border:1px solid var(--glass-b);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.14), transparent 32%),
+        repeating-linear-gradient(0deg, rgba(66,49,29,0.06) 0 1px, transparent 1px 52px),
+        repeating-linear-gradient(90deg, rgba(66,49,29,0.05) 0 1px, transparent 1px 68px),
+        rgba(255,255,255,0.08);
+    }
+    .atlas-grid{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      grid-template-areas:
+        "na na eu eu ea ea"
+        "na na me sa ea ea"
+        "la la af sa oc oc";
+      gap:var(--sp-3);
+      margin-top:var(--sp-4);
+    }
+    .atlas-node{
+      padding:var(--sp-3);
+      border:1px solid var(--glass-b);
+      background:rgba(249,241,226,0.88);
+      min-height:152px;
+    }
+    [data-theme="dark"] .atlas-node{
+      background:rgba(255,255,255,0.03);
+    }
+    .atlas-region{
+      font-size:24px;
+      line-height:1.02;
+      margin-bottom:6px;
+    }
+    .atlas-angle{
+      font-family:var(--font-ui);
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:var(--sp-2);
+    }
+    .atlas-note{
+      font-size:14px;
+      color:var(--text-2);
+      margin-bottom:var(--sp-3);
+    }
+    .atlas-outlets{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .atlas-chip,.genome-chip{
+      padding:4px 8px;
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.12);
+      font-family:var(--font-ui);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--text-2);
+    }
+    .genome-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:var(--sp-3);
+      margin-top:var(--sp-4);
+    }
+    .genome-card{
+      padding:var(--sp-4);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.10);
+    }
+    .genome-name{
+      font-size:26px;
+      line-height:1.04;
+      margin-bottom:var(--sp-2);
+    }
+    .genome-meta{
+      display:grid;
+      gap:6px;
+      margin-bottom:var(--sp-3);
+      font-size:13px;
+      color:var(--text-2);
+    }
+    .genome-meta strong{
+      font-family:var(--font-ui);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--text-3);
+      margin-right:6px;
+    }
+    .genome-notes{
+      font-size:14px;
+      color:var(--text-2);
+      margin-top:var(--sp-3);
+      line-height:1.6;
+    }
+    .m-overview{
+      display:grid;
+      gap:var(--sp-3);
+      margin-bottom:var(--sp-4);
+    }
+    .m-stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:var(--sp-2);
+    }
+    .m-stat{
+      padding:var(--sp-3);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.10);
+    }
+    .m-stat-kicker{
+      font-family:var(--font-ui);
+      font-size:10px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--text-3);
+      margin-bottom:5px;
+    }
+    .m-stat-value{
+      font-family:var(--font-display);
+      font-size:21px;
+      line-height:1;
+    }
+    .anatomy-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:var(--sp-3);
+      margin:var(--sp-4) 0;
+    }
+    .anatomy-card{
+      padding:var(--sp-3);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.10);
+    }
+    .anatomy-kicker{
+      font-family:var(--font-ui);
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:var(--sp-2);
+    }
+    .anatomy-list{
+      display:grid;
+      gap:8px;
+      color:var(--text-2);
+      font-size:14px;
+      line-height:1.55;
+    }
+    .anatomy-list div{
+      padding-left:14px;
+      position:relative;
+    }
+    .anatomy-list div::before{
+      content:'•';
+      position:absolute;
+      left:0;
+      top:0;
+      color:var(--accent);
+    }
+    .genome-panel{
+      margin-top:var(--sp-4);
+      padding:var(--sp-4);
+      border:1px solid var(--glass-b);
+      background:rgba(255,255,255,0.08);
+    }
+    .genome-panel-head{
+      display:flex;
+      justify-content:space-between;
+      gap:var(--sp-3);
+      margin-bottom:var(--sp-3);
+      align-items:flex-start;
+    }
+    .genome-panel-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:var(--sp-3);
+    }
+    .matrix-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:6px;
+      margin-top:var(--sp-2);
+    }
+    .matrix-cell{
+      aspect-ratio:1;
+      border:1px solid var(--glass-b);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:var(--font-ui);
+      font-size:10px;
+      color:var(--text-3);
+      background:rgba(255,255,255,0.10);
+    }
+    .matrix-cell.active{
+      background:rgba(151,38,26,0.10);
+      color:var(--accent);
+      border-color:rgba(151,38,26,0.26);
+      font-weight:700;
+    }
+    .journal-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top:var(--sp-3);
+      padding:10px 14px;
+      border:1px solid var(--glass-b-2);
+      background:transparent;
+      color:var(--accent);
+      font-family:var(--font-ui);
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+    .journal-link:hover{
+      border-color:var(--accent);
+    }
+    @media (max-width:1200px){
+      .news-grid-lede,.news-grid-secondary,.journal-layout,.genome-grid{
+        grid-template-columns:1fr;
+      }
+      .atlas-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-areas:
+          "na eu"
+          "la af"
+          "me sa"
+          "ea oc";
+      }
+      .feed-intel-card{
+        position:static;
+      }
+    }
+    @media (max-width:900px){
+      .report-metrics,.m-stats,.feed-stat-row,.genome-panel-grid,.anatomy-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    @media (max-width:680px){
+      .journal-head,.challenge-progress,.drift-top,.mood-kpi,.genome-panel-head{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .atlas-grid{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "na"
+          "la"
+          "eu"
+          "af"
+          "me"
+          "sa"
+          "ea"
+          "oc";
+      }
+      .atlas-node{
+        min-height:auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1711,7 +2548,7 @@
           <div class="radar-wrap"><svg id="radarSvg" viewBox="0 0 400 400" width="100%" height="100%"></svg></div>
           <div class="radar-legend">
             <div class="rl-item"><div class="rl-dot" style="background:var(--accent)"></div>Your Position</div>
-            <div class="rl-item"><div class="rl-dot" style="background:rgba(0,210,180,0.3)"></div>Confidence Band</div>
+            <div class="rl-item"><div class="rl-dot" style="background:rgba(204,0,0,0.25)"></div>Confidence Band</div>
             <div class="rl-item"><div class="rl-dot" style="background:var(--text-3)"></div>Data Too Thin</div>
           </div>
           <div class="domain-chips" id="domain-chips"></div>
@@ -1764,52 +2601,78 @@
         </div>
       </div>
 
-      <!-- PREMIUM BANNER -->
-      <div class="prem-section">
-        <div class="prem-eye">Atlas Pro · Unlock Full Intelligence</div>
-        <div class="prem-title">Seven features that turn reading into understanding</div>
-        <div class="prem-sub">The free tier gives you your viewpoint map, coverage gaps, and a curated feed. Atlas Pro adds the behavioral layer — tracking how your media diet changes you over time.</div>
-        <div class="prem-grid">
-          <div class="prem-feat glass">
-            <div class="prem-lock">🔒</div>
-            <div class="prem-icon">🌡</div>
-            <div class="prem-fname">Emotional Temperature</div>
-            <div class="prem-fdesc">Track outrage, fear, and threat-framing in your feed. Reduce emotional intensity without losing the topic.</div>
+      <div class="edition-break">
+        <span>Second Edition · Intelligence Desk</span>
+      </div>
+
+      <div class="news-grid news-grid-lede">
+        <section class="glass drift-card">
+          <div class="c-eye">Timeline Drift Tracker</div>
+          <div class="c-title">How your reading shifted across the past six weeks</div>
+          <div class="c-sub">Not a moral score. A newsroom-style change log for source variety, ideological spread, and the topics that crowded everything else out.</div>
+          <div class="lede-note" id="drift-summary"></div>
+          <div id="drift-track"></div>
+        </section>
+        <section class="glass mood-card">
+          <div class="c-eye">Emotional Temperature</div>
+          <div class="c-title">Heat in the current edition</div>
+          <div class="c-sub">A running estimate of outrage, fear, urgency, and uncertainty across the stories currently in rotation.</div>
+          <div id="emotion-card"></div>
+        </section>
+      </div>
+
+      <div class="news-grid news-grid-secondary">
+        <section class="glass report-card">
+          <div class="c-eye">Weekly Media Diet Report</div>
+          <div class="c-title">What your reading week says in plain English</div>
+          <div class="c-sub">A front-page summary of the topics you over-fed, the perspectives you missed, and the next corrective move worth making.</div>
+          <div id="report-sheet"></div>
+        </section>
+        <section class="glass challenge-card">
+          <div class="c-eye">Reading Challenge</div>
+          <div class="c-title">Assignment Desk</div>
+          <div class="c-sub">A concrete set of reading tasks generated from your blind spots. Open the right story, log an audit, and close the loop.</div>
+          <div id="challenge-panel"></div>
+        </section>
+      </div>
+
+      <section class="glass journal-card">
+        <div class="journal-head">
+          <div>
+            <div class="c-eye">Belief Audit Journal</div>
+            <div class="c-title">Write your belief before the frame hardens</div>
+            <div class="c-sub">Record what you think happened, what remains uncertain, and what evidence would change your mind. Revisit after more reporting arrives.</div>
           </div>
-          <div class="prem-feat glass">
-            <div class="prem-lock">🔒</div>
-            <div class="prem-icon">📅</div>
-            <div class="prem-fname">Timeline Drift Tracker</div>
-            <div class="prem-fdesc">See how your media diet shifts week by week — not "you became biased" but "your Ukraine reading narrowed to two source families."</div>
+          <div class="journal-focus" id="journal-focus-label">Focused story · Iran Nuclear Standoff</div>
+        </div>
+        <div class="journal-layout">
+          <div class="journal-form">
+            <label class="journal-label" for="journal-story">Story Desk</label>
+            <select id="journal-story" class="journal-input"></select>
+
+            <label class="journal-label" for="journal-belief">What do you currently believe happened?</label>
+            <textarea id="journal-belief" class="journal-input journal-area" placeholder="State the central claim as carefully as you can."></textarea>
+
+            <label class="journal-label" for="journal-uncertainty">What remains disputed or unclear?</label>
+            <textarea id="journal-uncertainty" class="journal-input journal-area" placeholder="Separate verified facts from inference, spin, and missing evidence."></textarea>
+
+            <label class="journal-label" for="journal-mind">What would change your mind?</label>
+            <textarea id="journal-mind" class="journal-input journal-area" placeholder="List the source, document, or type of evidence that would update your view."></textarea>
+
+            <div class="journal-actions">
+              <button class="prem-cta journal-save" onclick="saveJournalEntry()">Save Audit</button>
+              <button class="reset-btn journal-clear" onclick="clearJournalDraft()">Clear Draft</button>
+            </div>
           </div>
-          <div class="prem-feat glass">
-            <div class="prem-lock">🔒</div>
-            <div class="prem-icon">🧬</div>
-            <div class="prem-fname">Source Genome Cards</div>
-            <div class="prem-fdesc">Full outlet profiles: ownership, country, audience, format mix, topic strengths, ideological tendency, and reliability inputs.</div>
-          </div>
-          <div class="prem-feat glass">
-            <div class="prem-lock">🔒</div>
-            <div class="prem-icon">🗺</div>
-            <div class="prem-fname">Atlas World Map</div>
-            <div class="prem-fdesc">The same story through national, regional, local, wire, and independent source layers — across every continent.</div>
-          </div>
-          <div class="prem-feat glass">
-            <div class="prem-lock">🔒</div>
-            <div class="prem-icon">📔</div>
-            <div class="prem-fname">Belief Audit Journal</div>
-            <div class="prem-fdesc">After reading a story package, record what you think happened, what's uncertain, and what would change your mind. Revisited a week later.</div>
-          </div>
-          <div class="prem-feat glass">
-            <div class="prem-lock">🔒</div>
-            <div class="prem-icon">📊</div>
-            <div class="prem-fname">Weekly Media Diet Report</div>
-            <div class="prem-fdesc">Topics you dominated, viewpoints you overconsumed, where your confidence exceeded your evidence — shareable, habit-forming.</div>
+          <div class="journal-log">
+            <div class="journal-log-head">
+              <div class="journal-log-title">Filed Notes</div>
+              <div class="journal-log-sub">Recent audits stored locally for this account.</div>
+            </div>
+            <div id="journal-log"></div>
           </div>
         </div>
-        <button class="prem-cta" onclick="showToast('Atlas Pro is coming soon. Join the waitlist at viewpointatlas.com')">Upgrade to Atlas Pro →</button>
-        <div class="prem-price">$8 / month · φ-ratio pricing · cancel any time</div>
-      </div>
+      </section>
 
     </div>
   </div>
@@ -1828,7 +2691,8 @@
       <div class="mode-desc-bar" id="mode-desc"></div>
       <div class="feed-layout">
         <div class="feed-list" id="feed-list"></div>
-        <div>
+        <div class="feed-side-stack">
+          <div class="glass feed-intel-card" id="feed-intel-card"></div>
           <div class="glass sliders-card">
             <div class="c-eye">Rerank Controls</div>
             <div class="c-title" style="margin-bottom:var(--sp-3)">Shape Your Algorithm</div>
@@ -1855,7 +2719,7 @@
         <div>
           <div class="c-eye">Comparative Coverage</div>
           <div class="page-title">Stories by Perspective</div>
-          <div class="page-sub">Left · Center · Right columns + your personal coverage gap + story timeline</div>
+          <div class="page-sub">Left · Center · Right columns, a global coverage atlas, source genome cards, and your personal gap analysis</div>
         </div>
       </div>
       <div class="topic-chips" id="topic-chips"></div>
@@ -1927,9 +2791,9 @@ const OB_SOURCES = [
 // DATA — BASE TEMPLATES (adjusted per user profile on launch)
 // ===================================================================
 const BASE_DOMAINS = [
-  {id:'economy',      lbl:'Economy',       score:-0.15, conf:0.12, n:61,  col:'#4f8ef7'},
-  {id:'foreignPolicy',lbl:'Foreign Policy',score: 0.28, conf:0.18, n:44,  col:'#9b59b6'},
-  {id:'techReg',      lbl:'Tech Reg.',     score:-0.52, conf:0.21, n:36,  col:'#00d2b4'},
+  {id:'economy',      lbl:'Economy',       score:-0.15, conf:0.12, n:61,  col:'#1A4A8F'},
+  {id:'foreignPolicy',lbl:'Foreign Policy',score: 0.28, conf:0.18, n:44,  col:'#5A3E78'},
+  {id:'techReg',      lbl:'Tech Reg.',     score:-0.52, conf:0.21, n:36,  col:'#CC0000'},
   {id:'environment',  lbl:'Environment',   score:-0.71, conf:0.15, n:36,  col:'#27ae60'},
   {id:'gender',       lbl:'Gender',        score:null,  conf:null, n:10,  col:'#f39c12'},
   {id:'immigration',  lbl:'Immigration',   score: 0.31, conf:0.19, n:38,  col:'#e74c5e'},
@@ -2289,13 +3153,670 @@ const TOPICS = {
 };
 
 // ===================================================================
+// DATA — INTELLIGENCE LAYER
+// ===================================================================
+const SOURCE_GENOMES = {
+  'wall-street-journal': {name:'Wall Street Journal', lean:'r', reliability:4.4, country:'US', region:'North America', ownership:'Corporate', audience:'Business', formats:['Breaking','Analysis','Opinion'], topicStrengths:['economy','markets','tech'], notes:'High reliability on business coverage; opinion pages lean right.'},
+  'the-guardian': {name:'The Guardian', lean:'l', reliability:4.3, country:'GB', region:'Europe', ownership:'Non-profit', audience:'General', formats:['Breaking','Analysis','Longform'], topicStrengths:['environment','human-rights','foreign-policy'], notes:'Trust-owned newsroom with strong climate and global affairs depth.'},
+  'associated-press': {name:'Associated Press', lean:'c', reliability:4.8, country:'US', region:'North America', ownership:'Non-profit', audience:'General', formats:['Breaking','Wire','Data'], topicStrengths:['breaking-news','elections','foreign-policy'], notes:'Wire-service baseline with minimal narrative coloration.'},
+  'reuters': {name:'Reuters', lean:'c', reliability:4.8, country:'GB', region:'Europe', ownership:'Corporate', audience:'Business', formats:['Breaking','Wire','Data'], topicStrengths:['economy','markets','foreign-policy'], notes:'High factual density and unusually low emotional temperature.'},
+  'bbc-news': {name:'BBC', lean:'c', reliability:4.5, country:'GB', region:'Europe', ownership:'Public', audience:'General', formats:['Breaking','Analysis','Longform'], topicStrengths:['foreign-policy','science','politics'], notes:'Public broadcaster with strong international reporting bench.'},
+  'bbc-world-service': {name:'BBC World Service', lean:'c', reliability:4.6, country:'GB', region:'Europe', ownership:'Public', audience:'Global', formats:['Breaking','Analysis','Audio'], topicStrengths:['foreign-policy','global-affairs','conflict'], notes:'Global-facing BBC desk with stronger cross-border sourcing.'},
+  'npr': {name:'NPR', lean:'c', reliability:4.4, country:'US', region:'North America', ownership:'Non-profit', audience:'General', formats:['Analysis','Longform','Audio'], topicStrengths:['politics','science','culture'], notes:'Measured tone and strong explainer format.'},
+  'msnbc': {name:'MSNBC', lean:'l', reliability:3.5, country:'US', region:'North America', ownership:'Corporate', audience:'General', formats:['Breaking','Opinion'], topicStrengths:['politics','elections'], notes:'Opinion-forward and often high-emotion in framing.'},
+  'fox-news': {name:'Fox News', lean:'r', reliability:2.8, country:'US', region:'North America', ownership:'Corporate', audience:'General', formats:['Breaking','Opinion'], topicStrengths:['immigration','politics','crime'], notes:'High reach, strong rightward framing, lower factual reliability overall.'},
+  'the-economist': {name:'The Economist', lean:'c', reliability:4.8, country:'GB', region:'Europe', ownership:'Private', audience:'Global', formats:['Analysis','Longform','Data'], topicStrengths:['economy','foreign-policy','technology'], notes:'Explanatory and comparative, with a market-liberal editorial posture.'},
+  'financial-times': {name:'Financial Times', lean:'c', reliability:4.8, country:'GB', region:'Europe', ownership:'Corporate', audience:'Business', formats:['Breaking','Analysis','Data'], topicStrengths:['economy','markets','trade'], notes:'Very strong on institutions, policy process, and cross-border capital flows.'},
+  'al-jazeera-english': {name:'Al Jazeera English', lean:'c', reliability:4.1, country:'QA', region:'Middle East', ownership:'State', audience:'Global', formats:['Breaking','Analysis','Longform'], topicStrengths:['middle-east','global-south','human-rights'], notes:'Valuable non-Western lens, especially on conflict and postcolonial framing.'},
+  'the-hindu': {name:'The Hindu', lean:'c', reliability:4.2, country:'IN', region:'South Asia', ownership:'Private', audience:'General', formats:['Breaking','Analysis','Opinion'], topicStrengths:['south-asia','policy','economy'], notes:'Detailed institutional reporting with strong regional grounding.'},
+  'the-atlantic': {name:'The Atlantic', lean:'l', reliability:4.2, country:'US', region:'North America', ownership:'Private', audience:'General', formats:['Longform','Analysis','Opinion'], topicStrengths:['politics','culture','science'], notes:'High-quality argument-driven essays with clear editorial voice.'},
+  'vox': {name:'Vox', lean:'l', reliability:4.0, country:'US', region:'North America', ownership:'Corporate', audience:'General', formats:['Explainers','Analysis','Opinion'], topicStrengths:['policy','economy','culture'], notes:'Explainer-heavy outlet optimized for synthesis and causal narratives.'},
+  'wired': {name:'Wired', lean:'l', reliability:4.2, country:'US', region:'North America', ownership:'Corporate', audience:'Tech', formats:['Analysis','Longform','Investigations'], topicStrengths:['technology','privacy','platforms'], notes:'Strong on tech power and civil-liberties framing.'},
+  'mit-technology-review': {name:'MIT Technology Review', lean:'c', reliability:4.6, country:'US', region:'North America', ownership:'Academic', audience:'Tech', formats:['Analysis','Longform','Research'], topicStrengths:['ai','science','innovation'], notes:'Technical but accessible; useful bridge between policy and engineering.'},
+  'national-review': {name:'National Review', lean:'r', reliability:3.4, country:'US', region:'North America', ownership:'Private', audience:'Conservative', formats:['Opinion','Analysis'], topicStrengths:['politics','economy','culture'], notes:'Ideological clarity is the main value; factual claims need cross-checking.'},
+  'the-intercept': {name:'The Intercept', lean:'l', reliability:3.9, country:'US', region:'North America', ownership:'Non-profit', audience:'General', formats:['Investigations','Longform','Opinion'], topicStrengths:['surveillance','war','civil-liberties'], notes:'Adversarial investigative lens with strong document-driven reporting.'},
+  'responsible-statecraft': {name:'Responsible Statecraft', lean:'c', reliability:4.1, country:'US', region:'North America', ownership:'Non-profit', audience:'Policy', formats:['Analysis','Opinion'], topicStrengths:['foreign-policy','realism','national-security'], notes:'Useful corrective to interventionist consensus coverage.'},
+  'democracy-now': {name:'Democracy Now', lean:'l', reliability:3.8, country:'US', region:'North America', ownership:'Non-profit', audience:'Progressive', formats:['Audio','Interviews','Opinion'], topicStrengths:['human-rights','labor','anti-war'], notes:'Movement-aligned coverage that elevates activist voices and field reporting.'},
+  'the-nation': {name:'The Nation', lean:'l', reliability:3.9, country:'US', region:'North America', ownership:'Private', audience:'Progressive', formats:['Longform','Opinion'], topicStrengths:['labor','housing','healthcare'], notes:'Strong on structural critique and power analysis.'},
+  'propublica': {name:'ProPublica', lean:'l', reliability:4.4, country:'US', region:'North America', ownership:'Non-profit', audience:'General', formats:['Investigations','Data','Longform'], topicStrengths:['healthcare','corruption','policy'], notes:'Investigation-heavy and document-first.'},
+  'stat-news': {name:'STAT News', lean:'c', reliability:4.6, country:'US', region:'North America', ownership:'Private', audience:'Health', formats:['Analysis','Data','Breaking'], topicStrengths:['healthcare','medicine','biotech'], notes:'One of the stronger specialist desks for health policy and clinical evidence.'},
+  'reason': {name:'Reason', lean:'r', reliability:3.7, country:'US', region:'North America', ownership:'Non-profit', audience:'Libertarian', formats:['Opinion','Analysis'], topicStrengths:['housing','regulation','markets'], notes:'Market-first framework; useful for deregulatory critique.'},
+  'jacobin': {name:'Jacobin', lean:'l', reliability:3.6, country:'US', region:'North America', ownership:'Private', audience:'Left', formats:['Opinion','Analysis'], topicStrengths:['labor','housing','inequality'], notes:'Strong ideological framing; more useful as a perspective probe than a factual baseline.'}
+};
+
+const SOURCE_ALIASES = {
+  'wall-street-journal':'wall-street-journal',
+  'wsj':'wall-street-journal',
+  'the-guardian':'the-guardian',
+  'guardian':'the-guardian',
+  'associated-press':'associated-press',
+  'ap':'associated-press',
+  'bbc':'bbc-news',
+  'bbc-news':'bbc-news',
+  'bbc-world-service':'bbc-world-service',
+  'bbc-world':'bbc-world-service',
+  'npr':'npr',
+  'msnbc':'msnbc',
+  'fox-news':'fox-news',
+  'fox':'fox-news',
+  'the-economist':'the-economist',
+  'economist':'the-economist',
+  'financial-times':'financial-times',
+  'ft':'financial-times',
+  'al-jazeera-english':'al-jazeera-english',
+  'al-jazeera':'al-jazeera-english',
+  'the-hindu':'the-hindu',
+  'hindu':'the-hindu',
+  'the-atlantic':'the-atlantic',
+  'atlantic':'the-atlantic',
+  'vox':'vox',
+  'wired':'wired',
+  'mit-technology-review':'mit-technology-review',
+  'national-review':'national-review',
+  'the-intercept':'the-intercept',
+  'responsible-statecraft':'responsible-statecraft',
+  'democracy-now':'democracy-now',
+  'the-nation':'the-nation',
+  'propublica':'propublica',
+  'stat-news':'stat-news',
+  'reason':'reason',
+  'jacobin':'jacobin',
+  'reuters':'reuters'
+};
+
+const STORY_DOSSIERS = {
+  general: {
+    facts:['Multiple reputable desks are covering the same core event.', 'At least one high-reliability source is available as a factual baseline.', 'The disagreement is mostly about causation, blame, and likely consequences.'],
+    disputed:['Whether the headline event reflects a durable trend or a temporary spike.', 'How much institutional responsibility belongs to government versus private actors.', 'Which downstream effects are immediate versus speculative.'],
+    missing:['Primary-source documents and direct stakeholder testimony.', 'Historical context that explains why the story surfaced now.', 'Coverage from outside the dominant national media market.'],
+    experts:['Ask for a domain specialist, not just a partisan spokesperson.', 'Favor reporting with document links, data appendices, or named analysts.', 'Use one wire-service baseline before reading framed commentary.']
+  },
+  iran: {
+    facts:['Iran has advanced enrichment capacity well beyond JCPOA-era limits.', 'IAEA access and verification remain central to the reporting dispute.', 'Regional actors interpret the same technical developments through different security doctrines.'],
+    disputed:['How close Iran is to deployable weapons capability versus material readiness.', 'Whether sanctions harden the program or create leverage for renewed diplomacy.', 'How credible military contingency leaks actually are.'],
+    missing:['Persian-language domestic reporting on elite debate inside Iran.', 'Technical non-proliferation analysis beyond generalist national-security framing.', 'Shipping and energy-market reporting from Gulf and South Asian desks.'],
+    experts:['IAEA inspectors and non-proliferation scholars for technical verification.', 'Regional security analysts from Gulf and Levant institutions.', 'Former negotiators who can separate signaling from substantive concessions.']
+  },
+  climate: {
+    facts:['The compact headline hides differences between binding and voluntary commitments.', 'Finance pledges, methane rules, and fossil-fuel language are the main leverage points.', 'Scientific baseline coverage is materially different from lobbying or market framing.'],
+    disputed:['Whether the accord meaningfully changes emissions trajectories.', 'How much the watered-down language reflects geopolitics versus feasibility constraints.', 'Whether industry-cost estimates capture transition benefits.'],
+    missing:['Frontline reporting from countries living with adaptation failure.', 'Energy-system reporting on grid, storage, and industrial feasibility.', 'Tracking of ratification, implementation, and enforcement after summit week.'],
+    experts:['Climate scientists for physical risk, not just summit politics.', 'Grid operators and energy economists for implementation realism.', 'Local reporters in climate-vulnerable regions for adaptation outcomes.']
+  },
+  ai: {
+    facts:['The bill is about disclosure, testing, liability, and exceptions.', 'Lobbying pressure is reshaping implementation timelines and carve-outs.', 'Civil-liberties and competition concerns are distinct even when they travel together in coverage.'],
+    disputed:['Whether regulation helps smaller labs or entrenches incumbents.', 'How much model-risk evidence exists outside worst-case scenario rhetoric.', 'Whether national-security framing is widening the bill beyond consumer harm.'],
+    missing:['Technical safety-evaluation literature that tests the actual failure modes.', 'Comparative implementation reporting from the EU, UK, Singapore, and India.', 'Worker and procurement reporting on where AI systems are already deployed.'],
+    experts:['Policy engineers who can explain testing regimes.', 'Competition lawyers on incumbent advantage.', 'Labor researchers and civil-liberties groups on deployment harms.']
+  },
+  ukraine: {
+    facts:['Aid flows, battlefield shifts, and alliance politics all shape the story.', 'Frontline reality and domestic politics often diverge across outlets.', 'Military reporting, humanitarian reporting, and fiscal reporting answer different questions.'],
+    disputed:['Whether negotiated settlement windows were or are realistic.', 'How sustainable current support levels are across NATO capitals.', 'Which side is benefiting more from time and attrition.'],
+    missing:['Ukrainian-language reporting on domestic morale and political tradeoffs.', 'Russian independent reporting that is neither state-aligned nor NATO-framed.', 'Coverage from non-aligned states that do not share the dominant Western security frame.'],
+    experts:['Military analysts grounded in logistics rather than ideology.', 'Regional journalists with access to local civilian conditions.', 'Sanctions and reconstruction economists for longer-horizon impacts.']
+  },
+  china: {
+    facts:['Tariffs, export controls, and industrial policy are interacting rather than operating separately.', 'Supply chains have rerouted more than they have actually decoupled.', 'The same policy package can look strategic, inflationary, and developmental depending on who reports it.'],
+    disputed:['Whether tariffs produce strategic resilience worth the near-term price.', 'How much China is being constrained versus incentivized to localize faster.', 'Who ultimately bears the cost: consumers, firms, or allied economies.'],
+    missing:['Chinese business and provincial reporting outside U.S. framing.', 'Coverage from beneficiary manufacturing hubs like Vietnam, Mexico, and India.', 'Labor-economics work on who absorbs tariff incidence.'],
+    experts:['Trade economists and supply-chain operators.', 'Regional reporters in countries absorbing factory relocation.', 'China specialists who distinguish industrial capacity from state rhetoric.']
+  },
+  healthcare: {
+    facts:['Cost, coverage, provider power, and drug pricing are separate but linked beats.', 'Policy headlines often hide long implementation windows.', 'Comparative international data changes the frame more than partisan rhetoric does.'],
+    disputed:['Whether market competition or public bargaining power lowers costs more effectively.', 'How much innovation would actually fall under stronger drug-price controls.', 'What current reform proposals mean for rural and low-income access.'],
+    missing:['Patient and provider-level reporting, not just Washington policy coverage.', 'Comparative health-system reporting from peer countries.', 'Longitudinal reporting on what reforms changed after initial passage.'],
+    experts:['Health economists and clinicians with implementation experience.', 'Patient advocates and provider operators for on-the-ground effects.', 'Specialist health reporters who can read the rulemaking, not just the speeches.']
+  },
+  housing: {
+    facts:['Supply constraints, rates, zoning, and labor costs all matter at once.', 'Local policy details determine whether national rhetoric means anything.', 'Owner and renter impacts are often reported through separate outlet ecosystems.'],
+    disputed:['Whether deregulation alone is sufficient to lower rents.', 'How much public housing is necessary versus complementary.', 'What role federal pressure should play in local zoning policy.'],
+    missing:['Metro-level housing beat reporting and tenant-rights coverage.', 'Construction trade reporting on labor, materials, and permitting delays.', 'Evidence on displacement and neighborhood-level outcomes after reforms.'],
+    experts:['Urban economists and local housing reporters.', 'Tenant advocates and builders, not just national commentators.', 'Land-use lawyers who can explain what the statute actually changes.']
+  },
+  immigration: {
+    facts:['Enforcement, asylum processing, and border politics are often collapsed into one headline.', 'Official crossing numbers describe flows, not necessarily outcomes or legality.', 'Humanitarian and security frames coexist even when outlets only foreground one.'],
+    disputed:['Whether recent executive actions changed crossings because of deterrence or seasonality.', 'How representative the most dramatic case studies are.', 'Which reforms would alter processing backlogs versus symbolic politics.'],
+    missing:['Local border reporting, migrant-rights coverage, and Spanish-language desks.', 'Longitudinal data on adjudication timelines and labor-market effects.', 'Comparative coverage from countries facing similar asylum pressures.'],
+    experts:['Immigration judges, asylum attorneys, and local reporters.', 'Labor economists for downstream market effects.', 'Humanitarian field organizations for conditions beyond headline arrests.']
+  }
+};
+
+const WORLD_DESK = {
+  iran: [
+    {cell:'na', region:'North America', angle:'Sanctions, deterrence, and congressional signaling', note:'Washington and New York desks emphasize enforcement credibility and alliance posture.', outlets:['WSJ','AP','Reuters']},
+    {cell:'eu', region:'Europe', angle:'Verification and diplomacy', note:'European coverage centers the IAEA, negotiation mechanics, and spillover to energy markets.', outlets:['BBC','Guardian','Reuters']},
+    {cell:'me', region:'Middle East', angle:'Regional escalation risk', note:'Gulf and Levant reporting maps the story onto shipping lanes, proxies, and missile deterrence.', outlets:['Al Jazeera','BBC World Service']},
+    {cell:'sa', region:'South Asia', angle:'Oil exposure and strategic hedging', note:'South Asian desks track price shocks, energy imports, and multipolar diplomacy.', outlets:['The Hindu']},
+    {cell:'ea', region:'East Asia', angle:'Non-proliferation precedent', note:'East Asian analysts read Iran through deterrence lessons for North Korea and Taiwan.', outlets:['Reuters','BBC']},
+    {cell:'af', region:'Africa', angle:'Non-aligned diplomatic posture', note:'African outlets tend to foreground shipping, fertilizer prices, and UN process over maximalist rhetoric.', outlets:['Reuters']}
+  ],
+  climate: [
+    {cell:'na', region:'North America', angle:'Cost, compliance, and political feasibility', note:'U.S. desks split between implementation realism and domestic partisan cost arguments.', outlets:['AP','WSJ','Vox']},
+    {cell:'eu', region:'Europe', angle:'Treaty architecture and emissions accounting', note:'European coverage is strongest on text comparison, timelines, and institutional design.', outlets:['BBC','Reuters','FT']},
+    {cell:'af', region:'Africa', angle:'Adaptation finance and frontline exposure', note:'African reporting centers whether pledged finance reaches drought, flood, and food-security realities.', outlets:['Al Jazeera','Reuters']},
+    {cell:'sa', region:'South Asia', angle:'Heat, labor, and development tradeoffs', note:'South Asian outlets frame climate through grid stress, agriculture, and industrial upgrading.', outlets:['The Hindu']},
+    {cell:'ea', region:'East Asia', angle:'Industrial policy and manufacturing advantage', note:'Coverage shifts from summit theatre to batteries, exports, and supply-chain capacity.', outlets:['Reuters','FT']},
+    {cell:'la', region:'Latin America', angle:'Forests, extraction, and commodity politics', note:'Latin American framing tends to bind climate commitments to land use and resource sovereignty.', outlets:['Reuters','BBC']}
+  ],
+  ai: [
+    {cell:'na', region:'North America', angle:'Lobbying, liability, and platform power', note:'U.S. coverage is richest on Senate process, firm influence, and civil-liberties carve-outs.', outlets:['MIT Technology Review','Wired','WSJ']},
+    {cell:'eu', region:'Europe', angle:'Regulatory precedent', note:'European desks ask whether the bill shadows or diverges from the EU AI Act.', outlets:['Reuters','FT']},
+    {cell:'sa', region:'South Asia', angle:'State capacity and adoption', note:'South Asian reporting ties AI oversight to public-sector deployment and industrial policy.', outlets:['The Hindu']},
+    {cell:'ea', region:'East Asia', angle:'Competition and standards', note:'East Asian coverage maps AI governance onto export controls and standards-setting contests.', outlets:['Reuters','Economist']},
+    {cell:'oc', region:'Oceania', angle:'Platform governance and safety cases', note:'Anglophone Pacific debates usually foreground harmful deployment, education, and procurement.', outlets:['BBC','Reuters']},
+    {cell:'af', region:'Africa', angle:'Data sovereignty and digital dependence', note:'African frames question whose infrastructure and training data the bill ultimately protects.', outlets:['Al Jazeera']}
+  ],
+  ukraine: [
+    {cell:'na', region:'North America', angle:'Aid politics and fiscal durability', note:'U.S. framing toggles between alliance credibility and domestic budget fatigue.', outlets:['WSJ','AP','Reuters']},
+    {cell:'eu', region:'Europe', angle:'Border security and energy exposure', note:'European reporting is stronger on ammunition stocks, refugee policy, and industrial capacity.', outlets:['BBC','FT','Guardian']},
+    {cell:'me', region:'Middle East', angle:'Conflict spillover and great-power bargaining', note:'Middle East desks often map Ukraine onto broader U.S.-Russia bargaining and grain routes.', outlets:['Al Jazeera']},
+    {cell:'sa', region:'South Asia', angle:'Strategic autonomy', note:'South Asian coverage weighs defense ties, energy imports, and non-aligned positioning.', outlets:['The Hindu']},
+    {cell:'af', region:'Africa', angle:'Food security and non-alignment', note:'African framing emphasizes grain prices and the costs of alliance pressure.', outlets:['Reuters','BBC']},
+    {cell:'ea', region:'East Asia', angle:'Deterrence lessons', note:'East Asian analysts focus on alliance resolve, munitions supply, and Taiwan analogies.', outlets:['Reuters','Economist']}
+  ],
+  china: [
+    {cell:'na', region:'North America', angle:'Tariffs, reshoring, and electoral politics', note:'U.S. desks foreground manufacturing revival claims and consumer-price risk.', outlets:['WSJ','Vox','Reuters']},
+    {cell:'eu', region:'Europe', angle:'Industrial competition and ally exposure', note:'European coverage tracks how U.S.-China friction pulls EU industry into defensive policy.', outlets:['FT','Economist']},
+    {cell:'sa', region:'South Asia', angle:'Factory relocation and regional opportunity', note:'South Asian outlets focus on whether supply-chain diversification becomes durable investment.', outlets:['The Hindu']},
+    {cell:'ea', region:'East Asia', angle:'Chip war and export controls', note:'East Asian framing is strongest on semiconductors, intermediate goods, and standards races.', outlets:['Reuters','Economist']},
+    {cell:'la', region:'Latin America', angle:'Commodity leverage and nearshoring', note:'Latin American reporting often treats trade war shifts as a manufacturing and logistics opportunity.', outlets:['Reuters','BBC']},
+    {cell:'af', region:'Africa', angle:'Infrastructure dependency and commodity demand', note:'African coverage tends to examine how slower Chinese growth changes financing and demand.', outlets:['Reuters']}
+  ],
+  healthcare: [
+    {cell:'na', region:'North America', angle:'Insurance, prices, and congressional math', note:'U.S. coverage is richest on payer power, cost growth, and the legislative route.', outlets:['AP','STAT News','WSJ']},
+    {cell:'eu', region:'Europe', angle:'Peer-system comparison', note:'European reporting makes comparative health-system outcomes visible in a way U.S. outlets often do not.', outlets:['BBC','Reuters']},
+    {cell:'af', region:'Africa', angle:'Public-health infrastructure', note:'Global-health desks broaden the frame from coverage fights to workforce and clinical capacity.', outlets:['Reuters','BBC']},
+    {cell:'sa', region:'South Asia', angle:'Scale, access, and mixed systems', note:'South Asian reporting is useful for understanding hybrid state-market health delivery.', outlets:['The Hindu']},
+    {cell:'ea', region:'East Asia', angle:'Industrial and pharmaceutical policy', note:'East Asian coverage often links health reform to domestic biotech and demographic pressures.', outlets:['Reuters']},
+    {cell:'la', region:'Latin America', angle:'Provider access and social insurance', note:'Latin American comparisons show alternative mixes of public financing and private provision.', outlets:['BBC','Reuters']}
+  ],
+  housing: [
+    {cell:'na', region:'North America', angle:'Rates, zoning, and local veto power', note:'North American reporting ties affordability to municipal process and monetary policy.', outlets:['Reuters','NPR','WSJ']},
+    {cell:'eu', region:'Europe', angle:'Rent regulation and urban density', note:'European coverage provides stronger comparisons on social housing and tenant protections.', outlets:['BBC','Economist']},
+    {cell:'sa', region:'South Asia', angle:'Urban growth and infrastructure lag', note:'South Asian cities make visible how transit, informality, and land policy interact.', outlets:['The Hindu']},
+    {cell:'ea', region:'East Asia', angle:'Land scarcity and household leverage', note:'East Asian housing coverage foregrounds debt, demographics, and state planning.', outlets:['Reuters','Economist']},
+    {cell:'oc', region:'Oceania', angle:'Investor demand and planning reform', note:'Pacific housing debates sharpen the line between supply reform and speculative pressure.', outlets:['Reuters','BBC']},
+    {cell:'la', region:'Latin America', angle:'Informality and displacement', note:'Latin American reporting broadens the story beyond ownership into neighborhood precarity and transit access.', outlets:['BBC','Reuters']}
+  ]
+};
+
+const EMOTION_KEYWORDS = {
+  outrage:['outrage','furious','shameful','scandal','blasted','backlash','denounced'],
+  fear:['threat','danger','crisis','collapse','catastrophe','emergency','risk'],
+  urgency:['urgent','immediate','warn','alarm','deadline','surge','escalation'],
+  hope:['breakthrough','progress','deal','agreement','recovery','improvement'],
+  uncertainty:['unclear','unknown','uncertain','debate','contested','unconfirmed']
+};
+
+function slugify(str=''){
+  return String(str).toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+function titleCase(str=''){
+  return String(str).replace(/\b\w/g, c => c.toUpperCase());
+}
+function getSourceId(name=''){
+  const slug = slugify(name);
+  return SOURCE_ALIASES[slug] || slug;
+}
+function fallbackSourceGenome(name='', lean='c', rel=3.9){
+  const id = getSourceId(name || 'unknown-desk');
+  return {
+    id,
+    name: name || titleCase(id.replace(/-/g,' ')),
+    lean,
+    reliability: +(rel || 3.9),
+    country:'US',
+    region:'North America',
+    ownership:'Private',
+    audience:'General',
+    formats:['Breaking','Analysis'],
+    topicStrengths:['general'],
+    notes:'Source profile inferred from visible card metadata.'
+  };
+}
+function getSourceGenome(nameOrId, lean='c', rel=3.9){
+  const id = SOURCE_GENOMES[nameOrId] ? nameOrId : getSourceId(nameOrId);
+  const source = SOURCE_GENOMES[id];
+  return source ? { id, ...source } : fallbackSourceGenome(nameOrId, lean, rel);
+}
+function inferTopicKey(article={}, explicit=''){
+  if (explicit && STORY_DOSSIERS[explicit]) return explicit;
+  const raw = `${article.ttl || article.title || ''} ${article.sum || article.description || ''} ${(article.tags || []).join(' ')}`.toLowerCase();
+  if (/iran|fordow|iaea|nuclear/.test(raw)) return 'iran';
+  if (/climate|geneva compact|emissions|methane|renewable|carbon/.test(raw)) return 'climate';
+  if (/\bai\b|algorithm|oversight bill|facial recognition|silicon valley/.test(raw)) return 'ai';
+  if (/ukraine|russia|nato|kharkiv|ceasefire/.test(raw)) return 'ukraine';
+  if (/china|tariff|trade war|semiconductor|chip|decoupling/.test(raw)) return 'china';
+  if (/health|vaccine|measles|mpox|medicaid|hospital|drug/.test(raw)) return 'healthcare';
+  if (/housing|zoning|rent|mortgage|tenant|home price/.test(raw)) return 'housing';
+  if (/immigration|border|migrant|asylum|deport/.test(raw)) return 'immigration';
+  return 'general';
+}
+function deriveFrames(text='', tags=[]){
+  const frames = [...(tags || [])].filter(Boolean).slice(0, 2);
+  const RULES = {
+    'National Security':['security','war','deterrence','military','missile','targeting'],
+    'Economic Cost':['cost','tariff','inflation','jobs','market','gdp','rate'],
+    'Humanitarian Crisis':['refugee','migrant','civilian','aid','displacement'],
+    'Regulatory Capture':['lobbying','carve-out','compliance','regulation','oversight'],
+    'Scientific Consensus':['study','scientist','data','what we know','evidence'],
+    'Governance':['bill','committee','senate','policy','executive order'],
+    'Market Power':['platform','monopoly','antitrust','industry','shareholder']
+  };
+  Object.entries(RULES).forEach(([label, words]) => {
+    if (words.some(word => text.includes(word.toLowerCase())) && !frames.includes(label)) frames.push(label);
+  });
+  return frames.length ? frames.slice(0, 4) : ['General Reporting'];
+}
+function detectEmotion(text='', tags=[]){
+  const scores = {};
+  Object.entries(EMOTION_KEYWORDS).forEach(([tone, words]) => {
+    scores[tone] = words.reduce((count, word) => count + (text.includes(word) ? 1 : 0), 0);
+  });
+  if ((tags || []).some(tag => /war|crisis|threat|border|emergency|surveillance/i.test(tag))) scores.urgency += 1;
+  const entries = Object.entries(scores);
+  const total = entries.reduce((sum, [, count]) => sum + count, 0);
+  const dominant = total ? entries.sort((a, b) => b[1] - a[1])[0][0] : 'measured';
+  const weighted = scores.outrage * 24 + scores.fear * 22 + scores.urgency * 18 + scores.uncertainty * 10 + scores.hope * 4;
+  const heat = Math.max(20, Math.min(96, 26 + weighted));
+  const normalised = {};
+  if (!total) {
+    Object.keys(scores).forEach(k => { normalised[k] = 0; });
+  } else {
+    Object.entries(scores).forEach(([k, count]) => {
+      normalised[k] = Math.round((count / total) * 100);
+    });
+  }
+  return { scores: normalised, dominant, heat, band: heat >= 75 ? 'hot' : heat >= 50 ? 'warm' : 'cool' };
+}
+function buildAnatomy(topicKey){
+  const dossier = STORY_DOSSIERS[topicKey] || STORY_DOSSIERS.general;
+  return {
+    facts: dossier.facts.slice(0, 3),
+    disputed: dossier.disputed.slice(0, 3),
+    missing: dossier.missing.slice(0, 3),
+    experts: dossier.experts.slice(0, 3)
+  };
+}
+function hydrateArticle(raw, ctx={}){
+  const title = raw.ttl || raw.title || '';
+  const summary = raw.sum || raw.summary || raw.description || '';
+  const source = getSourceGenome(raw.sourceId || raw.outlet || raw.source?.name || '', raw.lean || 'c', raw.rel || 3.9);
+  const tags = (raw.tags && raw.tags.length ? raw.tags : source.topicStrengths || []).slice(0, 4);
+  const topicKey = inferTopicKey({ ...raw, ttl:title, sum:summary, tags }, ctx.topicKey || raw.topicKey || raw._topic);
+  const frames = raw.frames && raw.frames.length ? raw.frames : deriveFrames(`${title} ${summary}`.toLowerCase(), tags);
+  const emotion = raw.emotion || detectEmotion(`${title} ${summary}`.toLowerCase(), tags.concat(frames));
+  return {
+    ...raw,
+    outlet: source.name || raw.outlet || raw.source?.name || 'Unknown Desk',
+    sourceId: source.id,
+    sourceMeta: source,
+    lean: raw.lean || source.lean || 'c',
+    rel: +(raw.rel || source.reliability || 3.9),
+    ttl: title,
+    sum: summary,
+    tags,
+    topicKey,
+    storyKey: ctx.storyKey || raw.storyKey || topicKey,
+    frames,
+    emotion,
+    anatomy: raw.anatomy || buildAnatomy(topicKey),
+    country: source.country,
+    region: source.region
+  };
+}
+function uniqueBy(arr, keyFn){
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = keyFn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+function articleStableId(article){
+  return article.url || `${article.outlet}-${article.ttl}`;
+}
+function userLeanWeights(articles){
+  const base = { l: 0, c: 0, r: 0 };
+  (articles || []).forEach(a => { base[a.lean || 'c']++; });
+  return base;
+}
+function reliabilityFloor(){
+  return +(2.2 + ((sliderVals.reliability || 0) / 100) * 2.6).toFixed(1);
+}
+function rerankArticles(articles=[], modeId='myFeed'){
+  const dominantLean = userProfile?.dominantLean || 'c';
+  const readSourceIds = new Set((readLog || []).map(r => r.sourceId));
+  const readRegions = new Set((readLog || []).map(r => r.region));
+  const leanMix = userLeanWeights(articles);
+  const targetLean = leanMix[dominantLean] >= Math.max(leanMix.l, leanMix.c, leanMix.r) ? dominantLean : 'c';
+  const minRel = reliabilityFloor();
+  let ranked = articles
+    .map((article, index) => {
+      const novelty = !readSourceIds.has(article.sourceId) ? 1 : 0.35;
+      const geoNovelty = !readRegions.has(article.region) ? 1 : article.region !== 'North America' ? 0.78 : 0.35;
+      const leanDistance = dominantLean === 'c' ? (article.lean === 'c' ? 0.3 : 1) : (article.lean === dominantLean ? 0.15 : article.lean === 'c' ? 0.65 : 1);
+      const reliabilityBoost = Math.max(0, article.rel - minRel);
+      const heatPenalty = Math.max(0, article.emotion.heat - (sliderVals.emotion || 0));
+      const modeBoost = modeId === 'bubble'
+        ? novelty * 24 + leanDistance * 10
+        : modeId === 'balanced'
+        ? leanDistance * 18
+        : modeId === 'reliable'
+        ? article.rel * 6
+        : modeId === 'global'
+        ? (article.region !== 'North America' ? 24 : 4)
+        : 0;
+      const score =
+        100 - index * 2 +
+        novelty * ((sliderVals.novelty || 0) * 0.26) +
+        leanDistance * ((sliderVals.spread || 0) * 0.24) +
+        geoNovelty * ((sliderVals.geo || 0) * 0.22) +
+        reliabilityBoost * 22 -
+        heatPenalty * 0.52 +
+        modeBoost;
+      const filtered =
+        article.rel >= minRel &&
+        !(modeId === 'reliable' && article.rel < 4.4) &&
+        !(modeId === 'global' && article.region === 'North America' && article.country === 'US');
+      return { article, score, filtered };
+    })
+    .filter(item => item.filtered)
+    .sort((a, b) => b.score - a.score)
+    .map(item => item.article);
+
+  if (modeId === 'balanced' && ranked.length >= 3) {
+    const buckets = { l: [], c: [], r: [] };
+    ranked.forEach(article => buckets[article.lean || 'c'].push(article));
+    ranked = [];
+    const max = Math.max(buckets.l.length, buckets.c.length, buckets.r.length);
+    for (let i = 0; i < max; i++) ['l','c','r'].forEach(lean => { if (buckets[lean][i]) ranked.push(buckets[lean][i]); });
+  }
+  if (modeId === 'bubble') {
+    ranked.sort((a, b) => Number(!readSourceIds.has(b.sourceId)) - Number(!readSourceIds.has(a.sourceId)));
+  }
+  return ranked;
+}
+function currentFeedSeed(modeId=curMode){
+  return (FEED_ARTICLES[modeId] || FEED_ARTICLES.myFeed).map(article => hydrateArticle(article, { modeId }));
+}
+function buildFeedMetrics(articles=[]){
+  const total = articles.length || 1;
+  const lean = userLeanWeights(articles);
+  const avgHeat = Math.round(articles.reduce((sum, article) => sum + (article.emotion?.heat || 0), 0) / total);
+  const sourceVariety = uniqueBy(articles, article => article.sourceId).length;
+  const overIndex = Object.entries(lean).sort((a, b) => b[1] - a[1])[0][0];
+  return {
+    avgHeat,
+    sourceVariety,
+    leanSpread: `${Math.round((lean.l / total) * 100)} / ${Math.round((lean.c / total) * 100)} / ${Math.round((lean.r / total) * 100)}`,
+    hottest: articles.slice().sort((a, b) => (b.emotion?.heat || 0) - (a.emotion?.heat || 0))[0] || null,
+    overIndex: { l:'Left', c:'Center', r:'Right' }[overIndex] || 'Center'
+  };
+}
+function formatWeekLabel(date){
+  return new Intl.DateTimeFormat(undefined, { month:'short', day:'numeric' }).format(date);
+}
+function buildDriftSeries(){
+  const weeks = [];
+  const dominant = userProfile?.dominantLean || 'c';
+  const selected = selTopics.length ? selTopics : ['economy','foreignPolicy','techReg'];
+  for (let i = 5; i >= 0; i--) {
+    const start = new Date();
+    start.setDate(start.getDate() - (i * 7) - 6);
+    const end = new Date();
+    end.setDate(end.getDate() - (i * 7));
+    const sway = dominant === 'l' ? -1 : dominant === 'r' ? 1 : 0;
+    const left = Math.max(14, Math.min(68, 34 + (sway < 0 ? 18 : 0) + (i % 3) * 4));
+    const right = Math.max(12, Math.min(60, 27 + (sway > 0 ? 18 : 0) + ((i + 1) % 2) * 3));
+    const center = Math.max(14, 100 - left - right);
+    const echo = Math.max(31, Math.min(86, 48 + Math.abs(sway) * 11 + i * 4 - (readLog.length > 3 && i === 0 ? 7 : 0)));
+    const flags = [];
+    if (i === 2) flags.push('Coverage narrowed to fewer source families');
+    if (i === 0 && readLog.some(entry => entry.region && entry.region !== 'North America')) flags.push('Global source variety improved this week');
+    if (i === 0 && journalEntries.length) flags.push('Belief audit logged against a contested story');
+    weeks.push({
+      label:`${formatWeekLabel(start)} - ${formatWeekLabel(end)}`,
+      echo,
+      left,
+      center,
+      right,
+      topTopic:selected[i % selected.length],
+      flag:flags[0] || ''
+    });
+  }
+  return weeks;
+}
+function gapTopicKey(){
+  const candidate = (GAPS[0]?.topic || '').toLowerCase();
+  if (candidate.includes('immigration')) return 'immigration';
+  if (candidate.includes('tech')) return 'ai';
+  if (candidate.includes('economy')) return 'china';
+  return 'iran';
+}
+function buildChallengeItems(){
+  const storyKey = journalFocus.storyKey || gapTopicKey();
+  const storyTitle = TOPICS[storyKey]?.name || titleCase(storyKey.replace(/-/g,' '));
+  const done = {
+    outsideLean:(readLog || []).some(entry => entry.lean && entry.lean !== (userProfile?.dominantLean || 'c')),
+    nonUs:(readLog || []).some(entry => entry.country && entry.country !== 'US'),
+    wire:(readLog || []).some(entry => ['associated-press','reuters','bbc-news','bbc-world-service'].includes(entry.sourceId)),
+    audit:(journalEntries || []).some(entry => entry.storyKey === storyKey)
+  };
+  return [
+    { id:'outsideLean', done:done.outsideLean, title:`Read outside your dominant lane on ${storyTitle}`, detail:'Open at least one article from a lean you have not over-consumed this week.' },
+    { id:'nonUs', done:done.nonUs, title:'Add one non-U.S. reporting desk', detail:'Pull in a regional or Global South source before accepting the default national frame.' },
+    { id:'wire', done:done.wire, title:'Anchor the story with a wire-service baseline', detail:'Use Reuters, AP, or BBC as the factual spine before commentary.' },
+    { id:'audit', done:done.audit, title:'File a belief audit', detail:'Write down the claim, the uncertainty, and the evidence that would move you.' }
+  ];
+}
+function dominantGapSummary(){
+  const gap = GAPS[0];
+  if (!gap) return 'Your reading is relatively balanced this week, but the atlas still favors adding one external baseline.';
+  return `${gap.topic} is still missing ${gap.missed[0]}. The drift tracker shows which weeks that blind spot hardened.`;
+}
+function buildReport(){
+  const drift = buildDriftSeries();
+  const hottest = currentFeedSeed(curMode).sort((a, b) => b.emotion.heat - a.emotion.heat)[0];
+  const narrowest = ECHO.filter(item => item.score != null).sort((a, b) => b.score - a.score)[0];
+  const thinnest = DOMAINS.filter(item => item.score == null || item.n < 15).sort((a, b) => (a.n || 0) - (b.n || 0))[0];
+  return {
+    headline:`${narrowest?.lbl || 'Your policy'} coverage narrowed, but your current feed is starting to counter-program the pattern.`,
+    metrics:[
+      { kicker:'Narrowest Beat', value:narrowest?.lbl || 'Tech', copy:`Echo ${narrowest?.score || 0}%` },
+      { kicker:'Hottest Story', value:hottest ? hottest.outlet : 'Reuters', copy:hottest ? hottest.ttl.slice(0, 44) : 'Measured wire coverage holding the line.' },
+      { kicker:'Thin Evidence', value:thinnest?.lbl || 'Gender', copy:thinnest ? `Only ${thinnest.n} reads logged` : 'More evidence needed before confidence rises.' }
+    ],
+    bullets:[
+      `Your most concentrated beat remains ${narrowest?.lbl || 'Technology'}, where commentary is outrunning cross-source verification.`,
+      `The strongest corrective move is to add ${GAPS[0]?.missed?.[0] || 'an international baseline'} before the next reading cycle.`,
+      `The drift line ${drift[5]?.echo < drift[4]?.echo ? 'widened slightly this week' : 'still shows narrowing across recent weeks'}, which means small reading changes are now visible in the aggregate.`
+    ]
+  };
+}
+function emotionNarrative(heat){
+  if (heat >= 75) return 'High-heat edition: rhetoric is outrunning verification. Keep a wire baseline in the stack.';
+  if (heat >= 50) return 'Mixed-heat edition: enough urgency to hold attention, but still recoverable with better source spread.';
+  return 'Measured edition: most stories are still anchored in analysis, not adrenaline.';
+}
+function atlasDesk(topicKey){
+  return WORLD_DESK[topicKey] || WORLD_DESK[gapTopicKey()] || [];
+}
+
+// ===================================================================
 // STATE
 // ===================================================================
 let curTopic = 'iran', curMode = 'myFeed', curTlIdx = 0;
 let selTopics = [], selSources = [], sliderVals = {};
 let userProfile = null;
+let readLog = [], journalEntries = [], journalFocus = { storyKey:'iran', title:TOPICS.iran.name };
 const AREG = {}; let _aid = 0;
 function regArt(a){ const id='a'+(_aid++); AREG[id]=a; return id; }
+function userStateKey(){
+  const base = currentUser?.username || 'guest';
+  return `va_intel_${btoa(base)}`;
+}
+function loadIntelligenceState(){
+  try{
+    const raw = localStorage.getItem(userStateKey());
+    if(!raw){
+      readLog = [];
+      journalEntries = [];
+      journalFocus = { storyKey:'iran', title:TOPICS.iran.name };
+      return;
+    }
+    const parsed = JSON.parse(raw);
+    readLog = Array.isArray(parsed.readLog) ? parsed.readLog : [];
+    journalEntries = Array.isArray(parsed.journalEntries) ? parsed.journalEntries : [];
+    journalFocus = parsed.journalFocus && parsed.journalFocus.storyKey
+      ? parsed.journalFocus
+      : { storyKey:'iran', title:TOPICS.iran.name };
+  }catch(e){
+    readLog = [];
+    journalEntries = [];
+    journalFocus = { storyKey:'iran', title:TOPICS.iran.name };
+  }
+}
+function persistIntelligenceState(){
+  try{
+    localStorage.setItem(userStateKey(), JSON.stringify({
+      readLog: readLog.slice(0, 80),
+      journalEntries: journalEntries.slice(0, 20),
+      journalFocus
+    }));
+  }catch(e){}
+}
+function syncJournalUI(){
+  const label = document.getElementById('journal-focus-label');
+  if(label) label.textContent = `Focused story · ${journalFocus.title || TOPICS[journalFocus.storyKey]?.name || 'General Desk'}`;
+  const storySelect = document.getElementById('journal-story');
+  if(storySelect){
+    const options = Object.entries(TOPICS).map(([key, topic]) => ({ key, label: topic.name }));
+    if(journalFocus.storyKey && !TOPICS[journalFocus.storyKey]){
+      options.unshift({ key: journalFocus.storyKey, label: journalFocus.title || titleCase(journalFocus.storyKey.replace(/-/g,' ')) });
+    }
+    storySelect.innerHTML = options.map(option =>
+      `<option value="${option.key}" ${option.key === journalFocus.storyKey ? 'selected' : ''}>${sanitize(option.label)}</option>`
+    ).join('');
+    storySelect.onchange = () => {
+      journalFocus = { storyKey: storySelect.value, title: TOPICS[storySelect.value]?.name || storySelect.value };
+      persistIntelligenceState();
+      syncJournalUI();
+      renderJournalEntries();
+      renderChallenge();
+    };
+  }
+}
+function clearJournalDraft(){
+  ['journal-belief','journal-uncertainty','journal-mind'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+}
+function renderJournalEntries(){
+  const mount = document.getElementById('journal-log');
+  if(!mount) return;
+  const items = journalEntries.filter(entry => !journalFocus.storyKey || entry.storyKey === journalFocus.storyKey);
+  if(!items.length){
+    mount.innerHTML = `<div class="journal-empty">No filed notes on this desk yet. Open a story, then capture your view before the narrative settles.</div>`;
+    return;
+  }
+  mount.innerHTML = items.slice().reverse().map(entry => `
+    <article class="journal-entry">
+      <div class="journal-entry-meta">
+        <span>${sanitize(entry.date)}</span>
+        <span>${sanitize(entry.storyTitle)}</span>
+      </div>
+      <div class="journal-entry-story">${sanitize(entry.headline)}</div>
+      <div class="journal-entry-copy">
+        <div><strong>Belief</strong>${sanitize(entry.belief)}</div>
+        <div><strong>Unclear</strong>${sanitize(entry.uncertainty)}</div>
+        <div><strong>Would change</strong>${sanitize(entry.mind)}</div>
+      </div>
+    </article>
+  `).join('');
+}
+function saveJournalEntry(){
+  const storyKey = document.getElementById('journal-story')?.value || journalFocus.storyKey || 'iran';
+  const belief = document.getElementById('journal-belief')?.value.trim() || '';
+  const uncertainty = document.getElementById('journal-uncertainty')?.value.trim() || '';
+  const mind = document.getElementById('journal-mind')?.value.trim() || '';
+  if(!belief || !uncertainty || !mind){
+    showToast('Fill all three journal prompts before filing the audit.');
+    return;
+  }
+  const entry = {
+    storyKey,
+    storyTitle: TOPICS[storyKey]?.name || titleCase(storyKey.replace(/-/g,' ')),
+    headline: `Audit filed for ${TOPICS[storyKey]?.name || titleCase(storyKey.replace(/-/g,' '))}`,
+    belief,
+    uncertainty,
+    mind,
+    date: new Intl.DateTimeFormat(undefined, { month:'short', day:'numeric', year:'numeric' }).format(new Date())
+  };
+  journalFocus = { storyKey, title: entry.storyTitle };
+  journalEntries.push(entry);
+  clearJournalDraft();
+  persistIntelligenceState();
+  syncJournalUI();
+  renderJournalEntries();
+  renderChallenge();
+  renderReport();
+  renderEmotionCard();
+  showToast('Belief audit saved to your journal.');
+}
+function focusJournalStory(article){
+  const storyKey = article?.storyKey || inferTopicKey(article || {}, gapTopicKey());
+  journalFocus = { storyKey, title: TOPICS[storyKey]?.name || titleCase(storyKey.replace(/-/g,' ')) };
+  persistIntelligenceState();
+}
+function jumpToJournal(id){
+  const article = AREG[id];
+  if(article) focusJournalStory(article);
+  closeModal();
+  go('dash');
+  syncJournalUI();
+  renderJournalEntries();
+  const block = document.querySelector('.journal-card');
+  if(block) block.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function trackRead(article){
+  const item = hydrateArticle(article || {});
+  const stableId = articleStableId(item);
+  if(readLog[readLog.length - 1]?.id === stableId) return;
+  readLog = readLog.filter(entry => entry.id !== stableId);
+  readLog.push({
+    id: stableId,
+    sourceId: item.sourceId,
+    lean: item.lean,
+    region: item.region,
+    country: item.country,
+    storyKey: item.storyKey,
+    title: item.ttl,
+    outlet: item.outlet,
+    heat: item.emotion?.heat || 0
+  });
+  focusJournalStory(item);
+  persistIntelligenceState();
+}
+function copyWeeklyReport(){
+  const report = buildReport();
+  const text = [
+    'Viewpoint Atlas Weekly Media Diet Report',
+    report.headline,
+    ...report.metrics.map(metric => `${metric.kicker}: ${metric.value} (${metric.copy})`),
+    ...report.bullets.map(item => `- ${item}`)
+  ].join('\n');
+  if(!navigator.clipboard || !navigator.clipboard.writeText){
+    showToast('Clipboard copy unavailable in this browser.');
+    return;
+  }
+  navigator.clipboard.writeText(text).then(
+    () => showToast('Weekly report copied to clipboard.'),
+    () => showToast('Clipboard copy unavailable in this browser.')
+  );
+}
 
 // ===================================================================
 // SETTINGS — NewsAPI
@@ -2353,6 +3874,7 @@ function go(view){
     document.getElementById('v-'+v).style.display=v===view?'block':'none';
   });
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.view===view));
+  if(view==='dash')initDash();
   if(view==='topics')renderTopics();
   if(view==='feed')renderFeed();
 }
@@ -2467,7 +3989,17 @@ function initDash(){
     if(sv[1])sv[1].textContent=Math.max(8,userProfile.sources.length+5);
     if(sv[2]){sv[2].textContent=overall+'%';sv[2].style.color=echoColor;}
   }
-  drawRadar(); renderDomainChips(); renderGaps(); renderEcho(); renderRecent();
+  drawRadar();
+  renderDomainChips();
+  renderGaps();
+  renderEcho();
+  renderRecent();
+  renderDrift();
+  renderEmotionCard();
+  renderReport();
+  renderChallenge();
+  syncJournalUI();
+  renderJournalEntries();
 }
 function renderDomainChips(){
   document.getElementById('domain-chips').innerHTML=DOMAINS.map(d=>{
@@ -2502,21 +4034,131 @@ function renderRecent(){
   const want=userProfile?userProfile.dominantLean:'c';
   const sorted=[...RECENT].sort((a,b)=>(a.lean===want?-1:1)-(b.lean===want?-1:1));
   document.getElementById('recent-list').innerHTML=sorted.map(a=>{
+    const article=hydrateArticle(a);
+    const id=regArt(article);
     const col=a.lean==='l'?'var(--left)':a.lean==='r'?'var(--right)':'var(--center)';
-    const title=sanitize(a.ttl||'');
-    const outlet=sanitize(a.outlet||'');
-    const img=sanitize(a.img||'');
-    return `<div class="r-art">
+    const title=sanitize(article.ttl||'');
+    const outlet=sanitize(article.outlet||'');
+    const img=sanitize(article.img||'');
+    return `<div class="r-art" onclick="openArt('${id}')">
       <div class="r-media picture-window">
         <img class="r-img living-photo" src="${img}" alt="${title}" loading="lazy" onerror="this.closest('.r-media').style.display='none'">
       </div>
       <div class="r-body">
         <div class="r-outlet" style="color:${col}">${outlet}</div>
         <div class="r-ttl">${title}</div>
-        <div class="why-chip" onclick="showWhy(event,'${encodeURIComponent(a.why)}')">💡 Why shown</div>
+        <div class="why-chip" onclick="showWhy(event,'${encodeURIComponent(article.why)}')">Why shown</div>
       </div>
     </div>`;
   }).join('');
+}
+function renderDrift(){
+  const series=buildDriftSeries();
+  const summary=document.getElementById('drift-summary');
+  const mount=document.getElementById('drift-track');
+  if(summary) summary.textContent=dominantGapSummary();
+  if(!mount) return;
+  mount.innerHTML=`<div class="drift-track">${series.map(week=>`
+    <article class="drift-week">
+      <div class="drift-top">
+        <div>
+          <div class="drift-date">${sanitize(week.label)}</div>
+          <div class="drift-score">${week.echo}% echo</div>
+        </div>
+        <div class="drift-date">${sanitize(titleCase(String(week.topTopic).replace(/([A-Z])/g,' $1').replace(/-/g,' ').trim()))}</div>
+      </div>
+      <div class="drift-bar">
+        <div class="drift-seg" style="width:${week.left}%;background:var(--left)"></div>
+        <div class="drift-seg" style="width:${week.center}%;background:var(--center)"></div>
+        <div class="drift-seg" style="width:${week.right}%;background:var(--right)"></div>
+      </div>
+      <div class="drift-meta">
+        <span>L ${week.left}%</span>
+        <span>C ${week.center}%</span>
+        <span>R ${week.right}%</span>
+      </div>
+      ${week.flag?`<div class="drift-flag">${sanitize(week.flag)}</div>`:''}
+    </article>
+  `).join('')}</div>`;
+}
+function renderEmotionCard(){
+  const mount=document.getElementById('emotion-card');
+  if(!mount) return;
+  const feed=rerankArticles(currentFeedSeed(curMode), curMode).slice(0, 6);
+  const total=feed.length||1;
+  const mix={ outrage:0, fear:0, urgency:0, hope:0, uncertainty:0 };
+  let heat=0;
+  feed.forEach(article=>{
+    heat += article.emotion?.heat || 0;
+    Object.keys(mix).forEach(key=>{
+      mix[key] += article.emotion?.scores?.[key] || 0;
+    });
+  });
+  const avgHeat=Math.round(heat/total);
+  const norm=Object.entries(mix).map(([key,val])=>({key,val:Math.round(val/total)})).sort((a,b)=>b.val-a.val);
+  mount.innerHTML=`
+    <div class="mood-meter">
+      <div class="mood-kpi">
+        <div class="mood-number">${avgHeat}</div>
+        <div class="mood-label">${avgHeat>=75?'High Heat':avgHeat>=50?'Mixed Heat':'Measured Stack'}</div>
+      </div>
+      <div class="mood-scale"><div class="mood-fill" style="width:${avgHeat}%"></div></div>
+      <div class="mood-sub">${sanitize(emotionNarrative(avgHeat))}</div>
+    </div>
+    <div class="mood-rows">
+      ${norm.map(item=>`
+        <div class="mood-row">
+          <span>${sanitize(titleCase(item.key))}</span>
+          <div class="mood-row-track"><div class="mood-row-fill" style="width:${item.val}%;background:${item.key==='hope'?'var(--success)':item.key==='uncertainty'?'var(--center)':'var(--accent)'}"></div></div>
+          <span>${item.val}%</span>
+        </div>
+      `).join('')}
+    </div>`;
+}
+function renderReport(){
+  const mount=document.getElementById('report-sheet');
+  if(!mount) return;
+  const report=buildReport();
+  mount.innerHTML=`
+    <div class="report-headline">${sanitize(report.headline)}</div>
+    <div class="report-metrics">
+      ${report.metrics.map(metric=>`
+        <div class="report-metric">
+          <div class="report-kicker">${sanitize(metric.kicker)}</div>
+          <div class="report-value">${sanitize(metric.value)}</div>
+          <div class="report-copy">${sanitize(metric.copy)}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="report-list">
+      ${report.bullets.map(item=>`<div class="report-list-item">${sanitize(item)}</div>`).join('')}
+    </div>
+    <div class="report-actions">
+      <button class="prem-cta" onclick="copyWeeklyReport()">Copy Report</button>
+      <button class="reset-btn" onclick="go('feed')">Correct The Feed</button>
+    </div>`;
+}
+function renderChallenge(){
+  const mount=document.getElementById('challenge-panel');
+  if(!mount) return;
+  const items=buildChallengeItems();
+  const done=items.filter(item=>item.done).length;
+  mount.innerHTML=`
+    <div class="challenge-progress">
+      <div class="challenge-count">${done}/${items.length}</div>
+      <div class="challenge-note">${sanitize(done===items.length ? 'Assignment complete. The current edition is materially broader than where you started.' : 'Complete these tasks to widen the edition without losing the story thread.')}</div>
+    </div>
+    <div class="challenge-list">
+      ${items.map(item=>`
+        <article class="challenge-item ${item.done?'done':''}">
+          <div class="challenge-mark">${item.done?'✓':''}</div>
+          <div class="challenge-copy">
+            <strong>${sanitize(item.title)}</strong>
+            ${sanitize(item.detail)}
+          </div>
+        </article>
+      `).join('')}
+    </div>`;
 }
 function showWhy(e,enc){
   e.stopPropagation();
@@ -2531,7 +4173,7 @@ function drawRadar(){
   const css=getComputedStyle(document.documentElement);
   const left=css.getPropertyValue('--left').trim() || '#4e6f93';
   const right=css.getPropertyValue('--right').trim() || '#9c473a';
-  const accent=css.getPropertyValue('--accent').trim() || '#214f48';
+  const accent=css.getPropertyValue('--accent').trim() || '#CC0000';
   const grid=css.getPropertyValue('--glass-b').trim() || 'rgba(58,45,33,0.12)';
   const gridStrong=css.getPropertyValue('--glass-b-2').trim() || 'rgba(58,45,33,0.22)';
   const faint=css.getPropertyValue('--text-3').trim() || 'rgba(31,26,23,0.44)';
@@ -2561,7 +4203,7 @@ function drawRadar(){
     const or=Math.min(r,(s+d.conf)*r);
     return `${cx+or*Math.cos(ang)},${cy+or*Math.sin(ang)}`;
   }).filter(Boolean).join(' ');
-  if(bp) h+=`<polygon points="${bp}" fill="rgba(33,79,72,0.10)" stroke="rgba(33,79,72,0.24)" stroke-width="1" stroke-dasharray="3,3"/>`;
+  if(bp) h+=`<polygon points="${bp}" fill="rgba(204,0,0,0.07)" stroke="rgba(204,0,0,0.18)" stroke-width="1" stroke-dasharray="3,3"/>`;
   // user position
   const up=DOMAINS.map((d,i)=>{
     if(!d.score)return null;
@@ -2569,7 +4211,7 @@ function drawRadar(){
     return `${cx+s*r*Math.cos(ang)},${cy+s*r*Math.sin(ang)}`;
   }).filter(Boolean).join(' ');
   if(up){
-    h+=`<polygon points="${up}" fill="rgba(33,79,72,0.16)" stroke="${accent}" stroke-width="2"/>`;
+    h+=`<polygon points="${up}" fill="rgba(204,0,0,0.11)" stroke="${accent}" stroke-width="2"/>`;
     DOMAINS.forEach((d,i)=>{
       if(!d.score)return;
       const ang=(Math.PI*2*i/n)-Math.PI/2, s=(d.score+1)/2;
@@ -2599,14 +4241,16 @@ async function fetchLiveNews(query){
   }catch(e){ return null; }
 }
 function mapLiveArticle(a, modeDesc){
+  const source=getSourceGenome(a.source?.name || '', 'c', 3.9);
   return {
-    outlet: (a.source?.name||'News').replace(/\[.*?\]/g,'').trim(),
-    lean:'c', rel:parseFloat((3.4+Math.random()*1.4).toFixed(1)),
+    outlet: (source.name || a.source?.name || 'News').replace(/\[.*?\]/g,'').trim(),
+    lean:source.lean || 'c',
+    rel:+(source.reliability || 3.9),
     img:a.urlToImage||`https://picsum.photos/seed/${Math.random().toString(36).slice(2)}/140/90`,
     ttl:(a.title||'').replace(/\s*[-|–]\s*[^-|–]+$/,'').trim(),
     sum:a.description||'',
     why:`Live article via NewsAPI. ${modeDesc||'Ranked by recency and your interest graph.'}`,
-    tags:[], frames:[], url:a.url, live:true,
+    tags:(source.topicStrengths || []).slice(0,3), frames:[], url:a.url, live:true,
   };
 }
 
@@ -2632,8 +4276,13 @@ function renderSliders(){
       <input type="range" min="0" max="100" value="${sliderVals[s.id]}" oninput="updSlider('${s.id}',this.value)">
     </div>`).join('');
 }
-function updSlider(id,v){ sliderVals[id]=parseInt(v); const el=document.getElementById('sv_'+id); if(el)el.textContent=v+'%'; }
-function resetSliders(){ SLIDERS.forEach(s=>{sliderVals[s.id]=s.val;}); renderSliders(); }
+function updSlider(id,v){
+  sliderVals[id]=parseInt(v);
+  const el=document.getElementById('sv_'+id);
+  if(el)el.textContent=v+'%';
+  renderFeedCards();
+}
+function resetSliders(){ SLIDERS.forEach(s=>{sliderVals[s.id]=s.val;}); renderSliders(); renderFeedCards(); }
 async function renderFeedCards(){
   const listEl=document.getElementById('feed-list');
   if(NEWS_API_KEY){
@@ -2642,21 +4291,21 @@ async function renderFeedCards(){
     const live=await fetchLiveNews(queries[curMode]||'world news');
     if(live&&live.length){
       const mode=MODES.find(m=>m.id===curMode);
-      listEl.innerHTML=live.slice(0,5).map(a=>{const id=regArt(mapLiveArticle(a,mode?.desc));return buildFcHTML(AREG[id],id);}).join('');
+      const ranked=rerankArticles(live.map(a=>hydrateArticle(mapLiveArticle(a,mode?.desc), { modeId:curMode })), curMode).slice(0,6);
+      listEl.innerHTML=ranked.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
+      renderFeedIntelCard(ranked);
       return;
     }
   }
   // Fallback: mock data, sorted by user lean if profile exists
-  let arts=[...(FEED_ARTICLES[curMode]||FEED_ARTICLES.myFeed)];
-  if(userProfile&&curMode==='myFeed'){
-    const want=userProfile.dominantLean;
-    arts.sort((a,b)=>(a.lean===want?-1:1)-(b.lean===want?-1:1));
-  }
+  const arts=rerankArticles(currentFeedSeed(curMode), curMode).slice(0,6);
   listEl.innerHTML=arts.map(a=>{const id=regArt(a);return buildFcHTML(a,id);}).join('');
+  renderFeedIntelCard(arts);
 }
 function buildFcHTML(a,id){
   const lt={l:'Left',c:'Center',r:'Right'}[a.lean]||'Center';
-  const live=a.live?`<span style="font-size:9px;padding:1px 6px;border-radius:4px;background:rgba(0,210,180,0.15);color:var(--accent);border:1px solid rgba(0,210,180,0.3);margin-left:6px">⚡ LIVE</span>`:'';
+  const heatClass=a.emotion?.band==='hot'?'heat-hot':a.emotion?.band==='warm'?'heat-warm':'heat-cool';
+  const live=a.live?`<span style="font-size:9px;padding:1px 6px;border-radius:4px;background:rgba(204,0,0,0.10);color:var(--accent);border:1px solid rgba(204,0,0,0.25);margin-left:6px">⚡ LIVE</span>`:'';
   const outlet=sanitize(a.outlet||'');
   const title=sanitize(a.ttl||a.title||'');
   const summary=sanitize((a.sum||'').slice(0,130));
@@ -2675,8 +4324,39 @@ function buildFcHTML(a,id){
     <div class="fc-title">${title}</div>
     <div class="fc-sum">${summary}${(a.sum||'').length>130?'...':''}</div>
     <div class="why-panel"><div class="why-lbl">💡 Why this is in your feed</div><div class="why-txt">${why}</div></div>
+    <div class="fc-signal-row">
+      <span class="signal-chip ${heatClass}">${sanitize((a.emotion?.band||'cool').toUpperCase())} HEAT</span>
+      <span class="signal-chip">${sanitize(a.region || 'North America')}</span>
+      <span class="signal-chip">${sanitize((a.frames||[])[0] || 'General Reporting')}</span>
+    </div>
     <div class="fc-tags">${(a.tags||[]).map(t=>`<span class="tag">${sanitize(t)}</span>`).join('')}</div>
   </div>`;
+}
+function renderFeedIntelCard(articles){
+  const mount=document.getElementById('feed-intel-card');
+  if(!mount) return;
+  const metrics=buildFeedMetrics(articles || []);
+  mount.innerHTML=`
+    <div class="c-eye">Edition Snapshot</div>
+    <div class="c-title" style="margin-bottom:var(--sp-3)">What the sliders just did</div>
+    <div class="feed-snapshot">
+      <div class="feed-stat-row">
+        <div class="feed-stat">
+          <div class="feed-stat-kicker">Avg Heat</div>
+          <div class="feed-stat-value">${metrics.avgHeat}</div>
+        </div>
+        <div class="feed-stat">
+          <div class="feed-stat-kicker">Sources</div>
+          <div class="feed-stat-value">${metrics.sourceVariety}</div>
+        </div>
+        <div class="feed-stat">
+          <div class="feed-stat-kicker">Lean Mix</div>
+          <div class="feed-stat-value">${metrics.overIndex}</div>
+        </div>
+      </div>
+      <div class="feed-note">Current spread L/C/R: ${sanitize(metrics.leanSpread)}. Reliability floor is ${reliabilityFloor().toFixed(1)} and the emotional cap is set to ${sliderVals.emotion}%.</div>
+      ${metrics.hottest?`<div class="feed-note">Highest-heat card in the current edition: <strong style="color:var(--text-1)">${sanitize(metrics.hottest.ttl)}</strong></div>`:''}
+    </div>`;
 }
 
 // ===================================================================
@@ -2700,11 +4380,12 @@ function renderTopicContent(k){
   const CB={left:'var(--left-soft)',center:'var(--center-soft)',right:'var(--right-soft)'};
   const colsHtml=Object.entries(t.cols).map(([ck,col])=>{
     const cards=col.srcs.map(a=>{
-      const id=regArt(a);
-      const title=sanitize(a.ttl||a.title||'');
-      const outlet=sanitize(a.outlet||'');
-      const img=sanitize(a.img||'');
-      const fr=(a.frames||[]).slice(0,2).map(f=>`<span class="a-frame" style="background:${CB[ck]};color:${CC[ck]}">${sanitize(f)}</span>`).join('');
+      const article=hydrateArticle(a,{topicKey:k,storyKey:k});
+      const id=regArt(article);
+      const title=sanitize(article.ttl||article.title||'');
+      const outlet=sanitize(article.outlet||'');
+      const img=sanitize(article.img||'');
+      const fr=(article.frames||[]).slice(0,2).map(f=>`<span class="a-frame" style="background:${CB[ck]};color:${CC[ck]}">${sanitize(f)}</span>`).join('');
       return `<div class="a-card glass" onclick="openArt('${id}')">
         <div class="a-media picture-window">
           <img class="a-img living-photo" src="${img}" alt="${title}" loading="lazy" onerror="this.closest('.a-media').style.display='none'">
@@ -2743,6 +4424,52 @@ function renderTopicContent(k){
         </div>
       </div>
     </div>`;
+  const atlasHtml=`
+    <div class="atlas-section">
+      <div class="s-title">Atlas World Map</div>
+      <div class="s-sub">A stylized cartography of where the story changes shape. Each region node shows the dominant editorial angle and the desks carrying it.</div>
+      <div class="atlas-board glass">
+        <div class="atlas-grid">
+          ${atlasDesk(k).map(node=>`
+            <article class="atlas-node" style="grid-area:${node.cell}">
+              <div class="atlas-region">${sanitize(node.region)}</div>
+              <div class="atlas-angle">${sanitize(node.angle)}</div>
+              <div class="atlas-note">${sanitize(node.note)}</div>
+              <div class="atlas-outlets">${(node.outlets||[]).map(outlet=>`<span class="atlas-chip">${sanitize(outlet)}</span>`).join('')}</div>
+            </article>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+  const genomeArticles=uniqueBy(
+    Object.values(t.cols).flatMap(col => col.srcs.map(article => hydrateArticle(article, { topicKey:k, storyKey:k }))),
+    article => article.sourceId
+  ).slice(0, 4);
+  const genomeHtml=`
+    <div class="genome-section">
+      <div class="s-title">Source Genome Cards</div>
+      <div class="s-sub">Ownership, region, audience, format mix, topic strengths, and the specific reason each desk matters in this story package.</div>
+      <div class="genome-grid">
+        ${genomeArticles.map(article=>{
+          const source=article.sourceMeta;
+          return `<article class="genome-card">
+            <div class="genome-name">${sanitize(source.name)}</div>
+            <div class="fc-signal-row">
+              <span class="signal-chip">${sanitize(({l:'Left',c:'Center',r:'Right'}[source.lean] || 'Center'))}</span>
+              <span class="signal-chip">${sanitize(source.region)}</span>
+              <span class="signal-chip">${sanitize(source.reliability.toFixed(1))}/5</span>
+            </div>
+            <div class="genome-meta">
+              <div><strong>Ownership</strong>${sanitize(source.ownership)}</div>
+              <div><strong>Audience</strong>${sanitize(source.audience)}</div>
+              <div><strong>Formats</strong>${sanitize((source.formats || []).join(', '))}</div>
+              <div><strong>Strengths</strong>${sanitize((source.topicStrengths || []).join(', '))}</div>
+            </div>
+            <div class="genome-notes">${sanitize(source.notes || '')}</div>
+          </article>`;
+        }).join('')}
+      </div>
+    </div>`;
   document.getElementById('topic-content').innerHTML=`
     <div class="t-head">
       <div class="t-eye">${t.cat}${t.hot?' · 🔥 Trending':''}</div>
@@ -2777,7 +4504,9 @@ function renderTopicContent(k){
         <div class="tl-d-body" id="tl-body">${fev.detail}</div>
         <div class="tl-srcs" id="tl-srcs">${srcChips(fev.srcs)}</div>
       </div>
-    </div>`;
+    </div>
+    ${atlasHtml}
+    ${genomeHtml}`;
 }
 function selTl(i,k){
   curTlIdx=i;
@@ -2797,25 +4526,98 @@ function selTl(i,k){
 // MODAL
 // ===================================================================
 function openArt(id){
-  const a=AREG[id]; if(!a)return;
+  const a=hydrateArticle(AREG[id] || {}); if(!a)return;
+  trackRead(a);
   const lt={l:'Left-Leaning',c:'Center',r:'Right-Leaning'}[a.lean]||'';
   const lc=a.lean==='l'?'var(--left)':a.lean==='r'?'var(--right)':a.lean==='c'?'var(--center)':'var(--text-2)';
-  const liveBadge=a.live?`<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(0,210,180,0.12);color:var(--accent);border:1px solid rgba(0,210,180,0.3);margin-right:8px">⚡ LIVE</span>`:'';
+  const source=a.sourceMeta || getSourceGenome(a.sourceId || a.outlet || '', a.lean, a.rel);
+  const relBand=Math.max(1,Math.min(5,Math.round(source.reliability || a.rel || 3)));
+  const leanCol=a.lean==='l'?1:a.lean==='c'?3:5;
+  const liveBadge=a.live?`<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(204,0,0,0.08);color:var(--accent);border:1px solid rgba(204,0,0,0.25);margin-right:8px">⚡ LIVE</span>`:'';
   const outlet=sanitize(a.outlet||'');
   const title=sanitize(a.ttl||a.title||'');
   const summary=sanitize(a.sum||a.summary||'');
   const link=sanitize(a.url||'');
   const img=sanitize(a.img||'');
+  const matrix=Array.from({length:25},(_,i)=>{
+    const row=5-Math.floor(i/5);
+    const col=(i%5)+1;
+    const active=row===relBand&&col===leanCol;
+    return `<div class="matrix-cell ${active?'active':''}">${active?'●':''}</div>`;
+  }).join('');
   document.getElementById('modal-body').innerHTML=`
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="m-outlet" style="color:${lc}">${liveBadge}${outlet}${lt?' · '+lt:''}</div>
     <div class="m-title">${title}</div>
     ${a.img?`<div class="m-media picture-window"><img class="m-img living-photo" src="${img}" alt="${title}" loading="lazy" onerror="this.closest('.m-media').style.display='none'"></div>`:''}
-    <div class="m-sum">${summary}</div>
+    <div class="m-overview">
+      <div class="m-sum">${summary}</div>
+      <div class="m-stats">
+        <div class="m-stat">
+          <div class="m-stat-kicker">Emotional Heat</div>
+          <div class="m-stat-value">${a.emotion?.heat || 0}</div>
+        </div>
+        <div class="m-stat">
+          <div class="m-stat-kicker">Geographic Desk</div>
+          <div class="m-stat-value">${sanitize(source.region || a.region || 'North America')}</div>
+        </div>
+        <div class="m-stat">
+          <div class="m-stat-kicker">Reliability</div>
+          <div class="m-stat-value">${sanitize((source.reliability || a.rel || 0).toFixed(1))}/5</div>
+        </div>
+      </div>
+    </div>
     ${a.url?`<a href="${link}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:var(--sp-3);font-size:var(--fs-sm);color:var(--accent);text-decoration:none">Read full article ↗</a>`:''}
     ${a.frames&&a.frames.length?`<div class="m-frames"><div class="m-frames-ttl">How this outlet frames the story</div><div class="m-frames-row">${a.frames.map(f=>`<span class="m-frame" style="color:${lc};border-color:${lc}40;background:${lc}10">${sanitize(f)}</span>`).join('')}</div></div>`:''}
     ${a.why?`<div class="m-why"><div class="m-why-ttl">Why this is in your feed</div><div class="m-why-txt">${sanitize(a.why)}</div></div>`:''}
-    ${a.rel?`<div class="m-rel">${'★'.repeat(Math.floor(a.rel))} ${(+a.rel).toFixed(1)}/5 factual reliability — Ad Fontes Media</div>`:''}`;
+    <div class="anatomy-grid">
+      <div class="anatomy-card">
+        <div class="anatomy-kicker">Verified Facts</div>
+        <div class="anatomy-list">${(a.anatomy?.facts || []).map(item=>`<div>${sanitize(item)}</div>`).join('')}</div>
+      </div>
+      <div class="anatomy-card">
+        <div class="anatomy-kicker">Disputed Terrain</div>
+        <div class="anatomy-list">${(a.anatomy?.disputed || []).map(item=>`<div>${sanitize(item)}</div>`).join('')}</div>
+      </div>
+      <div class="anatomy-card">
+        <div class="anatomy-kicker">Missing Context</div>
+        <div class="anatomy-list">${(a.anatomy?.missing || []).map(item=>`<div>${sanitize(item)}</div>`).join('')}</div>
+      </div>
+      <div class="anatomy-card">
+        <div class="anatomy-kicker">Expert Commentary</div>
+        <div class="anatomy-list">${(a.anatomy?.experts || []).map(item=>`<div>${sanitize(item)}</div>`).join('')}</div>
+      </div>
+    </div>
+    <div class="genome-panel">
+      <div class="genome-panel-head">
+        <div>
+          <div class="m-frames-ttl">Source Genome Card</div>
+          <div class="m-sum" style="margin-bottom:0">${sanitize(source.notes || '')}</div>
+        </div>
+        <div class="fc-signal-row">
+          <span class="signal-chip">${sanitize(({l:'Left',c:'Center',r:'Right'}[source.lean] || 'Center'))}</span>
+          <span class="signal-chip">${sanitize(source.country || 'US')}</span>
+          <span class="signal-chip">${sanitize((source.reliability || a.rel || 0).toFixed(1))}/5</span>
+        </div>
+      </div>
+      <div class="genome-panel-grid">
+        <div>
+          <div class="genome-meta">
+            <div><strong>Ownership</strong>${sanitize(source.ownership || 'Private')}</div>
+            <div><strong>Audience</strong>${sanitize(source.audience || 'General')}</div>
+            <div><strong>Formats</strong>${sanitize((source.formats || []).join(', '))}</div>
+            <div><strong>Strengths</strong>${sanitize((source.topicStrengths || []).join(', '))}</div>
+          </div>
+        </div>
+        <div>
+          <div class="m-frames-ttl">Reliability × Bias Matrix</div>
+          <div class="m-rel" style="margin-top:0">Reliability rises upward; ideological tilt runs left to right.</div>
+          <div class="matrix-grid">${matrix}</div>
+        </div>
+      </div>
+    </div>
+    ${a.rel?`<div class="m-rel">${'★'.repeat(Math.floor(a.rel))} ${(+a.rel).toFixed(1)}/5 factual reliability — Ad Fontes Media</div>`:''}
+    <button class="journal-link" onclick="jumpToJournal('${id}')">File Belief Audit For This Story</button>`;
   document.getElementById('modal').classList.add('open');
 }
 function closeModal(e){
@@ -2918,6 +4720,7 @@ function demoLogin(){
 function doLogout(){
   localStorage.removeItem('va_session');
   currentUser=null; selTopics=[]; selSources=[]; userProfile=null;
+  readLog=[]; journalEntries=[]; journalFocus={ storyKey:'iran', title:TOPICS.iran.name };
   DOMAINS=BASE_DOMAINS.map(d=>({...d}));
   GAPS=BASE_GAPS.map(g=>({...g}));
   ECHO=BASE_ECHO.map(e=>({...e}));
@@ -2936,6 +4739,7 @@ function doLogout(){
 function _enterApp(){
   syncUserChrome();
   document.getElementById('logoutBtn').style.display='flex';
+  loadIntelligenceState();
   // Returning user? Restore saved profile and skip onboarding
   const saved=localStorage.getItem('va_profile_'+btoa(currentUser.username));
   if(saved){
@@ -3000,16 +4804,17 @@ async function injectUrl(){
     const frames=(FRAME_POOLS[lean]||FRAME_POOLS.c).slice(0,3);
     const rel=parseFloat((lean==='c'?4.0+Math.random()*0.9:3.1+Math.random()*1.2).toFixed(1));
     const card={
-      outlet:sanitize(outlet), lean, rel,
+      outlet, lean, rel,
       img:'https://picsum.photos/seed/'+Math.random().toString(36).slice(2,8)+'/140/90',
-      ttl:'[Injected] Article from '+sanitize(host),
-      sum:'Injected via URL protocol. Domain: '+sanitize(host)+'. Bias estimated from AllSides/Ad Fontes outlet database. Open the original article for full content.',
+      ttl:'[Injected] Article from '+host,
+      sum:'Injected via URL protocol. Domain: '+host+'. Bias estimated from AllSides/Ad Fontes outlet database. Open the original article for full content.',
       why:'Manually injected by you. '+LEAN_LBL[lean]+' lean detected from outlet domain. Reliability estimate: '+rel+'/5.',
       tags:['Injected'], frames, url, live:true,
     };
-    const id=regArt(card);
+    const article=hydrateArticle(card);
+    const id=regArt(article);
     const listEl=document.getElementById('feed-list');
-    listEl.innerHTML=buildFcHTML(card,id)+listEl.innerHTML;
+    listEl.innerHTML=buildFcHTML(article,id)+listEl.innerHTML;
     document.getElementById('inj-url').value='';
     log.textContent='✓ Injected.';
     showToast('Article from '+sanitize(host)+' injected — '+LEAN_LBL[lean]+' lean detected.');
@@ -3025,6 +4830,7 @@ syncEditionStamp(); syncUserChrome(); syncThemeButton();
 function launch(){
   computeUserProfile();
   syncUserChrome();
+  loadIntelligenceState();
   if(currentUser){
     try{ localStorage.setItem('va_profile_'+btoa(currentUser.username),JSON.stringify({topics:selTopics,sources:selSources})); }catch(e){}
   }
