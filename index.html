@@ -434,6 +434,9 @@
       --texture-line:rgba(58,45,33,0.03);--texture-grid:rgba(58,45,33,0.014);--texture-dot:rgba(58,45,33,0.08);
       --texture-fade:rgba(255,255,255,0.22);--texture-smudge-1:rgba(255,255,255,0.16);--texture-smudge-2:rgba(110,86,61,0.08);--texture-vignette:rgba(58,45,33,0.05);
       --panel-highlight:rgba(255,255,255,0.40);--panel-lowlight:rgba(228,218,201,0.12);--panel-sheen:rgba(255,255,255,0.24);--panel-speck:rgba(58,45,33,0.06);
+      --paper-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.05' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0.08 0.14 0.2'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.92'/%3E%3C/svg%3E");
+      --paper-layer-opacity:.92;--paper-fiber:rgba(83,63,46,0.038);--paper-fiber-strong:rgba(83,63,46,0.06);--paper-crease:rgba(125,100,74,0.12);
+      --photo-mat:#f9f4ea;--photo-line:rgba(87,66,47,0.18);--photo-shadow:rgba(56,39,24,0.22);--photo-sheen:rgba(255,255,255,0.26);
     }
     [data-theme="dark"]{
       --paper:#161210;
@@ -457,12 +460,17 @@
       --texture-line:rgba(243,234,219,0.026);--texture-grid:rgba(243,234,219,0.012);--texture-dot:rgba(243,234,219,0.05);
       --texture-fade:rgba(255,255,255,0.04);--texture-smudge-1:rgba(141,193,180,0.08);--texture-smudge-2:rgba(0,0,0,0.22);--texture-vignette:rgba(0,0,0,0.28);
       --panel-highlight:rgba(255,255,255,0.08);--panel-lowlight:rgba(0,0,0,0.24);--panel-sheen:rgba(141,193,180,0.06);--panel-speck:rgba(243,234,219,0.05);
+      --paper-layer-opacity:.5;--paper-fiber:rgba(243,234,219,0.018);--paper-fiber-strong:rgba(243,234,219,0.038);--paper-crease:rgba(243,234,219,0.055);
+      --photo-mat:#241d18;--photo-line:rgba(243,234,219,0.12);--photo-shadow:rgba(0,0,0,0.44);--photo-sheen:rgba(255,255,255,0.08);
     }
     body{
       font-family:var(--font-body);
       background:
+        radial-gradient(circle at 14% 8%, rgba(255,255,255,0.18), transparent 24%),
         radial-gradient(circle at top right, var(--page-glow-1), transparent 32%),
         radial-gradient(circle at bottom left, var(--page-glow-2), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,0.08), transparent 22%),
+        linear-gradient(90deg, transparent 0, transparent 47.5%, rgba(255,255,255,0.035) 50%, transparent 52.5%, transparent 100%),
         var(--bg);
       color:var(--text-1);
     }
@@ -474,6 +482,21 @@
       pointer-events:none;
       background:
         linear-gradient(180deg, var(--texture-fade), transparent 18%),
+        var(--paper-noise),
+        repeating-linear-gradient(12deg,
+          transparent 0,
+          transparent 14px,
+          var(--paper-fiber) 14px,
+          var(--paper-fiber) 15px,
+          transparent 15px,
+          transparent 32px),
+        repeating-linear-gradient(-18deg,
+          transparent 0,
+          transparent 22px,
+          var(--paper-fiber-strong) 22px,
+          var(--paper-fiber-strong) 23px,
+          transparent 23px,
+          transparent 43px),
         repeating-linear-gradient(0deg,
           transparent 0,
           transparent 72px,
@@ -485,8 +508,9 @@
           var(--texture-grid) 104px,
           var(--texture-grid) 105px),
         radial-gradient(circle at 1px 1px, var(--texture-dot) 1px, transparent 1.1px);
-      background-size:auto, auto, auto, 18px 18px;
-      opacity:.88;
+      background-size:auto, 240px 240px, auto, auto, auto, auto, 18px 18px;
+      opacity:var(--paper-layer-opacity);
+      mix-blend-mode:multiply;
     }
     body::after{
       content:'';
@@ -497,8 +521,17 @@
       background:
         radial-gradient(circle at 14% 12%, var(--texture-smudge-1), transparent 22%),
         radial-gradient(circle at 82% 72%, var(--texture-smudge-2), transparent 28%),
+        linear-gradient(90deg,
+          transparent 0,
+          transparent 27%,
+          var(--paper-crease) 29%,
+          transparent 33%,
+          transparent 100%),
         linear-gradient(180deg, transparent 0%, var(--texture-vignette) 100%);
       opacity:.72;
+    }
+    [data-theme="dark"] body::before{
+      mix-blend-mode:screen;
     }
     .bg-orbs{display:none;}
     .glass,.glass-2{
@@ -530,13 +563,14 @@
       inset:0;
       pointer-events:none;
       background:
+        var(--paper-noise),
         repeating-linear-gradient(90deg,
           transparent 0,
           transparent 88px,
           var(--texture-grid) 88px,
           var(--texture-grid) 89px),
         radial-gradient(circle at 1px 1px, var(--panel-speck) 1px, transparent 1.1px);
-      background-size:auto, 16px 16px;
+      background-size:220px 220px, auto, 16px 16px;
       opacity:.24;
     }
     .nav-logo{
@@ -634,6 +668,9 @@
       font-family:var(--font-display);
       letter-spacing:-0.03em;
     }
+    .page-title,.auth-logo-title,.ob-title,.t-title,.prem-title,.m-title,.fc-title,.s-title,.c-title,.auth-editorial-title,.auth-note-title,.gap-ttl,.r-ttl,.col-ttl,.a-ttl,.tl-d-title{
+      text-wrap:balance;
+    }
     .page-title{
       font-size:clamp(42px,5vw,72px);
       line-height:.98;
@@ -653,6 +690,10 @@
       font-size:15px;
       line-height:1.7;
       color:var(--text-2);
+    }
+    .page-sub,.c-sub,.s-sub,.mf-text,.m-sum,.why-txt,.fc-sum,.sl-desc,.mi-desc,.prem-fdesc,.gap-saw,.ob-sub,.auth-logo-sub,.auth-editorial-sub,.tl-d-body,.m-why-txt,.auth-note-text{
+      text-wrap:pretty;
+      hyphens:auto;
     }
     .stats{
       display:grid;
@@ -704,9 +745,75 @@
       pointer-events:none;
       background:
         linear-gradient(135deg, transparent 0%, var(--panel-sheen) 14%, transparent 32%),
+        var(--paper-noise),
         radial-gradient(circle at 1px 1px, var(--panel-speck) 1px, transparent 1.1px);
-      background-size:auto, 18px 18px;
+      background-size:auto, 220px 220px, 18px 18px;
       opacity:.2;
+    }
+    .picture-window{
+      position:relative;
+      overflow:hidden;
+      padding:10px;
+      border-radius:var(--r-xl);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.56), transparent 64%),
+        linear-gradient(135deg, rgba(255,255,255,0.16), rgba(131,101,74,0.08)),
+        var(--paper-noise),
+        var(--photo-mat);
+      background-size:auto, auto, 240px 240px, auto;
+      border:1px solid var(--photo-line);
+      box-shadow:0 20px 32px -24px var(--photo-shadow), inset 0 1px 0 rgba(255,255,255,0.52);
+    }
+    .picture-window::before{
+      content:'';
+      position:absolute;
+      inset:9px;
+      border:1px solid var(--photo-line);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14);
+      pointer-events:none;
+      opacity:.92;
+    }
+    .picture-window::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(118deg, transparent 12%, var(--photo-sheen) 42%, transparent 66%),
+        linear-gradient(180deg, transparent 0%, rgba(58,45,33,0.10) 100%);
+      opacity:.38;
+      animation:photoSheen 16s ease-in-out infinite;
+    }
+    .picture-window img{
+      display:block;
+      width:100%;
+      background:var(--paper-shadow);
+    }
+    .living-photo{
+      transform-origin:center;
+      filter:saturate(1.08) contrast(1.03) brightness(1.01);
+      animation:livingPhoto 14s ease-in-out infinite alternate;
+    }
+    [data-theme="dark"] .living-photo{
+      filter:saturate(1.04) contrast(1.06) brightness(.92);
+    }
+    .r-media{
+      width:116px;
+      flex-shrink:0;
+    }
+    .fc-media{
+      width:100%;
+      max-width:190px;
+    }
+    .feed-list .fc:first-child .fc-media{
+      max-width:none;
+      margin-bottom:var(--sp-3);
+    }
+    .a-media{
+      margin-bottom:var(--sp-3);
+    }
+    .m-media{
+      margin:var(--sp-3) 0 var(--sp-4);
     }
     .radar-wrap{
       max-width:420px;
@@ -766,16 +873,19 @@
     }
     .r-art{
       align-items:flex-start;
+      display:grid;
+      grid-template-columns:116px minmax(0,1fr);
       padding:var(--sp-4) 0;
     }
     .r-art:hover{
       padding-left:var(--sp-2);
     }
     .r-img{
-      width:108px;
+      width:100%;
       height:82px;
-      border-radius:var(--r-lg);
-      border:1px solid var(--glass-b);
+      border-radius:calc(var(--r-lg) - 4px);
+      border:none;
+      object-fit:cover;
     }
     .why-chip,.why-panel,.m-why,.mode-desc-bar{
       background:rgba(33,79,72,0.06);
@@ -892,15 +1002,16 @@
     }
     .fc-head{
       display:grid;
-      grid-template-columns:180px 1fr;
+      grid-template-columns:minmax(0,190px) 1fr;
       gap:var(--sp-4);
       align-items:start;
     }
     .fc-img{
       width:100%;
-      height:132px;
-      border-radius:var(--r-lg);
-      border:1px solid var(--glass-b);
+      height:148px;
+      border-radius:calc(var(--r-xl) - 6px);
+      border:none;
+      object-fit:cover;
     }
     .fc-title{
       font-size:32px;
@@ -912,7 +1023,7 @@
       grid-template-columns:1fr;
     }
     .feed-list .fc:first-child .fc-img{
-      height:264px;
+      height:320px;
       margin-bottom:var(--sp-2);
     }
     .feed-list .fc:not(:first-child) .fc-title{
@@ -1018,9 +1129,10 @@
       box-shadow:none;
     }
     .a-img{
-      height:136px;
-      border-radius:var(--r-lg);
-      border:1px solid var(--glass-b);
+      height:156px;
+      border-radius:calc(var(--r-xl) - 6px);
+      border:none;
+      object-fit:cover;
     }
     .a-ttl{
       font-family:var(--font-display);
@@ -1058,9 +1170,23 @@
       background:rgba(28,22,18,0.36);
       backdrop-filter:blur(6px);
     }
+    .modal-box{
+      max-width:min(720px,calc(100vw - var(--sp-5)));
+    }
     .modal-close{
       background:var(--paper-strong);
       border:1px solid var(--glass-b);
+    }
+    .m-title{
+      font-size:clamp(30px,4vw,42px);
+      line-height:1.06;
+    }
+    .m-img{
+      height:320px;
+      border-radius:calc(var(--r-xl) - 6px);
+      border:none;
+      margin-bottom:0;
+      object-fit:cover;
     }
     .auth-view{
       padding:var(--sp-7) var(--sp-5) var(--sp-6);
@@ -1240,6 +1366,20 @@
       max-width:520px;
       margin:0;
     }
+    @keyframes livingPhoto{
+      0%{transform:scale(1.02) translate3d(0,0,0);}
+      48%{transform:scale(1.06) translate3d(-1.2%,1.2%,0);}
+      100%{transform:scale(1.04) translate3d(1.2%,-1%,0);}
+    }
+    @keyframes photoSheen{
+      0%,100%{transform:translateX(-10%);opacity:.22;}
+      50%{transform:translateX(10%);opacity:.4;}
+    }
+    @media (prefers-reduced-motion:reduce){
+      .living-photo,.picture-window::after{
+        animation:none;
+      }
+    }
     @media (max-width:1200px){
       .auth-box{
         grid-template-columns:1fr;
@@ -1258,6 +1398,20 @@
       }
       .p-grid{
         grid-template-columns:1fr;
+      }
+    }
+    @media (max-width:1050px){
+      .wrap{
+        padding:0 var(--sp-4);
+      }
+      .fc-head{
+        grid-template-columns:1fr;
+      }
+      .fc-media{
+        max-width:none;
+      }
+      .fc-img,.feed-list .fc:first-child .fc-img{
+        height:240px;
       }
     }
     @media (max-width:900px){
@@ -1285,17 +1439,18 @@
         border-left:none;
         border-top:1px solid var(--glass-b);
       }
-      .fc-head{
-        grid-template-columns:1fr;
-      }
-      .fc-img,.feed-list .fc:first-child .fc-img{
-        height:220px;
+      .nav-right{
+        margin-left:auto;
       }
     }
     @media (max-width:680px){
       nav,.wrap,.auth-view,#ob-view{
         padding-left:var(--sp-4);
         padding-right:var(--sp-4);
+      }
+      .nav-right{
+        width:100%;
+        justify-content:flex-end;
       }
       .nav-edition{
         width:100%;
@@ -1348,11 +1503,47 @@
         font-size:22px;
       }
       .r-art{
-        flex-direction:column;
+        grid-template-columns:1fr;
+      }
+      .r-media,.fc-media{
+        width:100%;
+        max-width:none;
+      }
+      .fc-img,.feed-list .fc:first-child .fc-img,.a-img,.m-img,.r-img{
+        height:200px;
       }
       .r-img{
         width:100%;
-        height:180px;
+      }
+    }
+    @media (max-width:520px){
+      .page{
+        padding-top:142px;
+      }
+      .content{
+        padding-top:var(--sp-5);
+      }
+      .page-title,.t-title,.ob-title,.auth-editorial-title,.prem-title{
+        font-size:clamp(34px,12vw,44px);
+      }
+      .fc-title,.m-title{
+        font-size:clamp(26px,8vw,34px);
+      }
+      .picture-window{
+        padding:8px;
+      }
+      .picture-window::before{
+        inset:7px;
+      }
+      .fc-img,.feed-list .fc:first-child .fc-img,.a-img,.m-img,.r-img{
+        height:176px;
+      }
+      .modal-ov{
+        padding:var(--sp-3);
+      }
+      .modal-box{
+        max-height:92vh;
+        padding:var(--sp-4);
       }
     }
   </style>
@@ -2305,11 +2496,16 @@ function renderRecent(){
   const sorted=[...RECENT].sort((a,b)=>(a.lean===want?-1:1)-(b.lean===want?-1:1));
   document.getElementById('recent-list').innerHTML=sorted.map(a=>{
     const col=a.lean==='l'?'var(--left)':a.lean==='r'?'var(--right)':'var(--center)';
+    const title=sanitize(a.ttl||'');
+    const outlet=sanitize(a.outlet||'');
+    const img=sanitize(a.img||'');
     return `<div class="r-art">
-      <img class="r-img" src="${a.img}" alt="" loading="lazy">
+      <div class="r-media picture-window">
+        <img class="r-img living-photo" src="${img}" alt="${title}" loading="lazy" onerror="this.closest('.r-media').style.display='none'">
+      </div>
       <div class="r-body">
-        <div class="r-outlet" style="color:${col}">${a.outlet}</div>
-        <div class="r-ttl">${a.ttl}</div>
+        <div class="r-outlet" style="color:${col}">${outlet}</div>
+        <div class="r-ttl">${title}</div>
         <div class="why-chip" onclick="showWhy(event,'${encodeURIComponent(a.why)}')">💡 Why shown</div>
       </div>
     </div>`;
@@ -2454,18 +2650,25 @@ async function renderFeedCards(){
 function buildFcHTML(a,id){
   const lt={l:'Left',c:'Center',r:'Right'}[a.lean]||'Center';
   const live=a.live?`<span style="font-size:9px;padding:1px 6px;border-radius:4px;background:rgba(0,210,180,0.15);color:var(--accent);border:1px solid rgba(0,210,180,0.3);margin-left:6px">⚡ LIVE</span>`:'';
+  const outlet=sanitize(a.outlet||'');
+  const title=sanitize(a.ttl||a.title||'');
+  const summary=sanitize((a.sum||'').slice(0,130));
+  const why=sanitize(a.why||'');
+  const img=sanitize(a.img||'');
   return `<div class="fc glass" onclick="openArt('${id}')">
     <div class="fc-head">
-      <img class="fc-img" src="${a.img}" alt="" loading="lazy" onerror="this.style.background='var(--glass-bg-2)'">
+      <div class="fc-media picture-window">
+        <img class="fc-img living-photo" src="${img}" alt="${title}" loading="lazy" onerror="this.closest('.fc-media').style.display='none'">
+      </div>
       <div class="fc-meta">
-        <div class="fc-outlet-row"><span class="outlet-name">${a.outlet}</span><span class="lb ${a.lean}">${lt}</span>${live}</div>
+        <div class="fc-outlet-row"><span class="outlet-name">${outlet}</span><span class="lb ${a.lean}">${lt}</span>${live}</div>
         <div class="rel-row"><span class="star">${'★'.repeat(Math.floor(a.rel||3))}</span><span>${(+(a.rel||3)).toFixed(1)}/5 reliability (Ad Fontes)</span></div>
       </div>
     </div>
-    <div class="fc-title">${a.ttl}</div>
-    <div class="fc-sum">${(a.sum||'').slice(0,130)}...</div>
-    <div class="why-panel"><div class="why-lbl">💡 Why this is in your feed</div><div class="why-txt">${a.why}</div></div>
-    <div class="fc-tags">${(a.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="fc-title">${title}</div>
+    <div class="fc-sum">${summary}${(a.sum||'').length>130?'...':''}</div>
+    <div class="why-panel"><div class="why-lbl">💡 Why this is in your feed</div><div class="why-txt">${why}</div></div>
+    <div class="fc-tags">${(a.tags||[]).map(t=>`<span class="tag">${sanitize(t)}</span>`).join('')}</div>
   </div>`;
 }
 
@@ -2491,11 +2694,16 @@ function renderTopicContent(k){
   const colsHtml=Object.entries(t.cols).map(([ck,col])=>{
     const cards=col.srcs.map(a=>{
       const id=regArt(a);
-      const fr=(a.frames||[]).slice(0,2).map(f=>`<span class="a-frame" style="background:${CB[ck]};color:${CC[ck]}">${f}</span>`).join('');
+      const title=sanitize(a.ttl||a.title||'');
+      const outlet=sanitize(a.outlet||'');
+      const img=sanitize(a.img||'');
+      const fr=(a.frames||[]).slice(0,2).map(f=>`<span class="a-frame" style="background:${CB[ck]};color:${CC[ck]}">${sanitize(f)}</span>`).join('');
       return `<div class="a-card glass" onclick="openArt('${id}')">
-        <img class="a-img" src="${a.img}" alt="" loading="lazy">
-        <div class="a-outlet" style="color:${CC[ck]}">${a.outlet}</div>
-        <div class="a-ttl">${a.ttl}</div>${fr}
+        <div class="a-media picture-window">
+          <img class="a-img living-photo" src="${img}" alt="${title}" loading="lazy" onerror="this.closest('.a-media').style.display='none'">
+        </div>
+        <div class="a-outlet" style="color:${CC[ck]}">${outlet}</div>
+        <div class="a-ttl">${title}</div>${fr}
       </div>`;
     }).join('');
     return `<div class="p-col">
@@ -2586,15 +2794,20 @@ function openArt(id){
   const lt={l:'Left-Leaning',c:'Center',r:'Right-Leaning'}[a.lean]||'';
   const lc=a.lean==='l'?'var(--left)':a.lean==='r'?'var(--right)':a.lean==='c'?'var(--center)':'var(--text-2)';
   const liveBadge=a.live?`<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(0,210,180,0.12);color:var(--accent);border:1px solid rgba(0,210,180,0.3);margin-right:8px">⚡ LIVE</span>`:'';
+  const outlet=sanitize(a.outlet||'');
+  const title=sanitize(a.ttl||a.title||'');
+  const summary=sanitize(a.sum||a.summary||'');
+  const link=sanitize(a.url||'');
+  const img=sanitize(a.img||'');
   document.getElementById('modal-body').innerHTML=`
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="m-outlet" style="color:${lc}">${liveBadge}${a.outlet||''}${lt?' · '+lt:''}</div>
-    <div class="m-title">${a.ttl||a.title||''}</div>
-    ${a.img?`<img class="m-img" src="${a.img}" alt="" loading="lazy" onerror="this.style.display='none'">`:''}
-    <div class="m-sum">${a.sum||a.summary||''}</div>
-    ${a.url?`<a href="${a.url}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:var(--sp-3);font-size:var(--fs-sm);color:var(--accent);text-decoration:none">Read full article ↗</a>`:''}
-    ${a.frames&&a.frames.length?`<div class="m-frames"><div class="m-frames-ttl">How this outlet frames the story</div><div class="m-frames-row">${a.frames.map(f=>`<span class="m-frame" style="color:${lc};border-color:${lc}40;background:${lc}10">${f}</span>`).join('')}</div></div>`:''}
-    ${a.why?`<div class="m-why"><div class="m-why-ttl">Why this is in your feed</div><div class="m-why-txt">${a.why}</div></div>`:''}
+    <div class="m-outlet" style="color:${lc}">${liveBadge}${outlet}${lt?' · '+lt:''}</div>
+    <div class="m-title">${title}</div>
+    ${a.img?`<div class="m-media picture-window"><img class="m-img living-photo" src="${img}" alt="${title}" loading="lazy" onerror="this.closest('.m-media').style.display='none'"></div>`:''}
+    <div class="m-sum">${summary}</div>
+    ${a.url?`<a href="${link}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:var(--sp-3);font-size:var(--fs-sm);color:var(--accent);text-decoration:none">Read full article ↗</a>`:''}
+    ${a.frames&&a.frames.length?`<div class="m-frames"><div class="m-frames-ttl">How this outlet frames the story</div><div class="m-frames-row">${a.frames.map(f=>`<span class="m-frame" style="color:${lc};border-color:${lc}40;background:${lc}10">${sanitize(f)}</span>`).join('')}</div></div>`:''}
+    ${a.why?`<div class="m-why"><div class="m-why-ttl">Why this is in your feed</div><div class="m-why-txt">${sanitize(a.why)}</div></div>`:''}
     ${a.rel?`<div class="m-rel">${'★'.repeat(Math.floor(a.rel))} ${(+a.rel).toFixed(1)}/5 factual reliability — Ad Fontes Media</div>`:''}`;
   document.getElementById('modal').classList.add('open');
 }
