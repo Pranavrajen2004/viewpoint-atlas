@@ -260,7 +260,7 @@
       background:var(--glass-bg-2);color:var(--text-2);border:1px solid var(--glass-b);}
 
     /* SLIDERS */
-    .sliders-card{padding:var(--sp-4);position:sticky;top:80px;}
+    .sliders-card{padding:var(--sp-4);}
     .sl-group{margin-bottom:var(--sp-4);}
     .sl-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2);}
     .sl-lbl{font-size:var(--fs-sm);font-weight:600;}
@@ -2063,13 +2063,8 @@
       align-content:start;
     }
     .feed-intel-card{
-      position:sticky;
-      top:108px;
-      max-height:calc(100vh - 140px);
-      overflow-y:auto;
-      scrollbar-width:none;
+      position:static;
     }
-    .feed-intel-card::-webkit-scrollbar{display:none;}
     .feed-snapshot{
       display:grid;
       gap:var(--sp-3);
@@ -4004,7 +3999,7 @@ function copyWeeklyReport(){
 function openSettings(){
   document.getElementById('api-key-input').value = NEWS_API_KEY;
   document.getElementById('api-status').textContent = NEWS_API_KEY
-    ? '✓ Key active — live news enabled on localhost'
+    ? '✓ Key active — live news enabled'
     : 'No key set — demo mode active';
   document.getElementById('settings-modal').classList.add('open');
 }
