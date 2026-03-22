@@ -16,8 +16,12 @@ It turns a reading history into a newspaper-like intelligence product with:
 
 ## Demo Status
 
-This repo currently runs as a static front-end demo.
-There is no build step required for the committed demo experience.
+This repo includes:
+
+- a static front-end demo in `index.html`
+- an optional local Express API in `server/`
+
+There is no frontend build step required for the committed demo experience.
 
 State is saved in the browser with `localStorage`, so demo reading history and journal notes persist locally on the same machine/browser.
 
@@ -77,9 +81,34 @@ python3 -m http.server 8000
 - If you use the journal or demo login, data is stored only in your browser.
 - Refreshing the page keeps local demo state unless browser storage is cleared.
 
+## Optional Local API
+
+If you want to run the included API locally:
+
+```bash
+cd server
+npm install
+npm start
+```
+
+The API starts on:
+
+```text
+http://localhost:3001
+```
+
+Health check:
+
+```text
+http://localhost:3001/api/health
+```
+
+The frontend demo does not require this API to run in its current committed state, but the server source is included in the repository.
+
 ## Files
 
 - `index.html`: main demo application
+- `server/`: optional Express API and analysis routes
 - `README.md`: setup and demo instructions
 
 ## Hosting Status
