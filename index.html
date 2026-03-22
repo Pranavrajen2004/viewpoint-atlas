@@ -1611,9 +1611,17 @@
       opacity:.34;
       z-index:0;
     }
+    [data-theme="dark"] body{
+      background:
+        radial-gradient(circle at 12% 8%, rgba(80,55,30,0.18), transparent 28%),
+        radial-gradient(circle at 88% 84%, rgba(60,40,20,0.14), transparent 24%),
+        repeating-linear-gradient(0deg, rgba(255,220,150,0.012) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(90deg, rgba(255,220,150,0.008) 0 1px, transparent 1px 7px),
+        var(--bg);
+    }
     [data-theme="dark"] body::before{
       mix-blend-mode:screen;
-      opacity:.16;
+      opacity:.10;
     }
     nav,.nav-tab,.mode-chip,.t-chip,.theme-btn,.ob-btn,.prem-cta,.inj-btn,.reset-btn,.auth-demo,.auth-tab,.journal-label,.sl-lbl,.sl-val,.gap-topic,.journal-focus,.nav-user,.nav-edition,.page-kicker,.c-eye,.t-eye,.ob-eye,.prem-eye,.m-why-ttl,.why-lbl,.auth-lbl,.gap-col-ttl,.miss-ttl,.m-frames-ttl{
       font-family:var(--font-ui);
@@ -2057,7 +2065,11 @@
     .feed-intel-card{
       position:sticky;
       top:108px;
+      max-height:calc(100vh - 140px);
+      overflow-y:auto;
+      scrollbar-width:none;
     }
+    .feed-intel-card::-webkit-scrollbar{display:none;}
     .feed-snapshot{
       display:grid;
       gap:var(--sp-3);
@@ -4377,7 +4389,7 @@ function drawRadar(){
     const or=Math.min(r,(s+d.conf)*r);
     return `${cx+or*Math.cos(ang)},${cy+or*Math.sin(ang)}`;
   }).filter(Boolean).join(' ');
-  if(bp) h+=`<polygon points="${bp}" fill="rgba(204,0,0,0.07)" stroke="rgba(204,0,0,0.18)" stroke-width="1" stroke-dasharray="3,3"/>`;
+  if(bp) h+=`<polygon points="${bp}" fill="rgba(204,0,0,0.14)" stroke="rgba(204,0,0,0.38)" stroke-width="1.5" stroke-dasharray="4,3"/>`;
   // user position
   const up=DOMAINS.map((d,i)=>{
     if(!d.score)return null;
@@ -4385,11 +4397,11 @@ function drawRadar(){
     return `${cx+s*r*Math.cos(ang)},${cy+s*r*Math.sin(ang)}`;
   }).filter(Boolean).join(' ');
   if(up){
-    h+=`<polygon points="${up}" fill="rgba(204,0,0,0.11)" stroke="${accent}" stroke-width="2"/>`;
+    h+=`<polygon points="${up}" fill="rgba(204,0,0,0.22)" stroke="${accent}" stroke-width="2.5"/>`;
     DOMAINS.forEach((d,i)=>{
       if(!d.score)return;
       const ang=(Math.PI*2*i/n)-Math.PI/2, s=(d.score+1)/2;
-      h+=`<circle cx="${cx+s*r*Math.cos(ang)}" cy="${cy+s*r*Math.sin(ang)}" r="4" fill="${accent}" stroke="${paper}" stroke-width="1.5"/>`;
+      h+=`<circle cx="${cx+s*r*Math.cos(ang)}" cy="${cy+s*r*Math.sin(ang)}" r="5" fill="${accent}" stroke="${paper}" stroke-width="2"/>`;
     });
   }
   h+=`<circle cx="${cx}" cy="${cy}" r="3" fill="${faint}"/>`;
@@ -4408,10 +4420,12 @@ function hexPts(cx,cy,r,n){
 async function fetchLiveNews(query){
   // Try backend proxy first (works on Vercel, bypasses NewsAPI CORS restriction)
   try{
-    const res=await fetch(`/api/news/proxy?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt`);
+    const keyParam=NEWS_API_KEY?`&userKey=${encodeURIComponent(NEWS_API_KEY)}`:'';
+    const res=await fetch(`/api/news/proxy?q=${encodeURIComponent(query)}&pageSize=8&sortBy=publishedAt${keyParam}`);
     if(res.ok){
       const d=await res.json();
-      const arts=(d.articles||[]).filter(a=>a.title&&a.description&&a.urlToImage);
+      // Don't require urlToImage — fallback to picsum for missing images
+      const arts=(d.articles||[]).filter(a=>a.title&&a.description&&a.title!=='[Removed]');
       if(arts.length) return arts;
     }
   }catch(e){}
@@ -4421,7 +4435,7 @@ async function fetchLiveNews(query){
     const res=await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&language=en&pageSize=8&apiKey=${NEWS_API_KEY}`);
     if(!res.ok) return null;
     const d=await res.json();
-    return (d.articles||[]).filter(a=>a.title&&a.description&&a.urlToImage);
+    return (d.articles||[]).filter(a=>a.title&&a.description&&a.title!=='[Removed]');
   }catch(e){ return null; }
 }
 function mapLiveArticle(a, modeDesc){

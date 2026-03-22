@@ -145,11 +145,22 @@ function applySliders(articles, sliders = {}) {
  */
 router.get('/proxy', async (req, res) => {
   try {
-    const { q = 'world news', sortBy = 'publishedAt' } = req.query;
+    const { q = 'world news', sortBy = 'publishedAt', userKey } = req.query;
     const pageSize = Math.min(parseInt(req.query.pageSize) || 8, 20);
-    const data = await fetchFromNewsAPI('everything', {
-      q, language: 'en', sortBy, pageSize
-    });
+    // Prefer the user's own key (forwarded from frontend localStorage) over the default
+    const apiKey = (userKey && userKey.length > 10) ? userKey : NEWS_API_KEY;
+    const url = new URL(`${NEWS_API_BASE}/everything`);
+    url.searchParams.set('apiKey', apiKey);
+    url.searchParams.set('q', q);
+    url.searchParams.set('language', 'en');
+    url.searchParams.set('sortBy', sortBy);
+    url.searchParams.set('pageSize', String(pageSize));
+    const upstream = await fetch(url.toString());
+    const data = await upstream.json();
+    if (!upstream.ok) {
+      console.error('[/api/news/proxy] NewsAPI error:', data);
+      return res.status(upstream.status).json(data);
+    }
     res.json(data);
   } catch (err) {
     console.error('[/api/news/proxy]', err.message);
