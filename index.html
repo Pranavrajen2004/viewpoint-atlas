@@ -2390,6 +2390,66 @@
         min-height:auto;
       }
     }
+
+    /* === SOURCES PAGE === */
+    .sources-filter{
+      display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-bottom:var(--sp-4);
+    }
+    .src-filter-btn{
+      font-family:var(--font-ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+      padding:6px var(--sp-3);border:1px solid var(--glass-b-2);background:var(--glass-bg);
+      color:var(--text-2);cursor:pointer;transition:all .2s;
+    }
+    .src-filter-btn.active,.src-filter-btn:hover{
+      background:var(--accent);color:#fff;border-color:var(--accent);
+    }
+    .sources-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:var(--sp-4);
+    }
+    .src-card{
+      padding:var(--sp-4);border:1px solid var(--glass-b);background:var(--glass-bg);
+      transition:border-color .2s;
+    }
+    .src-card:hover{border-color:var(--glass-b-2);}
+    .src-rel-bar{
+      height:3px;margin:var(--sp-2) 0 var(--sp-3);background:var(--glass-b);
+    }
+    .src-rel-fill{height:100%;}
+
+    /* === GLOBE PAGE === */
+    .globe-layout{
+      display:grid;grid-template-columns:1fr 260px;gap:var(--sp-4);align-items:start;
+    }
+    .globe-map-wrap{
+      padding:var(--sp-3);overflow:hidden;
+    }
+    .globe-legend{
+      display:grid;gap:var(--sp-3);
+    }
+    .globe-legend-item{
+      padding:var(--sp-3);border:1px solid var(--glass-b);background:var(--glass-bg);
+    }
+    .globe-legend-region{
+      font-family:var(--font-ui);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--text-3);margin-bottom:4px;
+    }
+    .globe-legend-name{
+      font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:4px;
+    }
+    .globe-legend-bar{
+      height:3px;background:var(--glass-b);margin-bottom:4px;
+    }
+    .globe-legend-fill{height:100%;background:var(--accent);}
+    .globe-legend-count{font-size:11px;color:var(--text-3);}
+    @media(max-width:860px){
+      .globe-layout{grid-template-columns:1fr;}
+    }
+
+    /* === CHALLENGES / JOURNAL / REPORT PAGES === */
+    .view-page-wrap{
+      max-width:860px;margin:0 auto;
+    }
   </style>
 </head>
 <body>
@@ -2405,6 +2465,11 @@
     <button class="nav-tab active" data-view="dash" onclick="go('dash')">Dashboard</button>
     <button class="nav-tab" data-view="feed" onclick="go('feed')">My Feed</button>
     <button class="nav-tab" data-view="topics" onclick="go('topics')">Topics</button>
+    <button class="nav-tab" data-view="sources" onclick="go('sources')">Sources</button>
+    <button class="nav-tab" data-view="globe" onclick="go('globe')">Globe</button>
+    <button class="nav-tab" data-view="challenges" onclick="go('challenges')">Challenges</button>
+    <button class="nav-tab" data-view="journal" onclick="go('journal')">Journal</button>
+    <button class="nav-tab" data-view="report" onclick="go('report')">Report</button>
   </div>
   <div class="nav-edition" id="nav-edition"></div>
   <div class="nav-right">
@@ -2724,6 +2789,113 @@
       </div>
       <div class="topic-chips" id="topic-chips"></div>
       <div id="topic-content"></div>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div id="v-sources" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph" style="padding-bottom:var(--sp-3)">
+        <div>
+          <div class="c-eye">Source Intelligence</div>
+          <div class="page-title">Source Genome Cards</div>
+          <div class="page-sub">Ownership, funding, ideological posture, format mix, and the exact reason each desk belongs in your stack.</div>
+        </div>
+      </div>
+      <div class="sources-filter" id="sources-filter"></div>
+      <div class="sources-grid" id="sources-grid"></div>
+    </div>
+  </div>
+
+  <!-- GLOBE -->
+  <div id="v-globe" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph" style="padding-bottom:var(--sp-3)">
+        <div>
+          <div class="c-eye">Geographic Coverage Atlas</div>
+          <div class="page-title">Where Your News Comes From</div>
+          <div class="page-sub">Source origins and coverage intensity by region. Dot size reflects volume of stories from that geography in your current feed.</div>
+        </div>
+      </div>
+      <div class="globe-layout">
+        <div class="globe-map-wrap glass">
+          <svg id="globe-svg" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block"></svg>
+        </div>
+        <div class="globe-legend" id="globe-legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES -->
+  <div id="v-challenges" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph" style="padding-bottom:var(--sp-3)">
+        <div>
+          <div class="c-eye">Assignment Desk</div>
+          <div class="page-title">Reading Challenge</div>
+          <div class="page-sub">Concrete reading tasks generated from your coverage blind spots. Open the right story, log an audit, and close the loop.</div>
+        </div>
+      </div>
+      <div class="view-page-wrap">
+        <div class="glass" style="padding:var(--sp-5)">
+          <div id="challenge-panel-pg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div id="v-journal" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph" style="padding-bottom:var(--sp-3)">
+        <div>
+          <div class="c-eye">Belief Audit Journal</div>
+          <div class="page-title">Write Your Belief Before the Frame Hardens</div>
+          <div class="page-sub">Record what you think happened, what remains uncertain, and what evidence would change your mind. Revisit after more reporting arrives.</div>
+        </div>
+        <div class="journal-focus" id="journal-focus-label-pg">Focused story · General Desk</div>
+      </div>
+      <div class="journal-layout">
+        <div class="journal-form">
+          <label class="journal-label" for="journal-story-pg">Story Desk</label>
+          <select id="journal-story-pg" class="journal-input"></select>
+          <label class="journal-label" for="journal-belief-pg">What do you currently believe happened?</label>
+          <textarea id="journal-belief-pg" class="journal-input journal-area" placeholder="State the central claim as carefully as you can."></textarea>
+          <label class="journal-label" for="journal-uncertainty-pg">What remains disputed or unclear?</label>
+          <textarea id="journal-uncertainty-pg" class="journal-input journal-area" placeholder="Separate verified facts from inference, spin, and missing evidence."></textarea>
+          <label class="journal-label" for="journal-mind-pg">What would change your mind?</label>
+          <textarea id="journal-mind-pg" class="journal-input journal-area" placeholder="List the source, document, or type of evidence that would update your view."></textarea>
+          <div class="journal-actions">
+            <button class="prem-cta journal-save" onclick="saveJournalEntryPg()">Save Audit</button>
+            <button class="reset-btn journal-clear" onclick="clearJournalDraftPg()">Clear Draft</button>
+          </div>
+        </div>
+        <div class="journal-log">
+          <div class="journal-log-head">
+            <div class="journal-log-title">Filed Notes</div>
+            <div class="journal-log-sub">Recent audits stored locally for this account.</div>
+          </div>
+          <div id="journal-log-pg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT -->
+  <div id="v-report" class="page" style="display:none">
+    <div class="wrap content">
+      <div class="ph" style="padding-bottom:var(--sp-3)">
+        <div>
+          <div class="c-eye">Editorial Desk</div>
+          <div class="page-title">Weekly Media Diet Report</div>
+          <div class="page-sub">Your reading week in plain English — topics you over-fed, perspectives you missed, and the next corrective move worth making.</div>
+        </div>
+      </div>
+      <div class="view-page-wrap">
+        <div class="glass" style="padding:var(--sp-5)">
+          <div id="report-sheet-pg"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3775,11 +3947,7 @@ function jumpToJournal(id){
   const article = AREG[id];
   if(article) focusJournalStory(article);
   closeModal();
-  go('dash');
-  syncJournalUI();
-  renderJournalEntries();
-  const block = document.querySelector('.journal-card');
-  if(block) block.scrollIntoView({ behavior:'smooth', block:'start' });
+  go('journal');
 }
 function trackRead(article){
   const item = hydrateArticle(article || {});
@@ -3870,13 +4038,19 @@ function toggleTheme(){
 // NAVIGATION
 // ===================================================================
 function go(view){
-  ['dash','feed','topics'].forEach(v=>{
-    document.getElementById('v-'+v).style.display=v===view?'block':'none';
+  ['dash','feed','topics','sources','globe','challenges','journal','report'].forEach(v=>{
+    const el=document.getElementById('v-'+v);
+    if(el) el.style.display=v===view?'block':'none';
   });
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.view===view));
   if(view==='dash')initDash();
   if(view==='topics')renderTopics();
   if(view==='feed')renderFeed();
+  if(view==='sources')renderSourcesPage();
+  if(view==='globe')initWorldMap();
+  if(view==='challenges')renderChallengePage();
+  if(view==='journal')renderJournalPage();
+  if(view==='report')renderReportPage();
 }
 
 // ===================================================================
@@ -4844,6 +5018,251 @@ if(_loadSession()){
   _enterApp();
 } else {
   document.getElementById('auth-view').classList.add('show');
+}
+
+// ===================================================================
+// SOURCES PAGE
+// ===================================================================
+let srcFilterLean = 'all';
+function renderSourcesPage(){
+  const filterEl = document.getElementById('sources-filter');
+  const gridEl   = document.getElementById('sources-grid');
+  if(!filterEl || !gridEl) return;
+  filterEl.innerHTML = [
+    {id:'all',lbl:'All Sources'},
+    {id:'l',  lbl:'Left-Leaning'},
+    {id:'c',  lbl:'Center'},
+    {id:'r',  lbl:'Right-Leaning'},
+  ].map(f=>`<button class="src-filter-btn${srcFilterLean===f.id?' active':''}" onclick="setSrcFilter('${f.id}')">${f.lbl}</button>`).join('');
+  const entries = Object.entries(SOURCE_GENOMES)
+    .filter(([,s])=> srcFilterLean==='all' || s.lean===srcFilterLean)
+    .sort((a,b)=> b[1].reliability - a[1].reliability);
+  const leanCol  = {l:'var(--left)',c:'var(--center)',r:'var(--right)'};
+  const leanName = {l:'Left',c:'Center',r:'Right'};
+  gridEl.innerHTML = entries.map(([id,s])=>`
+    <article class="src-card glass">
+      <div class="genome-name">${sanitize(s.name)}</div>
+      <div class="fc-signal-row" style="margin-bottom:var(--sp-2)">
+        <span class="signal-chip" style="color:${leanCol[s.lean]||'var(--text-2)'}">${leanName[s.lean]||'Center'}</span>
+        <span class="signal-chip">${sanitize(s.country)}</span>
+        <span class="signal-chip">${sanitize(s.region)}</span>
+      </div>
+      <div class="src-rel-bar">
+        <div class="src-rel-fill" style="width:${(s.reliability/5*100).toFixed(0)}%;background:${s.reliability>=4.4?'var(--success)':s.reliability>=3.5?'var(--warn)':'var(--danger)'}"></div>
+      </div>
+      <div class="genome-meta">
+        <div><strong>Reliability</strong>${s.reliability.toFixed(1)}/5</div>
+        <div><strong>Ownership</strong>${sanitize(s.ownership)}</div>
+        <div><strong>Audience</strong>${sanitize(s.audience)}</div>
+        <div><strong>Formats</strong>${sanitize((s.formats||[]).join(', '))}</div>
+        <div><strong>Strengths</strong>${sanitize((s.topicStrengths||[]).join(', '))}</div>
+      </div>
+      <div class="genome-notes">${sanitize(s.notes||'')}</div>
+    </article>`).join('');
+}
+function setSrcFilter(lean){
+  srcFilterLean=lean;
+  renderSourcesPage();
+}
+
+// ===================================================================
+// GLOBE / WORLD MAP
+// ===================================================================
+const GLOBE_REGIONS = [
+  {id:'na',  name:'North America',  x:175, y:160, color:'var(--left)',   outlets:['Associated Press','Reuters','NPR','Fox News','MSNBC','The Atlantic','Vox','ProPublica']},
+  {id:'sa',  name:'South America',  x:235, y:290, color:'var(--center)', outlets:[]},
+  {id:'eu',  name:'Europe',         x:390, y:130, color:'var(--accent)',  outlets:['BBC','The Guardian','Financial Times','The Economist','Reuters']},
+  {id:'af',  name:'Africa',         x:400, y:255, color:'var(--warn)',    outlets:[]},
+  {id:'me',  name:'Middle East',    x:460, y:185, color:'var(--danger)',  outlets:['Al Jazeera English']},
+  {id:'sa2', name:'South Asia',     x:535, y:210, color:'var(--center)',  outlets:['The Hindu']},
+  {id:'ea',  name:'East Asia',      x:620, y:170, color:'var(--left)',    outlets:[]},
+  {id:'oc',  name:'Oceania',        x:660, y:315, color:'var(--success)', outlets:[]},
+];
+// Simplified continent paths (Mercator-ish)
+const CONTINENT_PATHS = {
+  na:`M 80,80 L 120,60 L 200,55 L 240,75 L 260,110 L 245,145 L 225,155 L 210,195 L 190,205 L 165,195 L 135,185 L 110,170 L 90,140 L 70,115 Z`,
+  sa:`M 185,210 L 215,200 L 255,215 L 275,245 L 270,290 L 255,330 L 235,350 L 210,340 L 195,315 L 185,280 L 175,245 Z`,
+  eu:`M 340,55 L 380,45 L 430,50 L 455,70 L 450,100 L 425,115 L 400,120 L 375,115 L 345,100 L 330,80 Z`,
+  af:`M 345,120 L 395,110 L 450,120 L 465,155 L 465,220 L 450,280 L 425,315 L 395,325 L 365,310 L 345,270 L 330,220 L 330,165 Z`,
+  me:`M 440,100 L 490,95 L 510,110 L 510,150 L 490,170 L 460,165 L 440,145 L 435,120 Z`,
+  sa2:`M 500,120 L 560,115 L 580,130 L 580,180 L 560,215 L 530,225 L 505,210 L 490,175 L 490,140 Z`,
+  ea:`M 560,60 L 640,50 L 680,65 L 700,100 L 690,145 L 660,170 L 625,175 L 590,165 L 565,140 L 550,100 Z`,
+  oc:`M 610,270 L 680,255 L 720,265 L 740,290 L 730,325 L 700,345 L 665,340 L 635,320 L 615,300 Z`,
+};
+function initWorldMap(){
+  const svg = document.getElementById('globe-svg');
+  const legendEl = document.getElementById('globe-legend');
+  if(!svg) return;
+  // Count outlets by region
+  const regionCounts = {};
+  GLOBE_REGIONS.forEach(r=>{regionCounts[r.id]=r.outlets.length;});
+  const maxCount = Math.max(1,...Object.values(regionCounts));
+  // Ocean background
+  let h = `<rect x="0" y="0" width="800" height="420" fill="var(--glass-bg)" rx="4"/>`;
+  // Grid lines
+  for(let lat=0;lat<=420;lat+=60){
+    h += `<line x1="0" y1="${lat}" x2="800" y2="${lat}" stroke="var(--glass-b)" stroke-width="0.5"/>`;
+  }
+  for(let lng=0;lng<=800;lng+=80){
+    h += `<line x1="${lng}" y1="0" x2="${lng}" y2="420" stroke="var(--glass-b)" stroke-width="0.5"/>`;
+  }
+  // Continent fills
+  const pathMap={na:CONTINENT_PATHS.na,sa:CONTINENT_PATHS.sa,eu:CONTINENT_PATHS.eu,af:CONTINENT_PATHS.af,me:CONTINENT_PATHS.me,sa2:CONTINENT_PATHS.sa2,ea:CONTINENT_PATHS.ea,oc:CONTINENT_PATHS.oc};
+  GLOBE_REGIONS.forEach(r=>{
+    const path=pathMap[r.id];
+    if(!path) return;
+    h += `<path d="${path}" fill="rgba(128,128,128,0.13)" stroke="var(--glass-b-2)" stroke-width="1"/>`;
+  });
+  // Coverage dots
+  GLOBE_REGIONS.forEach(r=>{
+    const cnt=regionCounts[r.id]||0;
+    const baseR=10, maxR=38;
+    const dotR=cnt===0?baseR:baseR+(cnt/maxCount)*(maxR-baseR);
+    const opacity=cnt===0?0.15:0.25+0.55*(cnt/maxCount);
+    h += `<circle cx="${r.x}" cy="${r.y}" r="${dotR.toFixed(1)}" fill="${r.color}" opacity="${opacity.toFixed(2)}"/>`;
+    if(cnt>0){
+      h += `<circle cx="${r.x}" cy="${r.y}" r="${(dotR*0.45).toFixed(1)}" fill="${r.color}" opacity="0.7"/>`;
+      h += `<text x="${r.x}" y="${r.y+4}" text-anchor="middle" font-size="11" font-family="Georgia" fill="var(--text-1)" font-weight="600">${cnt}</text>`;
+    }
+    h += `<text x="${r.x}" y="${r.y+(dotR+14)}" text-anchor="middle" font-size="10" font-family="'IBM Plex Sans Condensed',sans-serif" fill="var(--text-2)" letter-spacing=".05em">${r.name.toUpperCase()}</text>`;
+  });
+  // Title
+  h += `<text x="400" y="405" text-anchor="middle" font-size="10" font-family="Georgia" fill="var(--text-3)">Coverage intensity by source origin — dot size proportional to outlets in your genome</text>`;
+  svg.innerHTML = h;
+  // Legend
+  if(legendEl){
+    legendEl.innerHTML = GLOBE_REGIONS.map(r=>{
+      const cnt=regionCounts[r.id]||0;
+      const pct=Math.round(cnt/maxCount*100);
+      return `<div class="globe-legend-item">
+        <div class="globe-legend-region">${r.name}</div>
+        <div class="globe-legend-bar"><div class="globe-legend-fill" style="width:${pct}%;background:${r.color}"></div></div>
+        <div class="globe-legend-count">${cnt} source${cnt!==1?'s':''} tracked</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ===================================================================
+// CHALLENGES PAGE
+// ===================================================================
+function renderChallengePage(){
+  const mount=document.getElementById('challenge-panel-pg');
+  if(!mount) return;
+  const items=buildChallengeItems();
+  const done=items.filter(item=>item.done).length;
+  mount.innerHTML=`
+    <div class="challenge-progress">
+      <div class="challenge-count">${done}/${items.length}</div>
+      <div class="challenge-note">${sanitize(done===items.length?'Assignment complete. The current edition is materially broader than where you started.':'Complete these tasks to widen the edition without losing the story thread.')}</div>
+    </div>
+    <div class="challenge-list">
+      ${items.map(item=>`
+        <article class="challenge-item ${item.done?'done':''}">
+          <div class="challenge-mark">${item.done?'✓':''}</div>
+          <div class="challenge-copy">
+            <strong>${sanitize(item.title)}</strong>
+            ${sanitize(item.detail)}
+          </div>
+        </article>
+      `).join('')}
+    </div>`;
+}
+
+// ===================================================================
+// JOURNAL PAGE
+// ===================================================================
+function renderJournalPage(){
+  const label=document.getElementById('journal-focus-label-pg');
+  if(label) label.textContent=`Focused story · ${journalFocus.title||TOPICS[journalFocus.storyKey]?.name||'General Desk'}`;
+  const storySelect=document.getElementById('journal-story-pg');
+  if(storySelect){
+    const options=Object.entries(TOPICS).map(([key,topic])=>({key,label:topic.name}));
+    if(journalFocus.storyKey&&!TOPICS[journalFocus.storyKey]){
+      options.unshift({key:journalFocus.storyKey,label:journalFocus.title||titleCase(journalFocus.storyKey.replace(/-/g,' '))});
+    }
+    storySelect.innerHTML=options.map(opt=>`<option value="${opt.key}" ${opt.key===journalFocus.storyKey?'selected':''}>${sanitize(opt.label)}</option>`).join('');
+    storySelect.onchange=()=>{
+      journalFocus={storyKey:storySelect.value,title:TOPICS[storySelect.value]?.name||storySelect.value};
+      persistIntelligenceState();
+      renderJournalPage();
+    };
+  }
+  renderJournalEntriesPg();
+}
+function renderJournalEntriesPg(){
+  const mount=document.getElementById('journal-log-pg');
+  if(!mount) return;
+  const items=journalEntries.filter(entry=>!journalFocus.storyKey||entry.storyKey===journalFocus.storyKey);
+  if(!items.length){
+    mount.innerHTML=`<div class="journal-empty">No filed notes on this desk yet. Open a story, then capture your view before the narrative settles.</div>`;
+    return;
+  }
+  mount.innerHTML=items.slice().reverse().map(entry=>`
+    <article class="journal-entry">
+      <div class="journal-entry-meta">
+        <span>${sanitize(entry.date)}</span>
+        <span>${sanitize(entry.storyTitle)}</span>
+      </div>
+      <div class="journal-entry-story">${sanitize(entry.headline)}</div>
+      <div class="journal-entry-copy">
+        <div><strong>Belief</strong>${sanitize(entry.belief)}</div>
+        <div><strong>Unclear</strong>${sanitize(entry.uncertainty)}</div>
+        <div><strong>Would change</strong>${sanitize(entry.mind)}</div>
+      </div>
+    </article>`).join('');
+}
+function saveJournalEntryPg(){
+  const storyKey=document.getElementById('journal-story-pg')?.value||journalFocus.storyKey||'iran';
+  const belief=document.getElementById('journal-belief-pg')?.value.trim()||'';
+  const uncertainty=document.getElementById('journal-uncertainty-pg')?.value.trim()||'';
+  const mind=document.getElementById('journal-mind-pg')?.value.trim()||'';
+  if(!belief||!uncertainty||!mind){showToast('Fill all three journal prompts before filing the audit.');return;}
+  const entry={
+    storyKey,
+    storyTitle:TOPICS[storyKey]?.name||titleCase(storyKey.replace(/-/g,' ')),
+    headline:`Audit filed for ${TOPICS[storyKey]?.name||titleCase(storyKey.replace(/-/g,' '))}`,
+    belief,uncertainty,mind,
+    date:new Intl.DateTimeFormat(undefined,{month:'short',day:'numeric',year:'numeric'}).format(new Date())
+  };
+  journalFocus={storyKey,title:entry.storyTitle};
+  journalEntries.push(entry);
+  clearJournalDraftPg();
+  persistIntelligenceState();
+  renderJournalPage();
+  renderChallengePage();
+  showToast('Belief audit saved to your journal.');
+}
+function clearJournalDraftPg(){
+  ['journal-belief-pg','journal-uncertainty-pg','journal-mind-pg'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+}
+
+// ===================================================================
+// REPORT PAGE
+// ===================================================================
+function renderReportPage(){
+  const mount=document.getElementById('report-sheet-pg');
+  if(!mount) return;
+  const report=buildReport();
+  mount.innerHTML=`
+    <div class="report-headline">${sanitize(report.headline)}</div>
+    <div class="report-metrics">
+      ${report.metrics.map(metric=>`
+        <div class="report-metric">
+          <div class="report-kicker">${sanitize(metric.kicker)}</div>
+          <div class="report-value">${sanitize(metric.value)}</div>
+          <div class="report-copy">${sanitize(metric.copy)}</div>
+        </div>`).join('')}
+    </div>
+    <div class="report-list">
+      ${report.bullets.map(item=>`<div class="report-list-item">${sanitize(item)}</div>`).join('')}
+    </div>
+    <div class="report-actions">
+      <button class="prem-cta" onclick="copyWeeklyReport()">Copy Report</button>
+      <button class="reset-btn" onclick="go('feed')">Correct The Feed</button>
+    </div>`;
 }
 </script>
 </body>
