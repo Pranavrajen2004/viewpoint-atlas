@@ -186,7 +186,9 @@ async function _fetchNewsAPI(q, n) {
  * Returns { articles, rateLimitedSources }
  */
 async function fetchFromAllSources(q, totalLimit = 25) {
-  const perSource = Math.ceil(totalLimit / 5);
+  // Ask each source for the full limit — after dedup we cap at totalLimit.
+  // This ensures a full feed even when only one source responds.
+  const perSource = totalLimit;
 
   const results = await Promise.allSettled([
     _fetchGuardian(q, perSource),
@@ -213,7 +215,17 @@ async function fetchFromAllSources(q, totalLimit = 25) {
   }
 
   articles.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
-  console.log(`[news] parallel fetch: ${articles.length} unique articles, rate-limited: [${rateLimitedSources.join(', ')}]`);
+
+  // Log per-source counts so Vercel function logs show exactly which APIs responded
+  const sourceCounts = {};
+  for (const r of results) {
+    if (r.status === 'fulfilled') {
+      sourceCounts[r.value.source] = r.value.items.length;
+    }
+  }
+  console.log(`[news] parallel fetch — per source:`, sourceCounts,
+    `| total unique: ${articles.length}`,
+    `| rate-limited: [${rateLimitedSources.join(', ')}]`);
 
   return { articles: articles.slice(0, totalLimit), rateLimitedSources };
 }
