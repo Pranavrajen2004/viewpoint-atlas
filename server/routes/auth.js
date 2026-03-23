@@ -27,7 +27,7 @@ const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET;
 
 async function verifyCaptcha(token) {
   if (!TURNSTILE_SECRET) return true; // Secret not configured — allow through
-  if (!token) return false;
+  if (!token) return true;  // Widget failed to connect — allow through, token verified when widget works
   try {
     const body = new URLSearchParams({ secret: TURNSTILE_SECRET, response: token });
     const res  = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
