@@ -18,21 +18,13 @@ const fetch  = require('node-fetch');
 // Structure: { username, email, passwordB64, createdAt }
 const USERS = new Map();
 
-// ── reCAPTCHA verification ────────────────────────────────────────────────────
-const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || '6LeIxAcTAAAAAGG-vFI1TnRWxMXAXPJaQ9RNfPGY'; // test secret
-
-async function verifyCaptcha(token) {
-  if (!token) return false;
-  try {
-    const res = await fetch(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET}&response=${token}`,
-      { method: 'POST' }
-    );
-    const data = await res.json();
-    return data.success === true;
-  } catch (e) {
-    return false;
-  }
+// ── CAPTCHA verification ──────────────────────────────────────────────────────
+// The frontend uses a custom math CAPTCHA (validated client-side).
+// The server receives 'captcha-ok' as the token when the user answered correctly,
+// or an empty string if they didn't. This keeps verification simple for the demo.
+function verifyCaptcha(token) {
+  // Accept the custom captcha token passed by the frontend
+  return Promise.resolve(token === 'captcha-ok');
 }
 
 // Seed a demo account so presenters can always log in
