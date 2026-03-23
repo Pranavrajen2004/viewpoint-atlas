@@ -2769,7 +2769,6 @@
                data-theme="light"
                style="margin:var(--sp-3) 0"></div>
           <button class="ob-btn" id="login-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
-          <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
         <!-- SIGNUP -->
         <div id="auth-signup-form" style="display:none">
@@ -2792,7 +2791,6 @@
                data-theme="light"
                style="margin:var(--sp-3) 0"></div>
           <button class="ob-btn" id="signup-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
-          <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
       </div>
     </div>
@@ -5603,10 +5601,6 @@ async function doSignup() {
   }
 }
 
-function demoLogin(){
-  _saveSession({username:'Demo User',email:'demo@viewpointatlas.com'});
-  _enterApp();
-}
 
 async function doLogout(){
   // Tell server to destroy the session (best-effort)
