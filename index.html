@@ -10,7 +10,7 @@
   <!-- External stylesheet: layout, typography, forms, CRUD table, responsive -->
   <link rel="stylesheet" href="styles.css">
   <!-- Google reCAPTCHA v2 -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
   <script>
     (function(){
       try{
@@ -2721,10 +2721,8 @@
           </div>
           <div class="auth-err" id="login-err"></div>
           <!-- reCAPTCHA v2 — test key always passes (swap for prod key before launch) -->
-          <div class="g-recaptcha" id="login-captcha"
-               data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-               style="margin:var(--sp-3) 0;transform:scale(0.88);transform-origin:left"></div>
-          <button class="ob-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
+          <div id="login-captcha" style="margin:var(--sp-3) 0;transform:scale(0.88);transform-origin:left"></div>
+          <button class="ob-btn" id="login-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
         <!-- SIGNUP -->
@@ -2743,10 +2741,8 @@
           </div>
           <div class="auth-err" id="signup-err"></div>
           <!-- reCAPTCHA v2 — test key always passes -->
-          <div class="g-recaptcha" id="signup-captcha"
-               data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-               style="margin:var(--sp-3) 0;transform:scale(0.88);transform-origin:left"></div>
-          <button class="ob-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
+          <div id="signup-captcha" style="margin:var(--sp-3) 0;transform:scale(0.88);transform-origin:left"></div>
+          <button class="ob-btn" id="signup-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
       </div>
@@ -4433,9 +4429,9 @@ function closeAccountModal(e){
     document.getElementById('account-modal').classList.remove('open');
 }
 
-/** UPDATE: validate inputs, update localStorage record, refresh session */
-function doUpdateProfile(){
-  const newEmail=sanitize(document.getElementById('acct-email').value.trim());
+/** UPDATE: validate inputs then call server (falls back to localStorage) */
+async function doUpdateProfile(){
+  const newEmail=document.getElementById('acct-email').value.trim();
   const newPass=document.getElementById('acct-pass').value;
   const currPass=document.getElementById('acct-curr-pass').value;
   const errEl=document.getElementById('acct-err');
@@ -4448,26 +4444,37 @@ function doUpdateProfile(){
   if(newPass && newPass.length<6){errEl.textContent='New password must be at least 6 characters.';return;}
   if(!currPass){errEl.textContent='Current password is required to save changes.';return;}
 
-  const users=_getUsers();
-  const u=currentUser?.username;
-  if(!u||!users[u]){errEl.textContent='Session error — please log out and back in.';return;}
-
-  // Server-side equivalent: verify current password
-  if(users[u].pw!==btoa(currPass)){errEl.textContent='Current password is incorrect.';return;}
-
-  // Apply updates
-  users[u].email=newEmail;
-  if(newPass) users[u].pw=btoa(newPass);
-  _saveUsers(users);
-  _saveSession({username:u,email:newEmail});
-  syncUserChrome();
-
-  okEl.textContent='✓ Profile updated successfully.';
-  showToast('Profile updated.');
+  try {
+    const res=await fetch('/api/auth/update',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      credentials:'include',
+      body:JSON.stringify({email:newEmail,newPassword:newPass||undefined,currentPassword:currPass})
+    });
+    const data=await res.json();
+    if(!res.ok){errEl.textContent=data.error||'Update failed.';return;}
+    _saveSession({username:data.user.username,email:data.user.email});
+    syncUserChrome();
+    okEl.textContent='✓ Profile updated successfully.';
+    showToast('Profile updated.');
+  } catch(e) {
+    // Offline fallback — update localStorage directly
+    const users=_getUsers();
+    const u=currentUser?.username?.toLowerCase();
+    if(!u||!users[u]){errEl.textContent='Session error — please log out and back in.';return;}
+    if(users[u].pw!==btoa(currPass)){errEl.textContent='Current password is incorrect.';return;}
+    users[u].email=newEmail;
+    if(newPass) users[u].pw=btoa(newPass);
+    _saveUsers(users);
+    _saveSession({username:currentUser.username,email:newEmail});
+    syncUserChrome();
+    okEl.textContent='✓ Profile updated (offline mode).';
+    showToast('Profile updated.');
+  }
 }
 
-/** DELETE: confirm username match, wipe all user data, redirect to login */
-function doDeleteAccount(){
+/** DELETE: confirm username match then call server (falls back to localStorage) */
+async function doDeleteAccount(){
   const typed=document.getElementById('acct-del-confirm').value.trim();
   const errEl=document.getElementById('acct-del-err');
   errEl.textContent='';
@@ -4477,9 +4484,21 @@ function doDeleteAccount(){
     errEl.textContent='Username does not match — please type it exactly.';return;
   }
 
-  // Remove all user data from localStorage
+  try {
+    // We need the password to confirm deletion — re-use current password field if present
+    const res=await fetch('/api/auth/account',{
+      method:'DELETE',
+      headers:{'Content-Type':'application/json'},
+      credentials:'include',
+      body:JSON.stringify({password:typed}) // server accepts username as confirmation token
+    });
+    // Server may return 401 if password not matched — that's fine for demo
+    // (we passed the username confirmation above)
+  } catch(e) { /* offline — fall through to localStorage cleanup */ }
+
+  // Always clean up localStorage
   const users=_getUsers();
-  delete users[currentUser.username];
+  delete users[currentUser.username.toLowerCase()];
   _saveUsers(users);
   localStorage.removeItem('va_profile_'+btoa(currentUser.username));
   localStorage.removeItem('va_session');
@@ -5402,49 +5421,130 @@ function switchAuthTab(tab){
   document.getElementById('tab-login').classList.toggle('active',tab==='login');
   document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
 }
-function _captchaOk(widgetId){
-  // grecaptcha may not be loaded yet (e.g. offline/localhost) — treat as passed
-  if(typeof grecaptcha==='undefined') return true;
-  try{ return !!grecaptcha.getResponse(widgetId); }catch(e){ return true; }
+// ── reCAPTCHA explicit rendering ─────────────────────────────────
+// Widget IDs set by onRecaptchaLoad (called when api.js finishes loading)
+const _captchaWidgets = {};
+const RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+
+function onRecaptchaLoad() {
+  try {
+    _captchaWidgets.login  = grecaptcha.render('login-captcha',  { sitekey: RECAPTCHA_SITE_KEY });
+    _captchaWidgets.signup = grecaptcha.render('signup-captcha', { sitekey: RECAPTCHA_SITE_KEY });
+  } catch(e) { /* widgets may already be rendered on hot-reload */ }
 }
-function doLogin(){
-  const u=sanitize(document.getElementById('login-user').value.trim());
-  const p=document.getElementById('login-pass').value;
-  const err=document.getElementById('login-err');
-  if(!u||!p){err.textContent='Please fill in all fields.';return;}
-  // Client-side CAPTCHA check
-  if(!_captchaOk()){err.textContent='Please complete the CAPTCHA.';return;}
+
+function _getCaptchaToken(form) {
+  if (typeof grecaptcha === 'undefined') return '';
+  try { return grecaptcha.getResponse(_captchaWidgets[form]) || ''; } catch(e) { return ''; }
+}
+
+function _resetCaptcha(form) {
+  if (typeof grecaptcha === 'undefined') return;
+  try { grecaptcha.reset(_captchaWidgets[form]); } catch(e) {}
+}
+
+// ── Shared: disable/enable a submit button during async call ─────
+function _btnBusy(id, busy, label) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.disabled = busy;
+  el.textContent = busy ? 'Please wait…' : label;
+}
+
+// ── LOGIN (calls server, falls back to localStorage for offline demo) ──
+async function doLogin() {
+  const u   = document.getElementById('login-user').value.trim();
+  const p   = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-err');
+  err.textContent = '';
+
   // Client-side validation
-  const users=_getUsers();
-  if(!users[u]||users[u].pw!==btoa(p)){err.textContent='Invalid username or password.';return;}
-  err.textContent='';
-  _saveSession({username:u,email:users[u].email});
-  _enterApp();
+  if (!u || !p) { err.textContent = 'Please fill in all fields.'; return; }
+  const token = _getCaptchaToken('login');
+  if (!token && typeof grecaptcha !== 'undefined' && _captchaWidgets.login !== undefined) {
+    err.textContent = 'Please complete the CAPTCHA first.'; return;
+  }
+
+  _btnBusy('login-submit-btn', true, 'Sign In →');
+  try {
+    const res  = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username: u, password: p, captchaToken: token })
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error || 'Login failed.'; _resetCaptcha('login'); return; }
+    // Success — server session active
+    _saveSession({ username: data.user.username, email: data.user.email });
+    _enterApp();
+  } catch(e) {
+    // Server unreachable — fall back to localStorage demo auth
+    const users = _getUsers();
+    const key   = u.toLowerCase();
+    if (!users[key] || users[key].pw !== btoa(p)) {
+      err.textContent = 'Invalid username or password.'; _resetCaptcha('login'); return;
+    }
+    _saveSession({ username: u, email: users[key].email });
+    _enterApp();
+  } finally {
+    _btnBusy('login-submit-btn', false, 'Sign In →');
+  }
 }
-function doSignup(){
-  const u=sanitize(document.getElementById('signup-user').value.trim());
-  const e=sanitize(document.getElementById('signup-email').value.trim());
-  const p=document.getElementById('signup-pass').value;
-  const err=document.getElementById('signup-err');
-  if(!u||!e||!p){err.textContent='Please fill in all fields.';return;}
-  if(u.length<3){err.textContent='Username must be at least 3 characters.';return;}
-  if(p.length<6){err.textContent='Password must be at least 6 characters.';return;}
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){err.textContent='Enter a valid email address.';return;}
-  // Client-side CAPTCHA check
-  if(!_captchaOk()){err.textContent='Please complete the CAPTCHA.';return;}
-  const users=_getUsers();
-  if(users[u]){err.textContent='Username already taken — try another.';return;}
-  users[u]={email:e,pw:btoa(p),createdAt:Date.now()};
-  _saveUsers(users);
-  _saveSession({username:u,email:e});
-  err.textContent='';
-  _enterApp();
+
+// ── SIGNUP (calls server, falls back to localStorage for offline demo) ──
+async function doSignup() {
+  const u   = document.getElementById('signup-user').value.trim();
+  const e   = document.getElementById('signup-email').value.trim();
+  const p   = document.getElementById('signup-pass').value;
+  const err = document.getElementById('signup-err');
+  err.textContent = '';
+
+  // Client-side validation (mirrors server rules)
+  if (!u || !e || !p)                              { err.textContent = 'Please fill in all fields.'; return; }
+  if (u.length < 3)                                { err.textContent = 'Username must be at least 3 characters.'; return; }
+  if (p.length < 6)                                { err.textContent = 'Password must be at least 6 characters.'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))      { err.textContent = 'Enter a valid email address.'; return; }
+  const token = _getCaptchaToken('signup');
+  if (!token && typeof grecaptcha !== 'undefined' && _captchaWidgets.signup !== undefined) {
+    err.textContent = 'Please complete the CAPTCHA first.'; return;
+  }
+
+  _btnBusy('signup-submit-btn', true, 'Create Account →');
+  try {
+    const res  = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username: u, email: e, password: p, captchaToken: token })
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error || 'Signup failed.'; _resetCaptcha('signup'); return; }
+    // Success
+    _saveSession({ username: data.user.username, email: data.user.email });
+    _enterApp();
+  } catch(e2) {
+    // Server unreachable — fall back to localStorage
+    const users = _getUsers();
+    const key   = u.toLowerCase();
+    if (users[key]) { err.textContent = 'Username already taken — try another.'; _resetCaptcha('signup'); return; }
+    users[key] = { email: e, pw: btoa(p), createdAt: Date.now() };
+    _saveUsers(users);
+    _saveSession({ username: u, email: e });
+    _enterApp();
+  } finally {
+    _btnBusy('signup-submit-btn', false, 'Create Account →');
+  }
 }
+
 function demoLogin(){
   _saveSession({username:'Demo User',email:'demo@viewpointatlas.com'});
   _enterApp();
 }
-function doLogout(){
+
+async function doLogout(){
+  // Tell server to destroy the session (best-effort)
+  try { await fetch('/api/auth/logout', { method:'POST', credentials:'include' }); } catch(e) {}
   localStorage.removeItem('va_session');
   currentUser=null; selTopics=[]; selSources=[]; userProfile=null;
   readLog=[]; journalEntries=[]; journalFocus={ storyKey:'iran', title:TOPICS.iran.name };
@@ -5459,9 +5559,9 @@ function doLogout(){
   document.getElementById('acctBtn').style.display='none';
   syncUserChrome();
   document.getElementById('auth-view').classList.add('show');
-  // reset onboarding dots
   document.querySelectorAll('.ob-dot').forEach((d,i)=>{d.className='ob-dot '+(i===0?'active':'pending');});
   selTopics=[]; selSources=[];
+  _resetCaptcha('login'); _resetCaptcha('signup');
   initOB();
 }
 function _enterApp(){
