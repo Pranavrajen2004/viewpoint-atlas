@@ -9,8 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
   <!-- External stylesheet: layout, typography, forms, CRUD table, responsive -->
   <link rel="stylesheet" href="styles.css">
-  <!-- Cloudflare Turnstile — test sitekey always passes, no warning banners -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <!-- Google reCAPTCHA v3 — invisible, no user interaction required -->
+  <script src="https://www.google.com/recaptcha/api.js?render=6Lcgt5QsAAAAAJ5lrSwqVF0ulrhF9-LmkcyzLwHQ" async defer></script>
   <script>
     (function(){
       try{
@@ -2764,11 +2764,11 @@
             <input class="auth-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
           </div>
           <div class="auth-err" id="login-err"></div>
-          <!-- Cloudflare Turnstile — test sitekey, always passes, no warning -->
-          <div class="cf-turnstile" id="login-captcha"
-               data-sitekey="0x4AAAAAACuwPVfKOUeF3scb"
-               data-theme="light"
-               style="margin:var(--sp-3) 0"></div>
+          <p style="font-size:11px;color:var(--text-3);margin:var(--sp-2) 0;text-align:center">
+            Protected by reCAPTCHA &mdash;
+            <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--text-3)">Privacy</a> &middot;
+            <a href="https://policies.google.com/terms" target="_blank" style="color:var(--text-3)">Terms</a>
+          </p>
           <button class="ob-btn" id="login-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
         </div>
         <!-- SIGNUP -->
@@ -2786,11 +2786,11 @@
             <input class="auth-input" id="signup-pass" type="password" placeholder="min 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()">
           </div>
           <div class="auth-err" id="signup-err"></div>
-          <!-- Cloudflare Turnstile — test sitekey, always passes, no warning -->
-          <div class="cf-turnstile" id="signup-captcha"
-               data-sitekey="0x4AAAAAACuwPVfKOUeF3scb"
-               data-theme="light"
-               style="margin:var(--sp-3) 0"></div>
+          <p style="font-size:11px;color:var(--text-3);margin:var(--sp-2) 0;text-align:center">
+            Protected by reCAPTCHA &mdash;
+            <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--text-3)">Privacy</a> &middot;
+            <a href="https://policies.google.com/terms" target="_blank" style="color:var(--text-3)">Terms</a>
+          </p>
           <button class="ob-btn" id="signup-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
         </div>
       </div>
@@ -5492,29 +5492,26 @@ function switchAuthTab(tab){
   document.getElementById('tab-login').classList.toggle('active',tab==='login');
   document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
 }
-// ── Cloudflare Turnstile helpers ──────────────────────────────────
-// Test sitekey "1x00000000000000000000AA" always passes with no warning banner.
-// Test secret  "1x0000000000000000000000000000000AA" always validates on server.
+// ── Google reCAPTCHA v3 helpers ──────────────────────────────────
+// Invisible — no widget shown. Token is fetched silently on submit.
+const _RECAPTCHA_SITE_KEY = '6Lcgt5QsAAAAAJ5lrSwqVF0ulrhF9-LmkcyzLwHQ';
 
-/** Get the Turnstile response token for the given form's widget */
-function _getCaptchaToken(form) {
+/** Get a reCAPTCHA v3 token for the given action (async, invisible) */
+async function _getCaptchaToken(action) {
   try {
-    const el = document.getElementById(form + '-captcha');
-    if (!el) return '';
-    const inp = el.querySelector('[name="cf-turnstile-response"]');
-    return inp ? inp.value : '';
+    if (typeof grecaptcha === 'undefined') return '';
+    return await new Promise(resolve => {
+      grecaptcha.ready(() => {
+        grecaptcha.execute(_RECAPTCHA_SITE_KEY, { action })
+          .then(resolve)
+          .catch(() => resolve(''));
+      });
+    });
   } catch(e) { return ''; }
 }
 
-/** Reset the Turnstile widget for the given form */
-function _resetCaptcha(form) {
-  try {
-    const el = document.getElementById(form + '-captcha');
-    if (el && typeof turnstile !== 'undefined') {
-      turnstile.reset(el);
-    }
-  } catch(e) {}
-}
+/** No-op for reCAPTCHA v3 — no visible widget to reset */
+function _resetCaptcha() {}
 
 // ── Shared: disable/enable a submit button during async call ─────
 function _btnBusy(id, busy, label) {
@@ -5533,7 +5530,7 @@ async function doLogin() {
 
   // Client-side validation
   if (!u || !p) { err.textContent = 'Please fill in all fields.'; return; }
-  const token = _getCaptchaToken('login');
+  const token = await _getCaptchaToken('login');
 
   _btnBusy('login-submit-btn', true, 'Sign In →');
   try {
@@ -5575,7 +5572,7 @@ async function doSignup() {
   if (u.length < 3)                                { err.textContent = 'Username must be at least 3 characters.'; return; }
   if (p.length < 6)                                { err.textContent = 'Password must be at least 6 characters.'; return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))      { err.textContent = 'Enter a valid email address.'; return; }
-  const token = _getCaptchaToken('signup');
+  const token = await _getCaptchaToken('signup');
 
   _btnBusy('signup-submit-btn', true, 'Create Account →');
   try {

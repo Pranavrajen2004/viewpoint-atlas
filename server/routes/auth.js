@@ -4,7 +4,7 @@
  * Demo-grade auth: users stored in an in-memory Map.
  * Passwords are base64-encoded (NOT for production — demo only).
  * Sessions managed via express-session.
- * CAPTCHA: Cloudflare Turnstile (test keys — always pass, no warning banners).
+ * CAPTCHA: Google reCAPTCHA v3 (invisible, score-based, no user interaction).
  *
  * POST /api/auth/signup   — register a new account
  * POST /api/auth/login    — log in and start session
@@ -19,26 +19,25 @@ const fetch  = require('node-fetch');
 // Structure: { username, email, passwordB64, createdAt }
 const USERS = new Map();
 
-// ── Cloudflare Turnstile verification ────────────────────────────────────────
-// Uses Cloudflare's siteverify API.
-// Test secret "1x0000000000000000000000000000000AA" always returns success=true
-// for the test sitekey "1x00000000000000000000AA" — no warning banners shown.
-const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET;
+// ── Google reCAPTCHA v3 verification ─────────────────────────────────────────
+// Env var name: RECAPTCHA_API
+// Score >= 0.5 is considered human. If secret not set, allows through (dev mode).
+const RECAPTCHA_SECRET = process.env.RECAPTCHA_API;
 
 async function verifyCaptcha(token) {
-  if (!TURNSTILE_SECRET) return true; // Secret not configured — allow through
-  if (!token) return true;  // Widget failed to connect — allow through, token verified when widget works
+  if (!RECAPTCHA_SECRET) return true; // Secret not configured — allow through
+  if (!token) return true;            // No token (e.g. script blocked) — allow through
   try {
-    const body = new URLSearchParams({ secret: TURNSTILE_SECRET, response: token });
-    const res  = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    const body = new URLSearchParams({ secret: RECAPTCHA_SECRET, response: token });
+    const res  = await fetch('https://www.google.com/recaptcha/api/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: body.toString()
     });
     const data = await res.json();
-    return data.success === true;
+    return data.success === true && (data.score === undefined || data.score >= 0.5);
   } catch (e) {
-    return true; // If Turnstile API is unreachable, allow through
+    return true; // If Google API is unreachable, allow through
   }
 }
 
