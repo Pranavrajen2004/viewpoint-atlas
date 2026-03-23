@@ -23,9 +23,10 @@ const USERS = new Map();
 // Uses Cloudflare's siteverify API.
 // Test secret "1x0000000000000000000000000000000AA" always returns success=true
 // for the test sitekey "1x00000000000000000000AA" — no warning banners shown.
-const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET || '1x0000000000000000000000000000000AA';
+const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET;
 
 async function verifyCaptcha(token) {
+  if (!TURNSTILE_SECRET) return true; // Secret not configured — allow through
   if (!token) return false;
   try {
     const body = new URLSearchParams({ secret: TURNSTILE_SECRET, response: token });
@@ -37,8 +38,7 @@ async function verifyCaptcha(token) {
     const data = await res.json();
     return data.success === true;
   } catch (e) {
-    // If Turnstile API is unreachable, allow through (demo resilience)
-    return true;
+    return true; // If Turnstile API is unreachable, allow through
   }
 }
 

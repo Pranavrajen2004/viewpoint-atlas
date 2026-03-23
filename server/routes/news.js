@@ -180,14 +180,6 @@ async function fetchWithFallback(q, pageSize = 8) {
   return null;
 }
 
-// Legacy helper used by /feed and /topic routes (still uses NewsAPI directly)
-function fetchFromNewsAPI(endpoint, params = {}) {
-  if (!NEWS_API_KEY) return Promise.resolve({ articles: [] });
-  const url = new URL(`${NEWS_API_BASE}/${endpoint}`);
-  url.searchParams.set('apiKey', NEWS_API_KEY);
-  Object.entries(params).forEach(([k, v]) => v != null && url.searchParams.set(k, v));
-  return fetch(url.toString()).then(r => r.ok ? r.json() : { articles: [] });
-}
 
 // Topic → NewsAPI search query mapping
 const TOPIC_QUERIES = {
@@ -213,15 +205,6 @@ const FEED_MODES = {
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-
-async function fetchFromNewsAPI(endpoint, params = {}) {
-  const url = new URL(`${NEWS_API_BASE}/${endpoint}`);
-  url.searchParams.set('apiKey', NEWS_API_KEY);
-  Object.entries(params).forEach(([k, v]) => v != null && url.searchParams.set(k, v));
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`NewsAPI error: ${res.status}`);
-  return res.json();
-}
 
 /**
  * Enrich a raw NewsAPI article with Viewpoint Atlas analysis.
@@ -352,25 +335,24 @@ router.get('/feed', async (req, res) => {
     };
 
     // Build a combined search query from selected topics
-    const topicPick = topics.slice(0, 3); // NewsAPI free tier limits — pick top 3
+    const topicPick = topics.slice(0, 3);
     const query     = topicPick.map(t => TOPIC_QUERIES[t] || t).join(' OR ');
 
     const modeConfig = FEED_MODES[mode];
 
-    // For global-south mode we restrict to specific sources
-    const sourcesParam = modeConfig.sources ? modeConfig.sources.join(',') : undefined;
+    const raw = await fetchWithFallback(query, Math.min(pageSize * 2, 30));
 
-    const data = await fetchFromNewsAPI('everything', {
-      q:        query,
-      sources:  sourcesParam,
-      language: 'en',
-      sortBy:   'publishedAt',
-      pageSize: Math.min(pageSize * 2, 100) // fetch extra to allow filtering headroom
-    });
-
-    let articles = (data.articles || [])
+    let articles = (raw || [])
       .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
       .map(a => enrichArticle(a, topicPick[0] || 'general', mode));
+
+    // For global-south mode, prefer sources from Global South outlets by name
+    if (modeConfig.sources) {
+      const preferred = articles.filter(a =>
+        modeConfig.sources.some(s => (a.source?.id || '').includes(s) || (a.source?.name || '').toLowerCase().includes(s.replace(/-/g,' ')))
+      );
+      if (preferred.length >= 3) articles = preferred;
+    }
 
     // High-reliability mode: filter by source reliability
     if (mode === 'reliability') {
@@ -408,14 +390,9 @@ router.get('/topic/:topic', async (req, res) => {
     const query    = TOPIC_QUERIES[topic] || topic;
     const colSize  = Math.min(parseInt(req.query.pageSize) || 5, 15);
 
-    const data = await fetchFromNewsAPI('everything', {
-      q:        query,
-      language: 'en',
-      sortBy:   'publishedAt',
-      pageSize: 100
-    });
+    const raw = await fetchWithFallback(query, 30);
 
-    const enriched = (data.articles || [])
+    const enriched = (raw || [])
       .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
       .map(a => enrichArticle(a, topic, 'my'));
 
@@ -477,14 +454,9 @@ router.get('/search', async (req, res) => {
 
     const pageSize = Math.min(parseInt(req.query.pageSize) || 20, 50);
 
-    const data = await fetchFromNewsAPI('everything', {
-      q,
-      language: 'en',
-      sortBy:   'relevancy',
-      pageSize
-    });
+    const raw = await fetchWithFallback(q, pageSize);
 
-    const articles = (data.articles || [])
+    const articles = (raw || [])
       .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
       .map(a => enrichArticle(a, 'search', 'my'));
 
