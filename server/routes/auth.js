@@ -18,13 +18,27 @@ const fetch  = require('node-fetch');
 // Structure: { username, email, passwordB64, createdAt }
 const USERS = new Map();
 
-// ── CAPTCHA verification ──────────────────────────────────────────────────────
-// The frontend uses a custom math CAPTCHA (validated client-side).
-// The server receives 'captcha-ok' as the token when the user answered correctly,
-// or an empty string if they didn't. This keeps verification simple for the demo.
-function verifyCaptcha(token) {
-  // Accept the custom captcha token passed by the frontend
-  return Promise.resolve(token === 'captcha-ok');
+// ── hCaptcha verification ─────────────────────────────────────────────────────
+// Uses hCaptcha's siteverify API.
+// Test secret key (0x0000...0000) always returns success=true for the test
+// sitekey (10000000-ffff-ffff-ffff-000000000001) — no warnings shown to users.
+const HCAPTCHA_SECRET = process.env.HCAPTCHA_SECRET || '0x0000000000000000000000000000000000000000';
+
+async function verifyCaptcha(token) {
+  if (!token) return false;
+  try {
+    const body = new URLSearchParams({ secret: HCAPTCHA_SECRET, response: token });
+    const res  = await fetch('https://api.hcaptcha.com/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    });
+    const data = await res.json();
+    return data.success === true;
+  } catch (e) {
+    // If hCaptcha API is unreachable, allow through (demo resilience)
+    return true;
+  }
 }
 
 // Seed a demo account so presenters can always log in

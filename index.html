@@ -10,7 +10,8 @@
   <!-- External stylesheet: layout, typography, forms, CRUD table, responsive -->
   <link rel="stylesheet" href="styles.css">
   <!-- Google reCAPTCHA v2 -->
-  <!-- Custom math CAPTCHA — no external keys required -->
+  <!-- hCaptcha — free, proper CAPTCHA service with test keys for localhost -->
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
   <script>
     (function(){
       try{
@@ -2763,18 +2764,10 @@
             <input class="auth-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
           </div>
           <div class="auth-err" id="login-err"></div>
-          <!-- Custom CAPTCHA: math challenge, no external API needed -->
-          <div class="captcha-box" id="login-captcha-box">
-            <div class="captcha-shield">🛡</div>
-            <div class="captcha-body">
-              <div class="captcha-label">Security Check</div>
-              <div class="captcha-question" id="login-captcha-q">Loading…</div>
-              <input class="captcha-input" id="login-captcha-ans" type="number"
-                placeholder="Answer" autocomplete="off"
-                oninput="validateCaptchaInput('login')">
-              <div class="captcha-refresh" onclick="refreshCaptcha('login')">↻ New question</div>
-            </div>
-          </div>
+          <!-- hCaptcha — test sitekey works on localhost without warnings -->
+          <div class="h-captcha" id="login-captcha"
+               data-sitekey="10000000-ffff-ffff-ffff-000000000001"
+               style="margin:var(--sp-3) 0"></div>
           <button class="ob-btn" id="login-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
@@ -2793,18 +2786,10 @@
             <input class="auth-input" id="signup-pass" type="password" placeholder="min 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()">
           </div>
           <div class="auth-err" id="signup-err"></div>
-          <!-- Custom CAPTCHA: math challenge -->
-          <div class="captcha-box" id="signup-captcha-box">
-            <div class="captcha-shield">🛡</div>
-            <div class="captcha-body">
-              <div class="captcha-label">Security Check</div>
-              <div class="captcha-question" id="signup-captcha-q">Loading…</div>
-              <input class="captcha-input" id="signup-captcha-ans" type="number"
-                placeholder="Answer" autocomplete="off"
-                oninput="validateCaptchaInput('signup')">
-              <div class="captcha-refresh" onclick="refreshCaptcha('signup')">↻ New question</div>
-            </div>
-          </div>
+          <!-- hCaptcha — test sitekey works on localhost without warnings -->
+          <div class="h-captcha" id="signup-captcha"
+               data-sitekey="10000000-ffff-ffff-ffff-000000000001"
+               style="margin:var(--sp-3) 0"></div>
           <button class="ob-btn" id="signup-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
         </div>
@@ -5484,63 +5469,31 @@ function switchAuthTab(tab){
   document.getElementById('tab-login').classList.toggle('active',tab==='login');
   document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
 }
-// ── Custom Math CAPTCHA ───────────────────────────────────────────
-// Stores the expected answer for each form ('login' | 'signup')
-const _captchaAnswers = {};
+// ── hCaptcha helpers ──────────────────────────────────────────────
+// hCaptcha test sitekey (10000000-ffff-ffff-ffff-000000000001) always
+// passes verification against the test secret key on the server.
+// No "testing purposes only" banner is shown.
 
-// Operators used in math challenges
-const _captchaOps = [
-  { sym: '+', fn: (a,b) => a+b },
-  { sym: '−', fn: (a,b) => a-b },
-  { sym: '×', fn: (a,b) => a*b },
-];
-
-/**
- * Generate a new math challenge and render it into the captcha box.
- * Keeps numbers small (1–12) so answers are always positive integers.
- */
-function refreshCaptcha(form) {
-  const op  = _captchaOps[Math.floor(Math.random() * _captchaOps.length)];
-  let a = Math.floor(Math.random() * 12) + 1;
-  let b = Math.floor(Math.random() * 12) + 1;
-  // Prevent negative answers for subtraction
-  if (op.sym === '−' && b > a) { const t=a; a=b; b=t; }
-  _captchaAnswers[form] = op.fn(a, b);
-
-  const qEl = document.getElementById(form + '-captcha-q');
-  if (qEl) qEl.innerHTML = `<em>${a}</em> ${op.sym} <em>${b}</em> = ?`;
-
-  // Clear previous answer input & styles
-  const inp = document.getElementById(form + '-captcha-ans');
-  if (inp) { inp.value = ''; inp.classList.remove('captcha-ok','captcha-err'); }
-}
-
-/** Live feedback as user types */
-function validateCaptchaInput(form) {
-  const inp = document.getElementById(form + '-captcha-ans');
-  if (!inp || inp.value === '') { inp.classList.remove('captcha-ok','captcha-err'); return; }
-  const correct = parseInt(inp.value, 10) === _captchaAnswers[form];
-  inp.classList.toggle('captcha-ok',  correct);
-  inp.classList.toggle('captcha-err', !correct);
-}
-
-/** Returns true if user answered the CAPTCHA correctly */
+/** Get the hCaptcha response token for the given form's widget */
 function _getCaptchaToken(form) {
-  const inp = document.getElementById(form + '-captcha-ans');
-  if (!inp || inp.value === '') return '';
-  return parseInt(inp.value, 10) === _captchaAnswers[form] ? 'captcha-ok' : '';
+  try {
+    const el = document.getElementById(form + '-captcha');
+    if (!el) return '';
+    // hCaptcha stores the token in the h-captcha-response hidden input
+    const inp = el.querySelector('[name="h-captcha-response"]');
+    return inp ? inp.value : '';
+  } catch(e) { return ''; }
 }
 
-function _resetCaptcha(form) { refreshCaptcha(form); }
-
-// Initialise both captchas on page load
-(function _initCaptchas() {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { refreshCaptcha('login'); refreshCaptcha('signup'); });
-  } else {
-    refreshCaptcha('login'); refreshCaptcha('signup');
-  }
-})();
+/** Reset the hCaptcha widget for the given form */
+function _resetCaptcha(form) {
+  try {
+    if (typeof hcaptcha !== 'undefined') {
+      // hcaptcha.reset() resets all widgets; pass the widget element id
+      hcaptcha.reset();
+    }
+  } catch(e) {}
+}
 
 // ── Shared: disable/enable a submit button during async call ─────
 function _btnBusy(id, busy, label) {
