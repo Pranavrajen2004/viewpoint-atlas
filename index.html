@@ -5453,6 +5453,14 @@ function sanitize(str){
 let currentUser=null;
 function _getUsers(){ return JSON.parse(localStorage.getItem('va_users')||'{}'); }
 function _saveUsers(u){ localStorage.setItem('va_users',JSON.stringify(u)); }
+// Ensure demo account always exists in localStorage fallback
+(function _seedDemo(){
+  const users = _getUsers();
+  if (!users['demo']) {
+    users['demo'] = { pw: btoa('demo1234'), email: 'demo@viewpointatlas.com' };
+    _saveUsers(users);
+  }
+})();
 function _saveSession(u){ localStorage.setItem('va_session',JSON.stringify(u)); currentUser=u; }
 function _loadSession(){ const s=localStorage.getItem('va_session'); if(s){try{currentUser=JSON.parse(s);return true;}catch(e){}} return false; }
 function syncEditionStamp(){
