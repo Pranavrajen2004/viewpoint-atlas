@@ -5525,9 +5525,6 @@ async function doLogin() {
   // Client-side validation
   if (!u || !p) { err.textContent = 'Please fill in all fields.'; return; }
   const token = _getCaptchaToken('login');
-  if (!token && typeof turnstile !== 'undefined') {
-    err.textContent = 'Please wait for the security check to complete.'; return;
-  }
 
   _btnBusy('login-submit-btn', true, 'Sign In →');
   try {
@@ -5570,9 +5567,6 @@ async function doSignup() {
   if (p.length < 6)                                { err.textContent = 'Password must be at least 6 characters.'; return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))      { err.textContent = 'Enter a valid email address.'; return; }
   const token = _getCaptchaToken('signup');
-  if (!token && typeof turnstile !== 'undefined') {
-    err.textContent = 'Please wait for the security check to complete.'; return;
-  }
 
   _btnBusy('signup-submit-btn', true, 'Create Account →');
   try {
