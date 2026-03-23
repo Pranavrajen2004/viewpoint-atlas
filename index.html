@@ -4974,12 +4974,27 @@ function hexPts(cx,cy,r,n){
 // ===================================================================
 // NEWS API
 // ===================================================================
+function _showRateLimitBanner(sources){
+  let el=document.getElementById('rate-limit-banner');
+  if(!sources||!sources.length){if(el)el.remove();return;}
+  if(!el){
+    el=document.createElement('div');
+    el.id='rate-limit-banner';
+    el.style.cssText='position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#f5c842;border:1px solid #f5c842;border-radius:6px;padding:0.6rem 1.2rem;font-size:0.78rem;z-index:9999;display:flex;align-items:center;gap:0.8rem;max-width:90vw;box-shadow:0 4px 16px rgba(0,0,0,.4)';
+    document.body.appendChild(el);
+  }
+  el.innerHTML=`<span>⚠ Daily limit reached for: <strong>${sources.join(', ')}</strong> — results from remaining sources shown.</span>`
+    +`<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#f5c842;cursor:pointer;font-size:1rem;line-height:1;padding:0">✕</button>`;
+  setTimeout(()=>{if(el.parentElement)el.remove();},8000);
+}
+
 async function fetchLiveNews(query){
-  // Backend proxy handles multi-source fallback (Guardian → GNews → NewsDataio → MediaStack → NewsAPI)
+  // Calls all 5 sources in parallel; deduplicates, sorts newest-first, caps at 25
   try{
-    const res=await fetch(`/api/news/proxy?q=${encodeURIComponent(query)}&pageSize=8`);
+    const res=await fetch(`/api/news/proxy?q=${encodeURIComponent(query)}&pageSize=25`);
     if(res.ok){
       const d=await res.json();
+      _showRateLimitBanner(d.rateLimitedSources||[]);
       const arts=(d.articles||[]).filter(a=>a.title&&a.description&&a.title!=='[Removed]');
       if(arts.length) return arts;
     }

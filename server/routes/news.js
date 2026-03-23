@@ -81,103 +81,141 @@ function normalizeMediaStack(item) {
   };
 }
 
+// ── Individual source fetchers ────────────────────────────────────────────────
+// Each returns { source, items: normalizedArticle[], rateLimited: boolean }
+
+async function _fetchGuardian(q, n) {
+  if (!GUARDIAN_API_KEY) return { source: 'The Guardian', items: [], rateLimited: false };
+  try {
+    const url = new URL('https://content.guardianapis.com/search');
+    url.searchParams.set('api-key', GUARDIAN_API_KEY);
+    url.searchParams.set('q', q);
+    url.searchParams.set('page-size', String(n));
+    url.searchParams.set('order-by', 'newest');
+    url.searchParams.set('show-fields', 'thumbnail,trailText,bodyText');
+    const res  = await fetch(url.toString());
+    const rateLimited = res.status === 429;
+    const data = await res.json();
+    if (data?.response?.status === 'error') return { source: 'The Guardian', items: [], rateLimited };
+    return { source: 'The Guardian', items: (data?.response?.results || []).map(normalizeGuardian), rateLimited };
+  } catch (e) {
+    console.warn('[news] guardian failed:', e.message);
+    return { source: 'The Guardian', items: [], rateLimited: false };
+  }
+}
+
+async function _fetchGNews(q, n) {
+  if (!GNEWS_API_KEY) return { source: 'GNews', items: [], rateLimited: false };
+  try {
+    const url = new URL('https://gnews.io/api/v4/search');
+    url.searchParams.set('token', GNEWS_API_KEY);
+    url.searchParams.set('q', q);
+    url.searchParams.set('lang', 'en');
+    url.searchParams.set('max', String(n));
+    const res  = await fetch(url.toString());
+    const rateLimited = res.status === 429;
+    const data = await res.json();
+    if (data?.errors) return { source: 'GNews', items: [], rateLimited: rateLimited || true };
+    return { source: 'GNews', items: (data?.articles || []).map(normalizeGNews), rateLimited };
+  } catch (e) {
+    console.warn('[news] gnews failed:', e.message);
+    return { source: 'GNews', items: [], rateLimited: false };
+  }
+}
+
+async function _fetchNewsData(q, n) {
+  if (!NEWSDATA_API_KEY) return { source: 'NewsData.io', items: [], rateLimited: false };
+  try {
+    const url = new URL('https://newsdata.io/api/1/news');
+    url.searchParams.set('apikey', NEWSDATA_API_KEY);
+    url.searchParams.set('q', q);
+    url.searchParams.set('language', 'en');
+    const res  = await fetch(url.toString());
+    const rateLimited = res.status === 429;
+    const data = await res.json();
+    if (data?.status === 'error') return { source: 'NewsData.io', items: [], rateLimited: rateLimited || (data.results?.message || '').toLowerCase().includes('limit') };
+    return { source: 'NewsData.io', items: (data?.results || []).slice(0, n).map(normalizeNewsData), rateLimited };
+  } catch (e) {
+    console.warn('[news] newsdata failed:', e.message);
+    return { source: 'NewsData.io', items: [], rateLimited: false };
+  }
+}
+
+async function _fetchMediaStack(q, n) {
+  if (!MEDIASTACK_KEY) return { source: 'MediaStack', items: [], rateLimited: false };
+  try {
+    const url = new URL('http://api.mediastack.com/v1/news');
+    url.searchParams.set('access_key', MEDIASTACK_KEY);
+    url.searchParams.set('keywords', q);
+    url.searchParams.set('languages', 'en');
+    url.searchParams.set('limit', String(n));
+    const res  = await fetch(url.toString());
+    const rateLimited = res.status === 429;
+    const data = await res.json();
+    if (data?.error) return { source: 'MediaStack', items: [], rateLimited: rateLimited || data.error.code === 104 };
+    return { source: 'MediaStack', items: (data?.data || []).map(normalizeMediaStack), rateLimited };
+  } catch (e) {
+    console.warn('[news] mediastack failed:', e.message);
+    return { source: 'MediaStack', items: [], rateLimited: false };
+  }
+}
+
+async function _fetchNewsAPI(q, n) {
+  if (!NEWS_API_KEY) return { source: 'NewsAPI', items: [], rateLimited: false };
+  try {
+    const url = new URL(`${NEWS_API_BASE}/everything`);
+    url.searchParams.set('apiKey', NEWS_API_KEY);
+    url.searchParams.set('q', q);
+    url.searchParams.set('language', 'en');
+    url.searchParams.set('sortBy', 'publishedAt');
+    url.searchParams.set('pageSize', String(n));
+    const res  = await fetch(url.toString());
+    const rateLimited = res.status === 429;
+    const data = await res.json();
+    if (data?.status === 'error') return { source: 'NewsAPI', items: [], rateLimited: rateLimited || data.code === 'rateLimited' };
+    return { source: 'NewsAPI', items: (data?.articles || []), rateLimited };
+  } catch (e) {
+    console.warn('[news] newsapi failed:', e.message);
+    return { source: 'NewsAPI', items: [], rateLimited: false };
+  }
+}
+
 /**
- * Try each news source in order, returning normalized articles on first success.
- * Returns null if all sources fail.
+ * Calls all 5 sources in parallel, merges results, deduplicates by URL,
+ * sorts newest-first, caps at totalLimit articles.
+ * Returns { articles, rateLimitedSources }
  */
-async function fetchWithFallback(q, pageSize = 8) {
-  // 1. The Guardian
-  if (GUARDIAN_API_KEY) {
-    try {
-      const url = new URL('https://content.guardianapis.com/search');
-      url.searchParams.set('api-key',     GUARDIAN_API_KEY);
-      url.searchParams.set('q',           q);
-      url.searchParams.set('page-size',   String(pageSize));
-      url.searchParams.set('order-by',    'newest');
-      url.searchParams.set('show-fields', 'thumbnail,trailText,bodyText');
-      const res  = await fetch(url.toString());
-      const data = await res.json();
-      const items = data?.response?.results || [];
-      if (items.length) {
-        console.log(`[news/proxy] source=guardian items=${items.length}`);
-        return items.map(normalizeGuardian);
+async function fetchFromAllSources(q, totalLimit = 25) {
+  const perSource = Math.ceil(totalLimit / 5);
+
+  const results = await Promise.allSettled([
+    _fetchGuardian(q, perSource),
+    _fetchGNews(q, perSource),
+    _fetchNewsData(q, perSource),
+    _fetchMediaStack(q, perSource),
+    _fetchNewsAPI(q, perSource)
+  ]);
+
+  const seenUrls        = new Set();
+  const articles        = [];
+  const rateLimitedSources = [];
+
+  for (const r of results) {
+    if (r.status !== 'fulfilled') continue;
+    const { source, items, rateLimited } = r.value;
+    if (rateLimited) rateLimitedSources.push(source);
+    for (const item of items) {
+      if (item.url && !seenUrls.has(item.url)) {
+        seenUrls.add(item.url);
+        articles.push(item);
       }
-    } catch (e) { console.warn('[news/proxy] guardian failed:', e.message); }
+    }
   }
 
-  // 2. GNews
-  if (GNEWS_API_KEY) {
-    try {
-      const url = new URL('https://gnews.io/api/v4/search');
-      url.searchParams.set('token', GNEWS_API_KEY);
-      url.searchParams.set('q',     q);
-      url.searchParams.set('lang',  'en');
-      url.searchParams.set('max',   String(pageSize));
-      const res  = await fetch(url.toString());
-      const data = await res.json();
-      const items = data?.articles || [];
-      if (items.length) {
-        console.log(`[news/proxy] source=gnews items=${items.length}`);
-        return items.map(normalizeGNews);
-      }
-    } catch (e) { console.warn('[news/proxy] gnews failed:', e.message); }
-  }
+  articles.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
+  console.log(`[news] parallel fetch: ${articles.length} unique articles, rate-limited: [${rateLimitedSources.join(', ')}]`);
 
-  // 3. NewsData.io
-  if (NEWSDATA_API_KEY) {
-    try {
-      const url = new URL('https://newsdata.io/api/1/news');
-      url.searchParams.set('apikey',   NEWSDATA_API_KEY);
-      url.searchParams.set('q',        q);
-      url.searchParams.set('language', 'en');
-      const res  = await fetch(url.toString());
-      const data = await res.json();
-      const items = data?.results || [];
-      if (items.length) {
-        console.log(`[news/proxy] source=newsdata items=${items.length}`);
-        return items.slice(0, pageSize).map(normalizeNewsData);
-      }
-    } catch (e) { console.warn('[news/proxy] newsdata failed:', e.message); }
-  }
-
-  // 4. MediaStack
-  if (MEDIASTACK_KEY) {
-    try {
-      const url = new URL('http://api.mediastack.com/v1/news');
-      url.searchParams.set('access_key', MEDIASTACK_KEY);
-      url.searchParams.set('keywords',   q);
-      url.searchParams.set('languages',  'en');
-      url.searchParams.set('limit',      String(pageSize));
-      const res  = await fetch(url.toString());
-      const data = await res.json();
-      const items = data?.data || [];
-      if (items.length) {
-        console.log(`[news/proxy] source=mediastack items=${items.length}`);
-        return items.map(normalizeMediaStack);
-      }
-    } catch (e) { console.warn('[news/proxy] mediastack failed:', e.message); }
-  }
-
-  // 5. NewsAPI (last resort — free tier is localhost-only)
-  if (NEWS_API_KEY) {
-    try {
-      const url = new URL(`${NEWS_API_BASE}/everything`);
-      url.searchParams.set('apiKey',   NEWS_API_KEY);
-      url.searchParams.set('q',        q);
-      url.searchParams.set('language', 'en');
-      url.searchParams.set('sortBy',   'publishedAt');
-      url.searchParams.set('pageSize', String(pageSize));
-      const res  = await fetch(url.toString());
-      const data = await res.json();
-      const items = data?.articles || [];
-      if (items.length) {
-        console.log(`[news/proxy] source=newsapi items=${items.length}`);
-        return items;
-      }
-    } catch (e) { console.warn('[news/proxy] newsapi failed:', e.message); }
-  }
-
-  return null;
+  return { articles: articles.slice(0, totalLimit), rateLimitedSources };
 }
 
 
@@ -297,17 +335,17 @@ function applySliders(articles, sliders = {}) {
  */
 router.get('/proxy', async (req, res) => {
   try {
-    const q        = req.query.q || 'world news';
-    const pageSize = Math.min(parseInt(req.query.pageSize) || 8, 20);
+    const q          = req.query.q || 'world news';
+    const totalLimit = Math.min(parseInt(req.query.pageSize) || 25, 30);
 
-    const articles = await fetchWithFallback(q, pageSize);
-    if (!articles || !articles.length) {
-      return res.status(503).json({ error: 'All news sources unavailable or returned no results.', articles: [] });
+    const { articles, rateLimitedSources } = await fetchFromAllSources(q, totalLimit);
+    if (!articles.length) {
+      return res.status(503).json({ error: 'All news sources unavailable or returned no results.', articles: [], rateLimitedSources });
     }
-    res.json({ status: 'ok', totalResults: articles.length, articles });
+    res.json({ status: 'ok', totalResults: articles.length, articles, rateLimitedSources });
   } catch (err) {
     console.error('[/api/news/proxy]', err.message);
-    res.status(502).json({ error: err.message, articles: [] });
+    res.status(502).json({ error: err.message, articles: [], rateLimitedSources: [] });
   }
 });
 
@@ -340,9 +378,9 @@ router.get('/feed', async (req, res) => {
 
     const modeConfig = FEED_MODES[mode];
 
-    const raw = await fetchWithFallback(query, Math.min(pageSize * 2, 30));
+    const { articles: raw, rateLimitedSources } = await fetchFromAllSources(query, Math.min(pageSize * 2, 30));
 
-    let articles = (raw || [])
+    let articles = raw
       .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
       .map(a => enrichArticle(a, topicPick[0] || 'general', mode));
 
@@ -366,7 +404,8 @@ router.get('/feed', async (req, res) => {
       modeLabel: FEED_MODES[mode].label,
       count:     articles.length,
       sliders,
-      articles
+      articles,
+      rateLimitedSources
     });
 
   } catch (err) {
@@ -390,9 +429,9 @@ router.get('/topic/:topic', async (req, res) => {
     const query    = TOPIC_QUERIES[topic] || topic;
     const colSize  = Math.min(parseInt(req.query.pageSize) || 5, 15);
 
-    const raw = await fetchWithFallback(query, 30);
+    const { articles: raw, rateLimitedSources } = await fetchFromAllSources(query, 30);
 
-    const enriched = (raw || [])
+    const enriched = raw
       .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
       .map(a => enrichArticle(a, topic, 'my'));
 
@@ -430,7 +469,7 @@ router.get('/topic/:topic', async (req, res) => {
         frames: [...new Set(arts.flatMap(a => a.frames))].slice(0, 3)
       }));
 
-    res.json({ topic, columns, topFrames, timeline, totalFetched: enriched.length });
+    res.json({ topic, columns, topFrames, timeline, totalFetched: enriched.length, rateLimitedSources });
 
   } catch (err) {
     console.error('[/api/news/topic]', err.message);
@@ -454,13 +493,13 @@ router.get('/search', async (req, res) => {
 
     const pageSize = Math.min(parseInt(req.query.pageSize) || 20, 50);
 
-    const raw = await fetchWithFallback(q, pageSize);
+    const { articles: raw, rateLimitedSources } = await fetchFromAllSources(q, pageSize);
 
-    const articles = (raw || [])
+    const articles = raw
       .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
       .map(a => enrichArticle(a, 'search', 'my'));
 
-    res.json({ query: q, count: articles.length, articles });
+    res.json({ query: q, count: articles.length, articles, rateLimitedSources });
 
   } catch (err) {
     console.error('[/api/news/search]', err.message);
