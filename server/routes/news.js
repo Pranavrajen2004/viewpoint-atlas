@@ -144,7 +144,7 @@ async function _fetchNewsData(q, n) {
 async function _fetchMediaStack(q, n) {
   if (!MEDIASTACK_KEY) return { source: 'MediaStack', items: [], rateLimited: false };
   try {
-    const url = new URL('http://api.mediastack.com/v1/news');
+    const url = new URL('https://api.mediastack.com/v1/news');
     url.searchParams.set('access_key', MEDIASTACK_KEY);
     url.searchParams.set('keywords', q);
     url.searchParams.set('languages', 'en');

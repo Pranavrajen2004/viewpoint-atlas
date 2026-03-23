@@ -4994,7 +4994,7 @@ async function fetchLiveNews(query){
     if(res.ok){
       const d=await res.json();
       _showRateLimitBanner(d.rateLimitedSources||[]);
-      const arts=(d.articles||[]).filter(a=>a.title&&a.description&&a.title!=='[Removed]');
+      const arts=(d.articles||[]).filter(a=>a.title&&a.title!=='[Removed]');
       if(arts.length) return arts;
     }
   }catch(e){}
