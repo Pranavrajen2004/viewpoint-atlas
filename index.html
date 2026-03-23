@@ -9,9 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
   <!-- External stylesheet: layout, typography, forms, CRUD table, responsive -->
   <link rel="stylesheet" href="styles.css">
-  <!-- Google reCAPTCHA v2 -->
-  <!-- hCaptcha — free, proper CAPTCHA service with test keys for localhost -->
-  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+  <!-- Cloudflare Turnstile — test sitekey always passes, no warning banners -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
     (function(){
       try{
@@ -2764,9 +2763,10 @@
             <input class="auth-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
           </div>
           <div class="auth-err" id="login-err"></div>
-          <!-- hCaptcha — test sitekey works on localhost without warnings -->
-          <div class="h-captcha" id="login-captcha"
-               data-sitekey="10000000-ffff-ffff-ffff-000000000001"
+          <!-- Cloudflare Turnstile — test sitekey, always passes, no warning -->
+          <div class="cf-turnstile" id="login-captcha"
+               data-sitekey="1x00000000000000000000AA"
+               data-theme="light"
                style="margin:var(--sp-3) 0"></div>
           <button class="ob-btn" id="login-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doLogin()">Sign In →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
@@ -2786,9 +2786,10 @@
             <input class="auth-input" id="signup-pass" type="password" placeholder="min 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()">
           </div>
           <div class="auth-err" id="signup-err"></div>
-          <!-- hCaptcha — test sitekey works on localhost without warnings -->
-          <div class="h-captcha" id="signup-captcha"
-               data-sitekey="10000000-ffff-ffff-ffff-000000000001"
+          <!-- Cloudflare Turnstile — test sitekey, always passes, no warning -->
+          <div class="cf-turnstile" id="signup-captcha"
+               data-sitekey="1x00000000000000000000AA"
+               data-theme="light"
                style="margin:var(--sp-3) 0"></div>
           <button class="ob-btn" id="signup-submit-btn" style="width:100%;margin-top:var(--sp-2)" onclick="doSignup()">Create Account →</button>
           <button class="auth-demo" onclick="demoLogin()">Read the demo edition →</button>
@@ -5469,28 +5470,26 @@ function switchAuthTab(tab){
   document.getElementById('tab-login').classList.toggle('active',tab==='login');
   document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
 }
-// ── hCaptcha helpers ──────────────────────────────────────────────
-// hCaptcha test sitekey (10000000-ffff-ffff-ffff-000000000001) always
-// passes verification against the test secret key on the server.
-// No "testing purposes only" banner is shown.
+// ── Cloudflare Turnstile helpers ──────────────────────────────────
+// Test sitekey "1x00000000000000000000AA" always passes with no warning banner.
+// Test secret  "1x0000000000000000000000000000000AA" always validates on server.
 
-/** Get the hCaptcha response token for the given form's widget */
+/** Get the Turnstile response token for the given form's widget */
 function _getCaptchaToken(form) {
   try {
     const el = document.getElementById(form + '-captcha');
     if (!el) return '';
-    // hCaptcha stores the token in the h-captcha-response hidden input
-    const inp = el.querySelector('[name="h-captcha-response"]');
+    const inp = el.querySelector('[name="cf-turnstile-response"]');
     return inp ? inp.value : '';
   } catch(e) { return ''; }
 }
 
-/** Reset the hCaptcha widget for the given form */
+/** Reset the Turnstile widget for the given form */
 function _resetCaptcha(form) {
   try {
-    if (typeof hcaptcha !== 'undefined') {
-      // hcaptcha.reset() resets all widgets; pass the widget element id
-      hcaptcha.reset();
+    const el = document.getElementById(form + '-captcha');
+    if (el && typeof turnstile !== 'undefined') {
+      turnstile.reset(el);
     }
   } catch(e) {}
 }
@@ -5513,8 +5512,8 @@ async function doLogin() {
   // Client-side validation
   if (!u || !p) { err.textContent = 'Please fill in all fields.'; return; }
   const token = _getCaptchaToken('login');
-  if (!token && typeof grecaptcha !== 'undefined' && _captchaWidgets.login !== undefined) {
-    err.textContent = 'Please complete the CAPTCHA first.'; return;
+  if (!token && typeof turnstile !== 'undefined') {
+    err.textContent = 'Please wait for the security check to complete.'; return;
   }
 
   _btnBusy('login-submit-btn', true, 'Sign In →');
@@ -5558,8 +5557,8 @@ async function doSignup() {
   if (p.length < 6)                                { err.textContent = 'Password must be at least 6 characters.'; return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))      { err.textContent = 'Enter a valid email address.'; return; }
   const token = _getCaptchaToken('signup');
-  if (!token && typeof grecaptcha !== 'undefined' && _captchaWidgets.signup !== undefined) {
-    err.textContent = 'Please complete the CAPTCHA first.'; return;
+  if (!token && typeof turnstile !== 'undefined') {
+    err.textContent = 'Please wait for the security check to complete.'; return;
   }
 
   _btnBusy('signup-submit-btn', true, 'Create Account →');

@@ -4,6 +4,7 @@
  * Demo-grade auth: users stored in an in-memory Map.
  * Passwords are base64-encoded (NOT for production — demo only).
  * Sessions managed via express-session.
+ * CAPTCHA: Cloudflare Turnstile (test keys — always pass, no warning banners).
  *
  * POST /api/auth/signup   — register a new account
  * POST /api/auth/login    — log in and start session
@@ -18,17 +19,17 @@ const fetch  = require('node-fetch');
 // Structure: { username, email, passwordB64, createdAt }
 const USERS = new Map();
 
-// ── hCaptcha verification ─────────────────────────────────────────────────────
-// Uses hCaptcha's siteverify API.
-// Test secret key (0x0000...0000) always returns success=true for the test
-// sitekey (10000000-ffff-ffff-ffff-000000000001) — no warnings shown to users.
-const HCAPTCHA_SECRET = process.env.HCAPTCHA_SECRET || '0x0000000000000000000000000000000000000000';
+// ── Cloudflare Turnstile verification ────────────────────────────────────────
+// Uses Cloudflare's siteverify API.
+// Test secret "1x0000000000000000000000000000000AA" always returns success=true
+// for the test sitekey "1x00000000000000000000AA" — no warning banners shown.
+const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET || '1x0000000000000000000000000000000AA';
 
 async function verifyCaptcha(token) {
   if (!token) return false;
   try {
-    const body = new URLSearchParams({ secret: HCAPTCHA_SECRET, response: token });
-    const res  = await fetch('https://api.hcaptcha.com/siteverify', {
+    const body = new URLSearchParams({ secret: TURNSTILE_SECRET, response: token });
+    const res  = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: body.toString()
@@ -36,7 +37,7 @@ async function verifyCaptcha(token) {
     const data = await res.json();
     return data.success === true;
   } catch (e) {
-    // If hCaptcha API is unreachable, allow through (demo resilience)
+    // If Turnstile API is unreachable, allow through (demo resilience)
     return true;
   }
 }
