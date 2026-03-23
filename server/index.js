@@ -1,7 +1,9 @@
-const express = require('express');
-const cors    = require('cors');
-const session = require('express-session');
-const path    = require('path');
+const express      = require('express');
+const cors         = require('cors');
+const session      = require('express-session');
+const path         = require('path');
+const swaggerUi    = require('swagger-ui-express');
+const { swaggerDefinition } = require('./swagger');
 
 const newsRoutes    = require('./routes/news');
 const profileRoutes = require('./routes/profile');
@@ -28,6 +30,12 @@ app.use('/api/news',    newsRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/inject',  injectRoutes);
 app.use('/api/sources', sourcesRoutes);
+
+// ── Swagger UI — /api/docs ────────────────────────────────────────────────────
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDefinition, {
+  customSiteTitle: 'Viewpoint Atlas API Docs',
+  customCss: '.swagger-ui .topbar { background: #1a1008; } .swagger-ui .topbar-wrapper img { content: none; }',
+}));
 
 // ── Health ───────────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) =>
